@@ -11,8 +11,7 @@ ptxdist select configs/ptxconfig
 Selecting a Hardware Platform<br />
 ptxdist platform configs/ufs913/platformconfig
 
-Selecting a Toolchain<br />
-If not automatically detected<br />
+Selecting a Toolchain (If not already automatically detected)<br />
 ptxdist toolchain /opt/STLinux.Toolchain-2013.03.1/sh4-linux-gnu/\ <br />
 gcc-4.7.2-glibc-2.10.2-binutils-2.23.1-kernel-2.6.32-sanitized/bin
 
