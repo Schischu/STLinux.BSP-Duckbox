@@ -1,0 +1,5 @@
+strace-4.5.20-sh_cacheflush.patch
+strace-4.5.20-sh_not-multiplexed_socket_calls.patch
+strace-4.5.20-sh_getrval2_warn.patch
+strace-4.5.20-sh_not-multiplexed_accept4.patch
+strace-4.5.20-st200.patch

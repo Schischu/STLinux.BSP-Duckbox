@@ -1,0 +1,31 @@
+From 78b7d3bf8e2556923b22e8b8f8b54a1898d91cdc Mon Sep 17 00:00:00 2001
+From: Carmelo Amoroso <carmelo.amoroso@st.com>
+Date: Tue, 4 Jan 2011 16:29:10 +0100
+Subject: [PATCH] sh: Add entry for accept4 (not-multiplexed path)
+
+* linux/sh/syscallent.h: Add specific entry for accept4 (not-multiplexed)
+available in kernel mainline since v2.6.37-rc6.
+
+See http://git.kernel.org/?p=linux/kernel/git/torvalds/linux-2.6.git;a=commit;h=21b6e4c7106b2d68a6710506d8706608272fd78b
+
+Signed-off-by: Carmelo Amoroso <carmelo.amoroso@st.com>
+---
+ linux/sh/syscallent.h |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/linux/sh/syscallent.h b/linux/sh/syscallent.h
+index 3dd68f9..ebf3c66 100644
+--- a/linux/sh/syscallent.h
++++ b/linux/sh/syscallent.h
+@@ -390,7 +390,7 @@
+ 	{ 5,	TN,	sys_sendmsg,		"sendmsg"	}, /* 355 */
+ 	{ 5,	TN,	sys_recvmsg,		"recvmsg"	}, /* 356 */
+ 	{ 5,	TN,	sys_recvmmsg,		"recvmmsg"	}, /* 357 */
+-	{ 5,	0,	printargs,		"SYS_358"	}, /* 358 */
++	{ 4,	TN,	sys_accept4,		"accept4"	}, /* 358 */
+ 	{ 5,	0,	printargs,		"SYS_359"	}, /* 359 */
+ 	{ 5,	0,	printargs,		"SYS_360"	}, /* 360 */
+ 	{ 5,	0,	printargs,		"SYS_361"	}, /* 361 */
+-- 
+1.5.5.6
+

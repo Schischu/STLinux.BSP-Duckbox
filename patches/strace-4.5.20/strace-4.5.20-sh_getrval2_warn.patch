@@ -1,0 +1,36 @@
+From fb45571a77e3595ab9a04ed1b3822137bce96184 Mon Sep 17 00:00:00 2001
+From: Carmelo Amoroso <carmelo.amoroso@st.com>
+Date: Mon, 13 Dec 2010 08:44:48 +0100
+Subject: [PATCH] sh: Fix compile warning in do_pipe due to missing prototype
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+* defs.h [SH]: Make getrval2 prototype visible to do_pipe
+and fix the following compiler warning:
+../net.c: In function ‘do_pipe’:
+../net.c:1632: warning: implicit declaration of function ‘getrval2’
+../net.c:1632: warning: format ‘%lu’ expects type ‘long unsigned int’, but argument 3 has type ‘int’
+
+Signed-off-by: Carmelo Amoroso <carmelo.amoroso@st.com>
+---
+ defs.h |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+diff --git a/defs.h b/defs.h
+index 62b3719..c7775a5 100644
+--- a/defs.h
++++ b/defs.h
+@@ -563,7 +563,8 @@ extern void tv_div(struct timeval *, struct timeval *, int);
+ #ifdef SUNOS4
+ extern int fixvfork(struct tcb *);
+ #endif
+-#if !(defined(LINUX) && !defined(SPARC) && !defined(SPARC64) && !defined(IA64))
++#if !(defined(LINUX) && !defined(SPARC) && !defined(SPARC64) && !defined(IA64) \
++	&& !defined(SH))
+ extern long getrval2(struct tcb *);
+ #endif
+ #ifdef USE_PROCFS
+-- 
+1.5.5.6
+

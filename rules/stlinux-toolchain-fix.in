@@ -1,0 +1,6 @@
+## SECTION=core
+
+config STLINUX_TOOLCHAIN_FIX
+	bool
+	default y
+	select BASE
