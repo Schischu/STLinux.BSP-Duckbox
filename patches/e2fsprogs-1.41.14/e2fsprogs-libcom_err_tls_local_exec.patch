@@ -1,0 +1,19 @@
+Force gcc to use explicitely the local-exec TLS access model.
+It is a safe optimisation, and on ARM this will prevent to generate TLS_DESC
+relocations.
+This has to be considered as a temporary w/a waiting to consolidate the support
+into uClibc dynamic linker.
+
+Signed-off-by: Carmelo Amoroso <carmelo.amoroso@st.com>
+
+--- e2fsprogs-1.41.9/lib/et/error_message.c.orig	2011-11-09 14:51:50.000000000 +0100
++++ e2fsprogs-1.41.9/lib/et/error_message.c	2011-11-09 14:52:05.000000000 +0100
+@@ -43,7 +43,7 @@
+ #include "internal.h"
+ 
+ #ifdef TLS
+-#define THREAD_LOCAL static TLS
++#define THREAD_LOCAL static TLS __attribute__ ((tls_model ("local-exec")))
+ #else
+ #define THREAD_LOCAL static
+ #endif

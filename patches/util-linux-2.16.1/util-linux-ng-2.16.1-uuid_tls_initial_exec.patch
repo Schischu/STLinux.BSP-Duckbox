@@ -1,0 +1,19 @@
+Force gcc to use explicitely the initial-exec TLS access model.
+It is a safe optimisation, and on ARM this will prevent to generate TLS_DESC
+relocations.
+This has to be considered as a temporary w/a waiting to consolidate the support
+into uClibc dynamic linker.
+
+Signed-off-by: Carmelo Amoroso <carmelo.amoroso@st.com>
+
+--- util-linux-ng-2.16.1/shlibs/uuid/src/gen_uuid.c.orig	2011-09-15 07:33:25.000000000 +0200
++++ util-linux-ng-2.16.1/shlibs/uuid/src/gen_uuid.c	2011-09-15 07:37:53.000000000 +0200
+@@ -99,7 +99,7 @@
+ #endif
+ 
+ #ifdef TLS
+-#define THREAD_LOCAL static TLS
++#define THREAD_LOCAL static TLS __attribute__ ((tls_model ("initial-exec")))
+ #else
+ #define THREAD_LOCAL static
+ #endif

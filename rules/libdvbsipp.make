@@ -50,7 +50,7 @@ $(STATEDIR)/libdvbsipp.targetinstall:
 	@$(call install_fixup, libdvbsipp,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, libdvbsipp,DESCRIPTION,missing)
 
-	@$(call install_lib, libdvbsipp, 0, 0, 0644, libdvbsipp)
+	@$(call install_lib, libdvbsipp, 0, 0, 0644, libdvbsi++)
 
 	@$(call install_finish, libdvbsipp)
 

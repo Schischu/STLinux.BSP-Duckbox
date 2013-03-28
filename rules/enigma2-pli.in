@@ -1,11 +1,30 @@
-## SECTION=multimedia
-
-libgif libsigc \
-		libdvbsipp libdreamdvd2 tuxtxt32bpp hotplug_e2
+## SECTION=multimedia_libs
 
 config ENIGMA2_PLI
 	tristate
-	select FREETYPE EXPAT FONTCONFIG LIBFRIBIDI LIBPNG LIBJPEG LIBGIF LIBID3TAG READLINE LIBMAD LIBXML2 LIBXSLT SDPARM PYTHON PYTHON_ELEMENTTREE PYTHON_ZOPE_INTERFACE PYTHON_TWISTED PYTHON_OPENSSL PYTHON_WIFI PYTHON_LXML LIBXMLCCWRAP
+	select FREETYPE 
+	
+	select EXPAT 
+	select FONTCONFIG 
+	select LIBFRIBIDI 
+	select LIBPNG 
+	select LIBJPEG 
+	select LIBGIF 
+	select LIBID3TAG 
+	select READLINE 
+	select LIBMAD 
+	select LIBXML2 
+	select LIBXSLT 
+	select SDPARM 
+	select PYTHON 
+	select PYTHON_ELEMENTTREE 
+	select PYTHON_ZOPE_INTERFACE 
+	select PYTHON_TWISTED 
+	select PYTHON_OPENSSL 
+	select PYTHON_WIFI 
+	select PYTHON_LXML 
+	select LIBXMLCCWRAP
+	select LIBSIGCPP
 	prompt "enigma2-pli"
 	help
 	  FIXME

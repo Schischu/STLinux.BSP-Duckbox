@@ -1,0 +1,8 @@
+--- zope.interface-4.0.1.orig/setup.py
++++ zope.interface-4.0.1/setup.py
+@@ -135,4 +135,4 @@
+       cmdclass = {'build_ext': optional_build_ext,
+                   },
+       test_suite = 'zope.interface.tests',
+-      **extra)
++      )

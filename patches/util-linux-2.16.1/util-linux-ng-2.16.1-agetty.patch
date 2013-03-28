@@ -1,0 +1,85 @@
+Index: util-linux-ng-2.16/login-utils/agetty.c
+===================================================================
+--- util-linux-ng-2.16.orig/login-utils/agetty.c
++++ util-linux-ng-2.16/login-utils/agetty.c
+@@ -155,6 +155,8 @@ struct chardata init_chardata = {
+     0,					/* no capslock */
+ };
+ 
++int noBaudGiven = 0;
++
+ struct Speedtab {
+     long    speed;
+     int     code;
+@@ -267,7 +269,7 @@ main(argc, argv)
+ #endif
+ 
+ #ifdef DEBUGGING
+-	dbf = fopen("/dev/ttyp0", "w");
++	dbf = fopen("/dev/tty1", "w");
+ 
+ 	{	int i;
+ 	
+@@ -459,17 +461,21 @@ parse_args(argc, argv, op)
+ 	}
+     }
+ 	debug("after getopt loop\n");
+-    if (argc < optind + 2)			/* check parameter count */
++    if (argc < optind + 1)			/* check parameter count */
+ 	usage();
+-
+-    /* we loosen up a bit and accept both "baudrate tty" and "tty baudrate" */
+-    if('0' <= argv[optind][0] && argv[optind][0] <= '9') {
+-	/* a number first, assume it's a speed (BSD style) */
+-	parse_speeds(op, argv[optind++]);	/* baud rate(s) */
+-	op->tty = argv[optind];			/* tty name */
++    else if( argc < optind + 2) {
++        noBaudGiven = 1;
++        op->tty =argv[optind];
+     } else {
+-	op->tty = argv[optind++];		/* tty name */
+-	parse_speeds(op, argv[optind]);		/* baud rate(s) */
++    	/* we loosen up a bit and accept both "baudrate tty" and "tty baudrate" */
++        if('0' <= argv[optind][0] && argv[optind][0] <= '9') {
++	    /* a number first, assume it's a speed (BSD style) */
++	    parse_speeds(op, argv[optind++]);	/* baud rate(s) */
++	    op->tty = argv[optind];			/* tty name */
++	} else {
++	    op->tty = argv[optind++];		/* tty name */
++            parse_speeds(op, argv[optind]);		/* baud rate(s) */
++        }
+     }
+ 
+     optind++;
+@@ -677,13 +683,6 @@ open_tty(tty, tp, local)
+      * access for group tty) after the login has succeeded.
+      */
+ 
+-    /*
+-     * Let us use 0600 for Linux for the period between getty and login
+-     */
+-
+-    (void) chown(tty, 0, 0);			/* root, sys */
+-    (void) chmod(tty, 0600);			/* 0622: crw--w--w- */
+-    errno = 0;					/* ignore above errors */
+ }
+ 
+ /* termio_init - initialize termios settings */
+@@ -707,10 +706,15 @@ termio_init(tp, speed, op)
+     /* flush input and output queues, important for modems! */
+     (void) tcflush(0, TCIOFLUSH);
+ 
+-    tp->c_cflag = CS8 | HUPCL | CREAD;
+-    cfsetispeed(tp, speed);
+-    cfsetospeed(tp, speed);
++    if (!noBaudGiven) {
++        tp->c_cflag = CS8 | HUPCL | CREAD;
++        cfsetispeed(tp, speed);
++        cfsetospeed(tp, speed);
++    } else {
++        tp->c_cflag = CS8 | HUPCL | CREAD | tp->c_cflag;
++    }
++
+     if (op->flags & F_LOCAL) {
+ 	tp->c_cflag |= CLOCAL;
+     }

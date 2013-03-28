@@ -1,0 +1,11 @@
+--- lxml-2.2.8.orig/setupinfo.py
++++ lxml-2.2.8/setupinfo.py
+@@ -166,7 +166,7 @@
+     result = []
+     possible_library_dirs = flags('libs')
+     for possible_library_dir in possible_library_dirs:
+-        if possible_library_dir.startswith('-L'):
++        if possible_library_dir.startswith('-L') and possible_library_dir == "-l/usr/lib" is False:
+             result.append(possible_library_dir[2:])
+     return result
+ 

@@ -1,0 +1,55 @@
+--- portmap_6.0/Makefile	2007-05-11 05:02:10.000000000 +0200
++++ portmap_6.0/Makefile-new	2007-11-13 16:58:00.000000000 +0100
+@@ -18,14 +18,14 @@
+ # target system will never user NIS for hostname lookup, you can define
+ # USE_DNS to add hostname tests in hosts.allow/deny.
+ 
+-ifeq ($(NO_TCP_WRAPPER),)
+-CPPFLAGS += -DHOSTS_ACCESS
+-WRAP_LIB  = -lwrap
+-ifdef USE_DNS
+-CPPFLAGS += -DENABLE_DNS
+-MAN_SED += -e 's/USE_DNS/yes/'
+-endif
+-endif
++#ifeq ($(NO_TCP_WRAPPER),)
++#CPPFLAGS += -DHOSTS_ACCESS
++#WRAP_LIB  = -lwrap
++#ifdef USE_DNS
++#CPPFLAGS += -DENABLE_DNS
++#MAN_SED += -e 's/USE_DNS/yes/'
++#endif
++#endif
+ 
+ # Comment out if your RPC library does not allocate privileged ports for
+ # requests from processes with root privilege, or the new portmap will
+@@ -136,12 +136,12 @@
+ 	sed $(MAN_SED) < portmap.8 > portmap.man
+ 
+ install: all
+-	install -o root -g root -m 0755 -s portmap ${BASEDIR}/sbin
+-	install -o root -g root -m 0755 -s pmap_dump ${BASEDIR}/sbin
+-	install -o root -g root -m 0755 -s pmap_set ${BASEDIR}/sbin
+-	install -o root -g root -m 0644 portmap.man ${BASEDIR}/usr/share/man/man8/portmap.8
+-	install -o root -g root -m 0644 pmap_dump.8 ${BASEDIR}/usr/share/man/man8
+-	install -o root -g root -m 0644 pmap_set.8 ${BASEDIR}/usr/share/man/man8
++	install -m 0755 portmap ${BASEDIR}/sbin
++	install -m 0755 pmap_dump ${BASEDIR}/sbin
++	install -m 0755 pmap_set ${BASEDIR}/sbin
++	install -m 0644 portmap.man ${BASEDIR}/usr/share/man/man8/portmap.8
++	install -m 0644 pmap_dump.8 ${BASEDIR}/usr/share/man/man8
++	install -m 0644 pmap_set.8 ${BASEDIR}/usr/share/man/man8
+ 
+ clean:
+ 	rm -f *.o portmap pmap_dump pmap_set from_local \
+--- portmap_6.0/pmap_check.c	2007-05-11 05:02:10.000000000 +0200
++++ portmap_6.0/pmap_check.c-new	2007-11-13 17:29:50.000000000 +0100
+@@ -44,7 +44,7 @@
+ #include <netinet/in.h>
+ #include <rpc/rpcent.h>
+ #endif
+-#include <tcpd.h>
++//#include <tcpd.h>
+ #include <arpa/inet.h>
+ #include <grp.h>
+ 

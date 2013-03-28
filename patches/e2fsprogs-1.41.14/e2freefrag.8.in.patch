@@ -1,0 +1,9 @@
+--- e2fsprogs-1.41.9.orig/misc/e2freefrag.8.in
++++ e2fsprogs-1.41.9/misc/e2freefrag.8.in
+@@ -1,5 +1,5 @@
+ .\" -*- nroff -*-
+-.TH E2FREEFRAG 8 "@E2FSPROGS_MONTH@ @E2FSPROGS_YEAR@" "E2fsprogs version @E2FSPROGS_VERSION@"
++.TH E2FREEFRAG 8 "@E2FSPROGS_MONTH@ @E2FSPROGS_YEAR@" "E2fsprogs version @E2FSPROGS_VERSION@"
+ .SH NAME
+ e2freefrag \- report free space fragmentation information
+ .SH SYNOPSIS

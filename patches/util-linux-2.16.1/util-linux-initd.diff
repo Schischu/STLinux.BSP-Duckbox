@@ -1,0 +1,14 @@
+Index: util-linux-2.12r/debian/hwclock.sh
+===================================================================
+--- util-linux-2.12r.orig/debian/hwclock.sh
++++ util-linux-2.12r/debian/hwclock.sh
+@@ -15,6 +15,9 @@
+ # WARNING:	Please read /usr/share/doc/util-linux/README.Debian.hwclock
+ #		before changing this file. You risk serious clock
+ #		misbehaviour otherwise.
++#
++# chkconfig: S 50 25
++#
+ 
+ FIRST=no	# debian/rules sets this to 'yes' when creating hwclockfirst.sh
+ 

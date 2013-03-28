@@ -1,0 +1,2826 @@
+--- portmap-6.0.0.orig/debian/init.d
++++ portmap-6.0.0/debian/init.d
+@@ -0,0 +1,84 @@
++#!/bin/sh
++#
++# start/stop portmap daemon.
++
++### BEGIN INIT INFO
++# Provides:          portmap
++# Required-Start:    $network $local_fs
++# Required-Stop:     $network $local_fs
++# Default-Start:     S 2 3 4 5
++# Default-Stop:      0 1 6
++# Short-Description: The RPC portmapper
++# Description:       Portmap is a server that converts RPC (Remote
++#                    Procedure Call) program numbers into DARPA
++#                    protocol port numbers. It must be running in
++#                    order to make RPC calls. Services that use
++#                    RPC include NFS and NIS.
++### END INIT INFO
++
++test -f /sbin/portmap || exit 0
++
++. /lib/lsb/init-functions
++
++OPTIONS=""
++if [ -f /etc/default/portmap ]; then
++  . /etc/default/portmap
++elif [ -f /etc/portmap.conf ]; then
++  . /etc/portmap.conf
++fi
++
++case "$1" in
++    start)
++	log_begin_msg "Starting portmap daemon..."
++	pid=$( pidofproc -p /var/run/portmap.pid /sbin/portmap )
++	if [ -n "$pid" ] ; then
++	      log_begin_msg "Already running."
++	      log_end_msg 0
++	      exit 0
++	fi
++	start-stop-daemon --start --quiet --oknodo --exec /sbin/portmap -- $OPTIONS
++	log_end_msg $?
++
++	if [ -f /var/run/portmap.upgrade-state ]; then
++	  log_begin_msg "Restoring old RPC service information..."
++	  sleep 1 # needs a short pause or pmap_set won't work. :(
++	  pmap_set </var/run/portmap.upgrade-state
++	  log_end_msg $?
++	  rm -f /var/run/portmap.upgrade-state
++	else
++	  if [ -f /var/run/portmap.state ]; then
++	    sleep 1 # needs a short pause or pmap_set won't work. :(
++	    pmap_set </var/run/portmap.state
++	    rm -f /var/run/portmap.state
++	  fi
++	fi
++
++	mkdir -p /lib/init/rw/sendsigs.omit.d
++	rm -f /lib/init/rw/sendsigs.omit.d/portmap
++	ln -s /var/run/portmap.pid /lib/init/rw/sendsigs.omit.d/portmap
++
++	;;
++    stop)
++	log_begin_msg "Stopping portmap daemon..."
++	pmap_dump >/var/run/portmap.state
++	start-stop-daemon --stop --quiet --oknodo --exec /sbin/portmap
++	log_end_msg $?
++	;;
++    force-reload)
++	$0 restart
++	;;
++    restart)
++	$0 stop
++	$0 start
++	;;
++    status)
++	status_of_proc -p /var/run/portmap.pid /sbin/portmap portmap && exit 0 || exit $?
++	;;
++    *)
++	log_success_msg "Usage: /etc/init.d/portmap {start|stop|force-reload|restart|status}"
++	exit 1
++	;;
++esac
++
++exit 0
++
+--- portmap-6.0.0.orig/debian/control
++++ portmap-6.0.0/debian/control
+@@ -0,0 +1,20 @@
++Source: portmap
++Section: net
++Priority: standard
++Maintainer: Anibal Monsalve Salazar <anibal@debian.org>
++Uploaders: Petter Reinholdtsen <pere@debian.org>
++Build-Depends: libwrap0-dev, debhelper (>= 7), quilt
++Standards-Version: 3.8.4
++Homepage: http://neil.brown.name/portmap/
++
++Package: portmap
++Architecture: any
++Depends: ${shlibs:Depends}, ${misc:Depends}, lsb-base (>= 3.2-14)
++Replaces: netbase (<< 4.00)
++Conflicts: sysv-rc (<< 2.86.ds1-59) 
++Description: RPC port mapper
++ Portmap is a server that converts RPC (Remote Procedure Call) program
++ numbers into DARPA protocol port numbers. It must be running in order
++ to make RPC calls.
++ .
++ Services that use RPC include NFS and NIS.
+--- portmap-6.0.0.orig/debian/README.source
++++ portmap-6.0.0/debian/README.source
+@@ -0,0 +1,5 @@
++Before editing the source package, apply the patches in
++debian/patches.
++
++For information about the patch system used for the source
++package refer to /usr/share/doc/quilt/README.source
+--- portmap-6.0.0.orig/debian/TODO
++++ portmap-6.0.0/debian/TODO
+@@ -0,0 +1,21 @@
++
++- Init.d script:
++  If the RPC services are stopped after the portmapper is stopped it
++  will not be aware of this (will keep the registration file)
++
++- If the following sequence occurs:
++	- FAM stopped
++	- Portmapper stopped
++	- FAM started
++	- Portmapper started
++  Then the services will not be registered with the portmapper properly
++
++  The only plausible fix for this is doing init.d dependencies: if
++  portmap is stopped stop all RPC services?
++
++- Postinst could restart RPC services if the configuration has changed
++  just like libc6's does for some upgrades.
++
++- Handle the file as a conffile? (done in 5-10) there are presumably
++  not many changes to it in the future since portmap is a rather fixed
++  program.
+--- portmap-6.0.0.orig/debian/postinst
++++ portmap-6.0.0/debian/postinst
+@@ -0,0 +1,160 @@
++#!/bin/sh
++set -e
++
++. /lib/lsb/init-functions
++. /usr/share/debconf/confmodule
++
++CONFFILE=/etc/default/portmap
++
++create_config() {
++        cat <<EOF > $CONFFILE
++# Portmap configuration file
++#
++# Note: if you manually edit this configuration file,
++# portmap configuration scripts will avoid modifying it
++# (for example, by running 'dpkg-reconfigure portmap').
++
++# If you want portmap to listen only to the loopback
++# interface, uncomment the following line (it will be
++# uncommented automatically if you configure this
++# through debconf).
++EOF
++        # Allow the installation default to be preseeded
++        db_get portmap/loopback
++        if [ "true" = "$RET" ] ; then
++                echo 'OPTIONS="-i 127.0.0.1"' >> $CONFFILE
++        else
++                echo 'OPTIONS=""' >> $CONFFILE
++        fi
++        chmod 0644 $CONFFILE
++}
++
++# On install only, create the config file if it does not exist
++#
++if [ ! -e $CONFFILE ] ; then
++       if  [ -z "$version" ] ; then
++               create_config
++       elif [ -n "$version" ] && [ "$action" = "upgrade" ] && \
++            dpkg --compare-versions "$version" lt 5-6; then
++# or if upgrading from version older than 5-6 (which provided the file)
++            create_config
++       fi
++fi
++
++if [ "$1" = "configure" ] && [ -n "$2" ] &&
++  dpkg --compare-versions "$2" le "6.0.0-1"; then
++       err=$( update-rc.d -f portmap remove 2>&1 > /dev/null ) || {
++               echo "$err" >&2
++               exit 1
++       }
++fi
++
++if [ "$1" = "configure" ] && [ -n "$2" ] && dpkg --compare-versions "$2" lt "5-7ubuntu2"; then
++    db_set portmap/loopback true
++fi
++
++# be consistent with Debian
++if [ -e "$CONFFILE" ]; then
++	sed -i -e 's/ARGS/OPTIONS/g' "$CONFFILE"
++else
++	printf "# By default, listen only on the loopback interface\nOPTIONS=\"-i 127.0.0.1\"\n" > "$CONFFILE"
++fi
++
++# Keep track of changes to the portmapper
++portmap_changed=0
++
++if [ -e "$CONFFILE" ] && [ "$1" = "configure" ] || [ "$1" = "reconfigure" ] ; then
++
++  # Read in the options
++  . $CONFFILE || true
++
++  if [ "$OPTIONS" = "-i 127.0.0.1" ] || [ -z "$OPTIONS" ] ; then
++  # The configuration matches the changes we introduce, go ahead
++  # and make the changes
++
++      db_get portmap/loopback
++
++      if [ "$RET" = true ]; then
++	  # first we need to understand if there is OPTIONS somewhere
++	  # and if not, add it with a sane default.
++          if [ "$1" = "configure" ] && [ -n "$2" ] && ! grep -qs OPTIONS "$CONFFILE"; then
++              echo "OPTIONS=\"-i 127.0.0.1\"" >> "$CONFFILE"
++              portmap_changed=1
++          fi
++	  # if OPTION is not at the beginning, make it so
++	  # XXX: only the last OPTIONS will be used, but we don't know
++	  # if the user is chaining the values, so it seems to be reasonably safe.
++          if ! grep -q ^OPTIONS "$CONFFILE" >/dev/null 2>&1; then
++              sed -i -e 's/.*OPTIONS/OPTIONS/g' "$CONFFILE"
++              portmap_changed=1
++          fi
++	  # source again the result
++          . "$CONFFILE"
++	  # check if loopback is not in the string
++          if [ -z "$( echo $OPTIONS | grep "127.0.0.1" )" ]; then
++              if [ -n "$OPTIONS" ]; then
++                  OPTIONS="$OPTIONS -i 127.0.0.1"
++              else
++                  OPTIONS="-i 127.0.0.1"
++              fi
++              sed -i -e 's/OPTIONS.*/OPTIONS=\"'"$OPTIONS"'\"/g' "$CONFFILE"
++              portmap_changed=1
++          fi
++      else
++          if [ "$1" = "configure" ] && [ -n "$2" ] && ! grep -qs OPTIONS "$CONFFILE"; then
++              echo "OPTIONS=\"\"" >> "$CONFFILE"
++          fi
++# Just reverse the change above in case a user wants to go from 'true'
++# to 'false' at some point.
++          OPTIONS="$( echo $OPTIONS | sed -e 's/-i 127.0.0.1//g' )"
++          sed -i -e 's/^OPTIONS.*/OPTIONS=\"'"$OPTIONS"'\"/g' "$CONFFILE"
++          portmap_changed=1
++      fi
++
++      
++  else 
++      echo "Portmap options have already been configured in $CONFFILE"
++      echo "This script will not modify it, please edit this file manually."
++  fi
++fi 
++
++if [ ! -e "$CONFFILE" ] && [ "$1" = "reconfigure" ] ; then
++	echo "Cannot reconfigure portmap since $CONFFILE has been manually removed by the admin"
++fi
++
++db_stop
++
++# End of configuration
++
++#DEBHELPER#
++
++# Warn if there are services linked with the portmapper
++# but its configuration has changed. We will not automatically
++# restart them, however.
++if [ -n "$2" ] && [ "$portmap_changed" -eq 1 ] ; then
++    pid=$( pidofproc -p /var/run/portmap.pid /sbin/portmap ) || true
++    if [ -n "$pid" ] ; then
++	# RPCinfo might fail if the portmapper is not running
++	# (i.e. broken options...)
++	set +e
++	rpccount=$( rpcinfo -p 2>/dev/null | grep "tcp\|udp" | grep -v portmapper | wc -l )
++	set -e
++	if [ "0$rpccount" -gt 0 ] ; then
++	# TODO: Turn this into a debconf note?
++	# TODO: associate common RPC services with init.d lines?
++	# i.e. : 
++	#  sgi_fam -> /etc/init.d/fam
++	#  status  -> /etc/init.d/nfs-common
++		echo "There are RPC services which were registered with the portmapper"
++		echo "before the configuration was changed."
++		echo "You need to manually restart them in order for the changes to take effect."
++		echo "Current registered services:"
++		echo "------------------------------------------------"
++		rpcinfo -p | grep "tcp\|udp" | grep -v portmapper 
++		echo "------------------------------------------------"
++	fi
++    fi
++fi
++
++
++exit 0 
+--- portmap-6.0.0.orig/debian/config
++++ portmap-6.0.0/debian/config
+@@ -0,0 +1,38 @@
++#!/bin/sh
++# config script for portmap
++
++set -e
++
++action=$1
++version=$2
++CONFFILE=/etc/default/portmap
++
++# Only make debconf questions if 
++# a) the CONFFILE exists 
++
++if [ -e $CONFFILE ] ; then
++	# Source debconf library.
++	. $CONFFILE || true
++
++	. /usr/share/debconf/confmodule
++
++	# and b) has the expected content
++	expected=1
++
++	if [ "$OPTIONS" = "-i 127.0.0.1" ]; then
++		db_set portmap/loopback true
++		expected=0
++        elif [ -z "$OPTIONS" ] ; then
++		expected=0
++		db_set portmap/loopback false
++	fi
++
++	if [ "$expected" -eq 0 ] ; then
++		db_input medium portmap/loopback || true
++	fi
++	db_go || true
++fi
++
++#DEBHELPER#
++
++exit 0
+--- portmap-6.0.0.orig/debian/docs
++++ portmap-6.0.0/debian/docs
+@@ -0,0 +1 @@
++README
+--- portmap-6.0.0.orig/debian/compat
++++ portmap-6.0.0/debian/compat
+@@ -0,0 +1 @@
++7
+--- portmap-6.0.0.orig/debian/watch
++++ portmap-6.0.0/debian/watch
+@@ -0,0 +1,2 @@
++version=3
++http://neil.brown.name/portmap/ portmap-(.*).tgz
+--- portmap-6.0.0.orig/debian/templates
++++ portmap-6.0.0/debian/templates
+@@ -0,0 +1,24 @@
++# These templates have been reviewed by the debian-l10n-english
++# team
++#
++# If modifications/additions/rewording are needed, please ask
++# debian-l10n-english@lists.debian.org for advice.
++#
++# Even minor modifications require translation updates and such
++# changes should be coordinated with translators and reviewers.
++
++Template: portmap/loopback
++Type: boolean
++Default: false
++_Description: Should portmap be bound to the loopback address?
++ By default, portmap listens to all IP addresses. However, if this
++ machine does not provide network RPC services (such as NIS or NFS) to
++ remote clients, you can safely bind it to the loopback IP address
++ (127.0.0.1).
++ .
++ This will allow RPC local services (like FAM) to work properly, while
++ preventing remote systems from accessing the RPC services.
++ .
++ This configuration can be changed by editing the OPTIONS line in the
++ /etc/default/portmap file and adapting the use of the -i option to
++ your needs.
+--- portmap-6.0.0.orig/debian/rules
++++ portmap-6.0.0/debian/rules
+@@ -0,0 +1,64 @@
++#!/usr/bin/make -f
++# Sample debian/rules that uses debhelper.
++# GNU copyright 1997 to 1999 by Joey Hess.
++# Copyright (C) 2004-2007 by Anibal Monsalve Salazar <anibal@debian.org>
++
++# Uncomment this to turn on verbose mode.
++export DH_VERBOSE=1
++
++DEB_HOST_ARCH_OS ?= $(shell dpkg-architecture -qDEB_HOST_ARCH_OS)
++
++include /usr/share/quilt/quilt.make
++
++build: patch build-stamp
++build-stamp:
++	dh_testdir
++ifeq (kfreebsd,$(DEB_HOST_ARCH_OS))
++	CPPFLAGS=-DHAS_SA_LEN $(MAKE)
++else
++	$(MAKE)
++endif
++	touch build-stamp
++
++clean: unpatch
++	dh_testdir
++	dh_testroot
++	[ ! -f Makefile ] || $(MAKE) clean
++	rm -f .depend
++	dh_clean build-stamp
++
++install: build
++	dh_testdir
++	dh_testroot
++	dh_prep
++	dh_installdirs
++	$(MAKE) install BASEDIR=`pwd`/debian/portmap
++
++# Build architecture-independent files here.
++binary-indep: build install
++# We have nothing to do by default.
++
++# Build architecture-dependent files here.
++binary-arch: build install
++	dh_testdir
++	dh_testroot
++	dh_installdebconf
++	dh_installdocs
++	dh_installexamples
++	dh_installinit -- start 43 S 2 3 4 5 . start 32 0 6 . stop 81 1 .
++	dh_installcron
++	dh_installman
++	dh_installinfo
++	dh_installchangelogs CHANGES
++	dh_link
++	dh_strip
++	dh_compress
++	dh_fixperms
++	dh_installdeb
++	dh_shlibdeps
++	dh_gencontrol
++	dh_md5sums
++	dh_builddeb
++
++binary: binary-indep binary-arch
++.PHONY: build clean binary-indep binary-arch binary install
+--- portmap-6.0.0.orig/debian/copyright
++++ portmap-6.0.0/debian/copyright
+@@ -0,0 +1,49 @@
++This package was debianized by Anthony Towns <ajt@debian.org> on
++Sat,  5 Aug 2000 22:08:49 +1000.
++
++It was then worked on by Herbert Xu <herbert@debian.org> after
++Sat,  3 Apr 2004 16:54:01 +1000.
++
++It is now maintained by Anibal Monsalve Salazar <anibal@debian.org>
++
++Upstream location: http://neil.brown.name/portmap/
++
++Upstream Author: Wietse Venema
++Upstream maintainer: Neil Brown
++
++Copyright:
++
++Most of the files, fall under the following copyright, and are distributable
++under the terms of the BSD license (/usr/share/common-licenses/BSD):
++
++ * Copyright (c) 1983,1991 The Regents of the University of California.
++ * All rights reserved.
++
++Some of the RPC code, is copyrighted by Sun Microsystems, and is provided
++under the following terms:
++
++ * Copyright (c) 2009, Sun Microsystems, Inc.
++ * All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions are met:
++ * - Redistributions of source code must retain the above copyright notice,
++ *   this list of conditions and the following disclaimer.
++ * - Redistributions in binary form must reproduce the above copyright notice,
++ *   this list of conditions and the following disclaimer in the documentation
++ *   and/or other materials provided with the distribution.
++ * - Neither the name of Sun Microsystems, Inc. nor the names of its
++ *   contributors may be used to endorse or promote products derived
++ *   from this software without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
++ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
++ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
++ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
++ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
++ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
++ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
++ * POSSIBILITY OF SUCH DAMAGE.
+--- portmap-6.0.0.orig/debian/postrm
++++ portmap-6.0.0/debian/postrm
+@@ -0,0 +1,13 @@
++#!/bin/sh
++set -e
++
++#DEBHELPER#
++
++if [ "$1" = "purge" ]
++then
++    # Remove all non-conffiles that portmap might have created
++    [ -f /etc/portmap.conf ] && rm -f /etc/portmap.conf
++    [ -f /etc/default/portmap ] && rm -f /etc/default/portmap
++fi
++
++exit 0
+--- portmap-6.0.0.orig/debian/preinst
++++ portmap-6.0.0/debian/preinst
+@@ -0,0 +1,21 @@
++#! /bin/sh
++set -e
++
++action=$1
++version=$2
++CONFFILE=/etc/default/portmap
++
++# TBD: should be based on a given version
++if [ "$action" = "upgrade" ] && [ -e /etc/portmap.conf ] \
++   && dpkg --compare-versions "$version" gt 5-10 \
++   && dpkg --compare-versions "$version" lt 5-13 ; then
++	# get rid of /etc/portmap.conf if it did not change from the default?
++	# Move to the "new" conffile location, let the user handle
++	# the change (if needed)
++		[ -e $CONFFILE ] && mv $CONFFILE $CONFFILE.dpkg-old
++		mv /etc/portmap.conf $CONFFILE
++fi
++
++#DEBHELPER#
++
++exit 0
+--- portmap-6.0.0.orig/debian/dirs
++++ portmap-6.0.0/debian/dirs
+@@ -0,0 +1,3 @@
++sbin
++usr/share/man/man8
++usr/share/doc/portmap
+--- portmap-6.0.0.orig/debian/changelog
++++ portmap-6.0.0/debian/changelog
+@@ -0,0 +1,692 @@
++portmap (6.0.0-2) unstable; urgency=low
++
++  [ Anibal Monsalve Salazar ]
++  * Merge 6.0.0-1ubuntu1 from Ubuntu
++    - Revert change to only bind to localhost
++      Closes: 559293
++    - Don't convert portmap to upstart
++    - Drop useless extra pmap_dump in prerm script
++  * Don't convert portmap to upstart yet
++  * DH compatibility level is 7
++  * Fix dh-clean-k-is-deprecated
++  * Fix out-of-date-standards-version
++  * Fix obsolete-relation-form-in-source
++  * Fix init.d-script-missing-dependency-on-local_fs
++
++  [ Petter Reinholdtsen ]
++  * Allow the installation default to be preseeded
++    Closes: 571131
++  * Run from rcS.d and rc[2-5].d
++    Closes: 571197
++
++ -- Anibal Monsalve Salazar <anibal@debian.org>  Thu, 25 Feb 2010 09:05:08 +1100
++
++portmap (6.0.0-1ubuntu1) lucid; urgency=low
++
++  * Merge from Debian testing, remaining changes:
++    - Convert portmap to upstart.
++    - Drop useless extra pmap_dump in prerm script, we get the same
++      information dumped out moments later when the init script stops.
++  * Revert change to only bind to localhost, as this will break NFS out of
++    the box.
++
++ -- Steve Langasek <steve.langasek@ubuntu.com>  Thu, 03 Dec 2009 03:13:16 -0800
++
++portmap (6.0.0-1) unstable; urgency=low
++
++  * New upstream release
++    Fix Sun RPC license
++    Closes: 424957
++  * Update debian/copyright
++  * Fix out-of-date-standards-version
++  * Fix patch-system-but-no-source-readme
++  * Fix maintainer-script-without-set-e
++
++ -- Anibal Monsalve Salazar <anibal@debian.org>  Sun, 23 Aug 2009 20:35:36 +1000
++
++portmap (6.0-11) unstable; urgency=low
++
++  [ Thijs Kinkhorst ]
++  * On new installation, default the question whether to bind to the
++    loopback interface only, to true (closes: #286301).
++
++  [ Anibal Monsalve Salazar ]
++  * Fix out-of-date-standards-version
++
++ -- Anibal Monsalve Salazar <anibal@debian.org>  Sun, 09 Aug 2009 23:24:39 +0200
++
++portmap (6.0-10ubuntu2) karmic; urgency=low
++
++  * Drop useless extra pmap_dump in prerm script, we get the same information
++    dumped out moments later when the init script stops.
++
++ -- Steve Langasek <steve.langasek@ubuntu.com>  Fri, 02 Oct 2009 17:17:35 -0700
++
++portmap (6.0-10ubuntu1) karmic; urgency=low
++
++  * Convert portmap to upstart.  LP: #431248.
++
++ -- Steve Langasek <steve.langasek@ubuntu.com>  Tue, 29 Sep 2009 09:27:48 +0000
++
++portmap (6.0-10) unstable; urgency=low
++
++  * Merge from Ubuntu 
++    - debian/control: Add Depend on lsb >= 3.2-14, which has the
++      status_of_proc() function.
++    - debian/init.d: Add the 'status' action.
++  * Standards version is 3.8.1
++
++ -- Anibal Monsalve Salazar <anibal@debian.org>  Fri, 22 May 2009 12:09:21 +1000
++
++portmap (6.0-9ubuntu1) jaunty; urgency=low
++
++  * Merge from Debian unstable, remaining changes: (LP: #313263)
++    - debian/control: Add Depend on lsb >= 3.2-14, which has the
++      status_of_proc() function.
++    - debian/init.d: Add the 'status' action.
++
++ -- Jamie Strandboge <jamie@ubuntu.com>  Fri, 02 Jan 2009 11:05:15 -0600
++
++portmap (6.0-9) unstable; urgency=medium
++
++  * In both init.d and postinst, replace "pidofproc portmap" with
++    "pidofproc -p /var/run/portmap.pid /sbin/portmap";
++    closes: #448470, #506429, #506995
++
++ -- Anibal Monsalve Salazar <anibal@debian.org>  Wed, 26 Nov 2008 20:14:15 +1100
++
++portmap (6.0-8ubuntu1) jaunty; urgency=low
++
++  * Merge from Debian unstable, remaining changes: (LP: #301009)
++    - debian/control: Add Depend on lsb >= 3.2-14, which has the
++      status_of_proc() function.
++    - debian/init.d: Add the 'status' action.
++
++ -- Bhavani Shankar <right2bhavi@gmail.com>  Sat, 22 Nov 2008 20:10:12 +0530
++
++portmap (6.0-8) unstable; urgency=high
++
++  * Fix the fix for #448470; patch by Juan Cespedes; closes: #506207, #504305
++  * Replace pidof with pidofproc in postinst; closes: #504867, #490985
++
++ -- Anibal Monsalve Salazar <anibal@debian.org>  Thu, 20 Nov 2008 10:01:57 +1100
++
++portmap (6.0-7) unstable; urgency=high
++
++  [ Yves-Alexis Perez ]
++  * urgency=high for RC bug closing.
++  * debian/init.d: use pidofproc to check portmap pid, so it check if portmap
++    is running by looking in /var/run/portmap.pid instead of running
++    processes. Finally closes: #448470
++
++ -- Anibal Monsalve Salazar <anibal@debian.org>  Mon, 27 Oct 2008 10:21:24 +1100
++
++portmap (6.0-6ubuntu1) intrepid; urgency=low
++
++  * debian/control: Add Depend on lsb >= 3.2-14, which has the
++    status_of_proc() function.
++  * debian/init.d: Add the 'status' action (LP: #254499).
++
++ -- Andres Rodriguez <andreserl@ubuntu.com>  Sun, 03 Aug 2008 15:05:23 -0500
++
++portmap (6.0-6) unstable; urgency=low
++
++  * Acknowledge NMU; closes: #482740
++  * Conflicts with sysv-rc (< 2.86.ds1-59); refer to #483172;
++    closes: #483102
++  * Patch 04-460156-no-pie.diff: Don't use -pie; closes: #460156
++  * Set OPTIONS correctly; closes: #420170
++  * Don't execute init script twice at boot; closes: #437912
++  * New uploader
++  * Standards version is 3.8.0
++
++ -- Anibal Monsalve Salazar <anibal@debian.org>  Thu, 12 Jun 2008 18:19:45 +1000
++
++portmap (6.0-5.1) unstable; urgency=low
++
++  * Non-maintainer upload.
++  * Avoid useless 1 second sleep during boot, while still doing
++    it when needed during restarts (Closes: #412636).  Patch
++    from Petter Reinholdtsen.
++  * New patch 02-448470-pidfile.diff to write pid to
++    /var/run/portmap.pid (Closes: #448470).  Patch
++    from Petter Reinholdtsen.
++  * New patch 03-356784-lotsofinterfaces.diff to handle more
++    than 256 network interfaces (Closes: #356784).  Patch
++    from Steven Wilton.
++  * Updated upstream URL and name in copyright file (Closes: #454208).
++  * Change init.d script to use the omitpid feature in sendsigs to
++    allow it to stop later during shutdown (Closes: #468665).  Patch
++    from Petter Reinholdtsen.
++  * Fix bashism in postinst script (Closes: #472236).  Patch
++    from Raphael Geissert.
++  * Updated Dutch debconf translation from Vincent Zweije (Closes: #463798).
++
++ -- Petter Reinholdtsen <pere@debian.org>  Sat, 24 May 2008 17:28:21 +0200
++
++portmap (6.0-5) unstable; urgency=medium
++
++  [ Anibal Monsalve Salazar ]
++
++  * Build-Depends on quilt
++  * Bumped up Standards-Version to 3.7.3
++  * Moved homepage from description to control header line
++  * Fixed "init script needlessly executed twice". Closes: #340158
++    Patch by Joey Hess <joeyh@debian.org>
++  * Fixed typo in portmap.8. Closes: #437892
++    Patch by A. Costa <agcosta@gis.net>
++  * Fixed init.d dependency loop with $named. Closes: #459430
++    Patch by Petter Reinholdtsen <pere@hungry.com>
++
++  [ Christian Perrier ]
++
++  * Debconf templates and debian/control reviewed by the debian-l10n-
++    english team as part of the Smith review project.
++    Closes: #442329, #420514
++  * Debconf translation updates
++    - Basque. Closes: #443154
++    - Swedish. Closes: #443162
++    - Japanese. Closes: #443175
++    - Portuguese. Closes: #443220
++    - Bulgarian. Closes: #443228
++    - Spanish. Closes: #443229
++    - Vietnamese. Closes: #443273
++    - Italian. Closes: #443496
++    - Finnish. Closes: #443620
++    - Czech. Closes: #443663
++    - German. Closes: #443698
++    - Tamil. Closes: #444282
++    - French. Closes: #444745
++    - Galician. Closes: #444759
++    - Russian. Closes: #445009
++    - Brazilian Portuguese. Closes: #445274
++
++ -- Anibal Monsalve Salazar <anibal@debian.org>  Wed, 09 Jan 2008 19:34:52 +1100
++
++portmap (6.0-4) unstable; urgency=low
++
++  * Portmap now build-depends on libwrap0-dev. Closes: #436309.
++
++ -- Anibal Monsalve Salazar <anibal@debian.org>  Tue, 07 Aug 2007 08:33:22 +1000
++
++portmap (6.0-3) unstable; urgency=low
++
++  * Enabled "-pie" link option. Closes: #427997.
++
++ -- Anibal Monsalve Salazar <anibal@debian.org>  Sun, 15 Jul 2007 08:46:00 +1000
++
++portmap (6.0-2) unstable; urgency=low
++
++  * Fixed typo in debian/rules. Closes: #423499.
++  * Fixed the following lintian messages:
++    - W: portmap source: debian-rules-ignores-make-clean-error line 24
++    - W: portmap: manpage-has-errors-from-man usr/share/man/man8/portmap.8.gz
++         Empty input line #156
++    - W: portmap: init.d-script-missing-lsb-keyword /etc/init.d/portmap
++         short-description
++
++ -- Anibal Monsalve Salazar <anibal@debian.org>  Wed, 04 Jul 2007 08:53:23 +1000
++
++portmap (6.0-1) unstable; urgency=low
++
++  * Build portmap without the "-pie" option. Closes: #424029.
++  * Fixed typo in portmap.8 manpage. Closes: #418482.
++  * Fixed "Fails to find local interfaces on Debian/kFreeBSD".
++    Closes: #423499.
++  * Fixed the following lintian message:
++    - W: portmap source: debian-rules-sets-DH_COMPAT
++
++ -- Anibal Monsalve Salazar <anibal@debian.org>  Fri, 01 Jun 2007 18:09:42 +1000
++
++portmap (6.0-0) unstable; urgency=low
++
++  * New upstream release.
++  * debian/watch: added.
++  * debian/control: added homepage to description.
++  * debian/rules: portmap starts at level 17. Closes: #400952.
++  * debian/postinst: fixed typo.
++
++ -- Anibal Monsalve Salazar <anibal@debian.org>  Fri, 11 May 2007 18:22:42 +1000
++
++portmap (5-26) unstable; urgency=low
++
++  * Really fix the encoding issues in the Spanish debconf translation
++    (there was still one char in latin1)
++  [ New translations ]
++  * Basque po-debconf translation, provided by Piarres Beobide 
++  (Closes: #404178)
++  * Portuguese translation, provided by Miguel Figueiredo (Closes: #404552)
++  * Galician translation, provided by Jacobo Tarrio (Closes: #405401)
++
++ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Sun, 11 Feb 2007 17:31:24 +0100
++
++portmap (5-25) unstable; urgency=low
++
++  * Fixed encoding in Spanish manpage, thanks to Christian Perrier for
++    spotting this and providing a patch (Closes: #404166)
++  [ Translation updates ]
++  * Spanish po-debconf review by Javier Fernandez-Sanguino.
++  * Brazilian Portuguese update by André Luís Lopes (Closes: #403826)
++  * Swedish updated by Daniel Nylander.
++  * Vietnamese updated by Clytie Siddall.
++
++ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Fri, 22 Dec 2006 09:16:14 +0100
++
++portmap (5-24) unstable; urgency=medium
++
++  * Fixed "subprocess post-installation script returned error exit
++    status 1". Closes: #402220.
++
++ -- Anibal Monsalve Salazar <anibal@debian.org>  Sun, 10 Dec 2006 11:50:26 +1100
++
++portmap (5-23) unstable; urgency=low
++
++  * Adapt patch from Ubuntu to prevent rpcinfo from being executed if
++    portmap is not running for some reason. This prevents this script
++    from stalling in some installations (was reported at Ubuntu
++    Malone bug #61668: Building LTSP chroot stops during portmap installation)
++
++ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Thu,  7 Dec 2006 11:21:20 +0100
++
++portmap (5-22) unstable; urgency=low
++
++  * Add German debconf translation provided by Mathias Klein (Closes: #397043)
++
++ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Thu,  7 Dec 2006 10:19:30 +0100
++
++portmap (5-21) unstable; urgency=low
++
++  * Add a note in the manpage related to the use of IP addresses in
++    /etc/hosts.{allow,deny} when protecting portmapper. (Closes: #361019)
++  * Updated translations:
++    - Spanish translation update provided by Javier Fernandez-Sanguino 
++      (Closes: #382962)
++    - Japanese translation update provided by Kenshi Muto (Closes: #379933)
++  [ debian/postinst ]
++  * Modify postinst so it does not run 'rpcinfo -p' for new installs of the
++    package as suggested by Joey Hess, this solves a problem with new d-i
++    installations since rpcinfo stalls when the package is being installed, a
++    static IP address has been assigned, 'lo' is down and portmap tries
++    to list the RPC services available. (Closes: #383941)
++  [ debian/rules ]
++  * Re-add the 'start' sentences in runlevels 2-5 (revert the change
++    introduced in -17 and reopens #340158, #334758). This is needed because if
++    someone goes to runlevel 1 (stops portmapper and NFS) and then back to
++    runlevel 2 portmapper would not start and NFS would fail. 
++  [ debian/init.d ]
++  * Reorder the "Starting portmap" message so it is presented before we say
++    "Already running"
++
++ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Wed, 11 Oct 2006 12:12:10 +0200
++
++portmap (5-20) unstable; urgency=low
++
++  * Resynchronise with Ubuntu.
++  * Set Standards-Version to 3.7.2.
++  * Set DH_COMPAT to 5.
++  * Dutch Debconf templates translation, closes: #367961.
++    Patch by Vincent Zweije <zweije@xs4all.nl>.
++  * Russian debconf templates translation, closes: #374007.
++    Patch by Alexander Bouksha <abook@purpe.ru>.
++  * Fixed "typo in postinst script", closes: #357248.
++  * Fixed "unused function in postinst", closes: #376120.
++
++ -- Anibal Monsalve Salazar <anibal@debian.org>  Sun, 09 Jul 2006 20:23:16 +1000
++
++portmap (5-19ubuntu2) edgy; urgency=low
++
++  * Source debconf confmodule at top of postinst.
++
++ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 30 Jun 2006 18:39:11 +0100
++
++portmap (5-19ubuntu1) edgy; urgency=low
++
++  * Sync with Debian.
++
++ -- Tollef Fog Heen <tfheen@ubuntu.com>  Fri, 30 Jun 2006 13:18:57 +0200
++
++portmap (5-19) unstable; urgency=low
++
++  * Remove duplicate LSB info and fix the stop argument in runlevel 1
++    (Closes: #361053)
++  * Translation updates:
++    - Dutch, provided by Vincent Zweije (Closes: #356278)
++    - Danish, provided by Claus Hindsgaul (Closes: #357425)
++    - Italian, provided by Luca Monducci (Closes: #357583)
++    - Czech, provided by Miroslav Kure (Closes: #360314)
++    - French, provided by Jean-Christophe Champarnaud (Closes: #360629)
++
++ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Tue, 25 Apr 2006 00:55:41 +0200
++
++portmap (5-18) unstable; urgency=low
++
++  * Use the LSB init.d script provided by Ubuntu
++  * Rephrase the template to make it clear that only those *not* providing RPC
++    services to the network should bind only to loopback (#316607)
++  * Included patch provided by Gerrit Pape which adds an '-f' option to make
++    it work in foreground mode (Closes: #351625)
++
++ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Sat, 25 Feb 2006 23:13:07 +0100
++
++portmap (5-17) unstable; urgency=low
++
++  * Fixed "Portmap dies w/ SIGPIPE during heavy I/O", closes: #342709.
++    Patch by Michael S. Peek <peek@tiem.utk.edu>.
++  * Fixed "init script needlessly executed twice (and it informs the
++    user about it too)", closes: #340158, #334758. Patch by Joey Hess
++    <joeyh@debian.org>.
++  * Added Swedish debconf translation, closes: #333125. Patch by
++    Daniel Nylander <yeager@lidkoping.net>.
++
++ -- Anibal Monsalve Salazar <anibal@debian.org>  Tue, 17 Jan 2006 08:59:01 +1100
++
++portmap (5-16ubuntu2) dapper; urgency=low
++
++  * Actually exit 0 if the portmap is already running.  Malone #6717
++
++ -- Tollef Fog Heen <tfheen@ubuntu.com>  Fri, 13 Jan 2006 09:24:49 +0100
++
++portmap (5-16ubuntu1) dapper; urgency=low
++
++  * Resynchronise with Debian.
++
++ -- Tollef Fog Heen <tfheen@ubuntu.com>  Thu,  1 Dec 2005 14:00:51 +0100
++
++portmap (5-16) unstable; urgency=low
++
++  * Fixed "Speed up the boot by not sleeping in init.d/portmap
++    twice", closes: #326100. Patch by Petter Reinholdtsen
++    <pere@hungry.com>.
++  * Fixed "Please add dependency info to init.d script", closes:
++    #326125. Patch by Petter Reinholdtsen <pere@hungry.com>.
++
++ -- Anibal Monsalve Salazar <anibal@debian.org>  Sun, 09 Oct 2005 01:16:11 +1000
++
++portmap (5-15) unstable; urgency=low
++
++  * Create the configuration file (if it does not exit) on preinst
++    instead of in config (Closes: #309987)
++  * Remove unused check_md5 code from config and preinst
++  * It's portmap(8) and not rpc.portmap(8) in the pmap_dump and pmap_set
++    manpages
++  * Minor changes to the portmap(8) based on Fedora's changes
++  * Addd myself as Co-maintainer
++  * Po-debconf translations:
++    - Vietnamese translation provided by Clytie Siddall  (Closes: #316982)
++    - French translation provided by Jean-Christophe (Closes: #317089)
++    - Italian update provided by Luca Monducci (Closes: #317994)
++
++ -- Javier Fernandez-Sanguino Pen~a <jfs@computer.org>  Mon,  4 Jul 2005 21:38:43 +0200
++
++portmap (5-14) unstable; urgency=low
++
++  * Updated Czech debconf translation, closes: #313254.
++    Patch by Miroslav Kure <kurem@upcase.inf.upol.cz>.
++  * Updated Danish debconf translation, closes: #315394.
++    Patch by Claus Hindsgaul <claus_h@image.dk>.
++
++ -- Anibal Monsalve Salazar <anibal@debian.org>  Thu, 23 Jun 2005 22:04:00 +1000
++
++portmap (5-13) unstable; urgency=high
++
++  * Patch by Javier Fernández-Sanguino Peña <jfs@computer.org>,
++    closes: #309310. All the 5-13 change entries are addressed
++    by the patch for #309310.
++  * Reverted the configuration file change introduced in -11, the
++    configuration file is now /etc/default/portmap, it is handled 
++    properly through maintainer scripts. I.e. the maintainer scripts 
++    will not touch it if the user modifies it.
++    This prevents upgrades from sarge to etch from breaking, and fixes
++    the broken configuration file handling of previous releases thus the 
++    high priority.
++    Note: Not implemented MD5 sum checks since there were at least
++    3 different valid MD5sums, made more sense to parse the file
++    and read in the $OPTIONS value.
++  * Handle configuration file properly (both old and new):
++    * If upgrading from any version from 5-10 to 5-12 (included) then
++      move the configuration to the proper location.
++    * If upgrading from any version prior to 5-6 or installing first time
++      then generate the configuration file.
++    * Remove both configuration files (old and new) if present when
++      purging in postrm.
++  [ debian/postinst ]
++  * Warn the user that probably he has to restart other RPC services if 
++    they are running and he has changed the OPTIONS
++    of the portmapper.
++  * Start and stop debconf invocation in postinst outside of if/then
++    condition or otherwise the 'init.d start' messages of portmap will not 
++    be shown to standard output (the user might think it was stopped but 
++    not started when --reconfiguring it)
++  * Added a debian/TODO file
++
++ -- Anibal Monsalve Salazar <anibal@debian.org>  Thu, 09 Jun 2005 09:05:52 +1000
++
++portmap (5-12) unstable; urgency=high
++
++  * Changed default of debconf question to correspond to the value
++    in the config file.
++
++ -- Anibal Monsalve Salazar <anibal@debian.org>  Mon, 16 May 2005 21:18:41 +1000
++
++portmap (5-11) unstable; urgency=high
++
++  * Changed all references of '/etc/default/portmap' to '/etc/portmap.conf'
++    in postinst, init.d, templates and po/*. Created postrm. Removed default.
++    This fixes RC bug "Portmap modifies conffile from postinst", closes: #305505.
++  * Fixed "SIGCHLD handler doesn't preserve errno", closes: #306929.
++    Patch by Alexander Achenbach <xela@slit.de>.
++
++ -- Anibal Monsalve Salazar <anibal@debian.org>  Tue, 10 May 2005 21:54:21 +1000
++
++portmap (5-10ubuntu3) breezy; urgency=low
++
++  * Set portmap/loopback default to false, as it should have been at the start
++    of Breezy
++
++ -- Matt Zimmerman <mdz@ubuntu.com>  Tue, 16 Aug 2005 14:36:32 -0700
++
++portmap (5-10ubuntu2) breezy; urgency=low
++
++  * Fix handling of /etc/default/portmap.
++
++ -- Fabio M. Di Nitto <fabbione@ubuntu.com>  Fri, 15 Apr 2005 17:26:06 +0200
++
++portmap (5-10ubuntu1) breezy; urgency=low
++
++  * Resynchronise with Debian.
++
++ -- Scott James Remnant <scott@ubuntu.com>  Thu, 14 Apr 2005 22:46:59 +0100
++
++portmap (5-10) unstable; urgency=high
++
++  * Re-added the debconf configuration, although the default for this is now
++    to have portamp listening in all interfaces. The debconf setting
++    allows system administrators, base-config and cdd developers to preseed
++    this value to 'true' (link only to the loopback interface) if needed.
++    Patch by Javier Fernández-Sanguino Peña <jfs@computer.org>.
++    Closes: #301130, #286301.
++  * Thanks to the following translators for their contribution:
++    cs      Miroslav Kure <kurem@debian.cz>
++    da      Claus Hindsgaul <claus_h@image.dk>
++    es      Javier Fernández-Sanguino Peña <jfs@debian.org>
++    fr      Stephane Fombonne <s.fombonne@laposte.net>
++    it      Luca Monducci <luca.mo@tiscali.it>
++    ja      Kenshi Muto <kmuto@debian.org>
++    pt_BR   André Luís Lopes <andrelop@debian.org>
++    uk      Eugeniy Meshcheryakov <eugen@univ.kiev.ua>
++  * Fixed "incomplete chroot patch from #274178", closes: #301535.
++
++ -- Anibal Monsalve Salazar <anibal@debian.org>  Mon, 11 Apr 2005 14:03:26 +1000
++
++portmap (5-9) unstable; urgency=high
++
++  * The following patch was applied to portmap.c:
++    -       while ((c = getopt(argc, argv, "dtvi:")) != EOF) {
++    +       while ((c = getopt(argc, argv, "dt:vi:")) != EOF) {
++    See bug #274178.
++
++ -- Anibal Monsalve Salazar <anibal@debian.org>  Sun, 20 Mar 2005 19:00:54 +1100
++
++portmap (5-8) unstable; urgency=low
++
++  * Fixed "discards port mappings on stop; start" (Closes: #293743).
++  * Compilation warnings cleanup (Closes: #266481).
++    Patch by Mark Ferlatte <ferlatte@cryptio.net>
++  * Option to chroot portmap (Closes: #274178).
++    Patch by Mark Ferlatte <ferlatte@cryptio.net>
++  * New maintainer's email address.
++
++ -- Anibal Monsalve Salazar <anibal@debian.org>  Mon, 07 Feb 2005 21:47:42 +1100
++
++portmap (5-7ubuntu3) hoary; urgency=low
++
++  * Really ensure portmap only listens to localhost on upgrades from warty
++
++ -- Thom May <thom@planetarytramp.net>  Mon, 13 Dec 2004 15:33:10 +0100
++
++portmap (5-7ubuntu2) hoary; urgency=low
++
++  * Listen on all interfaces by default. (Ubuntu #4140)
++
++ -- Thom May <thom@planetarytramp.net>  Mon, 13 Dec 2004 14:29:31 +0100
++
++portmap (5-7ubuntu1) hoary; urgency=low
++
++  * Resynchronise with Debian.
++
++ -- Matthias Klose <m@klose.in-berlin.de>  Mon, 15 Nov 2004 15:05:56 +0000
++
++portmap (5-7) unstable; urgency=high
++
++  * Fixed "Silently changes to bind to localhost only" (Closes: #280026, #280128, #280553).
++    Commented out the OPTION line in /etc/default/portmap.
++  * Removed debconf note (Closes: #280371, #280554, #280414).
++    Patches supplied (but not applied) by:
++    Andre Luis Lopes <andrelop@debian.org>
++    Kenshi Muto <kmuto@debian.org>
++    Jose Carlos Garcia Sogo <jsogo@debian.org>
++  * Fixed "Manpage is wrong" (Closes: #280421).
++    Changed portmap.8.
++
++ -- Anibal Monsalve Salazar <A.Monsalve.Salazar@IEEE.org>  Wed, 10 Nov 2004 20:34:44 +1100
++
++portmap (5-6) unstable; urgency=high
++
++  * Fixed "Silently changes to bind to localhost only" (Closes: #280026).
++    Display a medium debconf note to let users know about portmap's
++    binding to the loopback address by default.
++
++ -- Anibal Monsalve Salazar <A.Monsalve.Salazar@IEEE.org>  Mon, 08 Nov 2004 07:23:19 +1100
++
++portmap (5-5) unstable; urgency=high
++
++  * Implemented -i option to allow binding to a particular address (Closes: #246935).
++    Patch by Matt Zimmerman <mdz@canonical.com>.
++    Soeren Sonnenburg <bugreports@nn7.de> supplied the original version of the
++    patch.
++  * Bind to the loopback address by default.
++    Patch by Matt Zimmerman <mdz@canonical.com>.
++  * debian/init.d: added --oknodo to make sure portmap script returns 0
++    Patch by Matt Zimmerman <mdz@canonical.com>.
++
++ -- Anibal Monsalve Salazar <A.Monsalve.Salazar@IEEE.org>  Fri, 05 Nov 2004 06:57:29 +1100
++
++portmap (5-4ubuntu5) warty; urgency=low
++
++  * Fix s/OPTIONS/ARGS/ in /etc/default/portmap
++
++ -- Fabio M. Di Nitto <fabbione@fabbione.net>  Thu, 14 Oct 2004 08:28:18 +0200
++
++portmap (5-4ubuntu4) warty; urgency=low
++
++  * Implement -i option to allow binding to a particular address
++  * Bind to the loopback address by default
++
++ -- Matt Zimmerman <mdz@canonical.com>  Tue, 12 Oct 2004 21:57:58 -0700
++
++portmap (5-4ubuntu3) warty; urgency=low
++
++  * debian/init.d: added --oknodo to make sure portmap script returns 0
++    when portmap is already running (#995)
++
++ -- Nathaniel McCallum <npmccallum@canonical.com>  Fri,  3 Sep 2004 18:01:24 -0400
++
++portmap (5-4ubuntu2) warty; urgency=low
++
++  * Added versioned depend on lsb-base
++
++ -- Nathaniel McCallum <npmccallum@canonical.com>  Fri,  3 Sep 2004 15:13:38 -0400
++
++portmap (5-4ubuntu1) warty; urgency=low
++
++  * debian/init.d: pretty initscript
++
++ -- Nathaniel McCallum <npmccallum@canonical.com>  Fri,  3 Sep 2004 11:43:05 -0400
++
++portmap (5-4) unstable; urgency=low
++
++  * New maintainer.
++
++ -- Anibal Monsalve Salazar <A.Monsalve.Salazar@IEEE.org>  Thu, 20 May 2004 09:52:29 +1000
++
++portmap (5-3) unstable; urgency=low
++
++  * New maintainer (closes: #210768, #241674).
++  * Fixed hosts.allow example in portmap(8) (closes: #29142, #229004).
++  * Moved rcS script to 43 from 41 (closes: #196150).
++
++ -- Herbert Xu <herbert@debian.org>  Sat,  3 Apr 2004 20:32:41 +1000
++
++portmap (5-2.3) unstable; urgency=low
++
++  * Non maintainer upload.
++  * Call setgroups instead of initgroup (closes: #226681).
++  * Removed emacs trailer in changelog.
++
++ -- Herbert Xu <herbert@debian.org>  Sat, 27 Mar 2004 09:47:23 +1100
++
++portmap (5-2.2) unstable; urgency=low
++
++  * NMU
++  * Update to debhelper mode 4, cleanups in debian/ (closes: #162586).
++  * Standards-version is 3.6.1.
++  * Start portmap in runlevels 2 to 5, at priority 18. Also stop it for
++    runlevel 1 before it is killed by `single'
++    (closes: #159925, #216107, #60367, #93599, #101726, #130360).
++  * Stop it at S32 in runlevels 0 and 6, after umountnfs.sh (closes: #138023).
++  * Force the symlink update for older versions so that all packages don't
++    have to start portmap before their own daemon.
++  * Don't ship README's content in portmapper.txt.
++
++ -- Josselin Mouette <joss@debian.org>  Fri, 20 Feb 2004 17:11:03 +0100
++
++portmap (5-2.1) unstable; urgency=low
++
++  * NMU
++  * [pmap_check.c] Drop group privileges as well. (Closes: #58864)
++  * [portmap.c] Corrected error message for failure to bind with tcp. 
++    (Closes: #61876)
++  * [portmap.c, Makefile] Use glibc's strerror() and daemon(). (Closes: #106380)
++  * [portmap.c] Don't declare extern int errno but #include <errno.h> so as
++    not to reference the deprecated errno@GLIBC_2.0 symbol. (Closes: #168530)
++  * New upload, built using newer binutils which should fix the prelinking
++    issue on powerpc. (Closes: #176352)
++  * [debian/copyright] Updated the upstream location. (Closes: #181807)
++  * [debian/rules] Removed obsolete dh_suidregister.
++
++ -- J.H.M. Dassen (Ray) <jdassen@debian.org>  Sat, 13 Sep 2003 17:08:22 +0200
++
++portmap (5-2) unstable; urgency=low
++
++  * Fix from_local.c to declare some functions it uses correctly. Thanks
++    to Bdale Garbee. (Closes: Bug#90090)
++  * Add -Wall to CFLAGS, and fix most of the warnings it comes up with.
++
++ -- Anthony Towns <aj@azure.humbug.org.au>  Sun, 18 Mar 2001 19:04:25 +1000
++
++portmap (5-1) unstable; urgency=low
++
++  * Initial Release.
++
++ -- Anthony Towns <ajt@debian.org>  Sat,  5 Aug 2000 22:08:49 +1000
++
+--- portmap-6.0.0.orig/debian/patches/02-448470-pidfile.diff
++++ portmap-6.0.0/debian/patches/02-448470-pidfile.diff
+@@ -0,0 +1,150 @@
++This patch implement pidfile support in portmap.  Upstream was notified about
++this patch 2008-05-24.
++
++--- a/portmap.c	2009-08-23 20:24:47.000000000 +1000
+++++ b/portmap.c	2009-08-23 20:56:03.000000000 +1000
++@@ -97,6 +97,8 @@ static char sccsid[] = "@(#)portmap.c 1.
++ 
++ #include <stdlib.h>
++ #include <pwd.h>
+++#include <stdarg.h>
+++#include <sys/stat.h>
++ 
++ #ifndef LOG_PERROR
++ #define LOG_PERROR 0
++@@ -168,6 +170,126 @@ struct flagged_pml {
++ 	int priv;
++ };
++ 
+++#ifndef PIDFILE
+++#  define PIDFILE "/var/run/portmap.pid"
+++#endif
+++
+++/*
+++ * Copied from the atd source
+++ */
+++static int
+++lock_fd(int fd)
+++{
+++    struct flock lock;
+++
+++    lock.l_type = F_WRLCK;
+++    lock.l_whence = SEEK_SET;
+++    lock.l_start = 0;
+++    lock.l_len = 0;
+++
+++    return fcntl(fd, F_SETLK, &lock);
+++}
+++
+++void
+++perr(const char *fmt,...)
+++{
+++    char buf[1024];
+++    va_list args;
+++
+++    va_start(args, fmt);
+++    vsnprintf(buf, sizeof(buf), fmt, args);
+++    va_end(args);
+++
+++    if (debugging) {
+++       perror(buf);
+++    } else
+++       syslog(LOG_ERR, "%s: %m", buf);
+++
+++    exit(EXIT_FAILURE);
+++}
+++
+++void
+++pabort(const char *fmt,...)
+++{
+++    char buf[1024];
+++    va_list args;
+++
+++    va_start(args, fmt);
+++    vsnprintf(buf, sizeof(buf), fmt, args);
+++    va_end(args);
+++
+++    if (debugging) {
+++       fprintf(stderr, "%s\n", buf);
+++    } else
+++       syslog(LOG_ERR, "%s", buf);
+++
+++    exit(EXIT_FAILURE);
+++}
+++
+++FILE *
+++save_pidfile(void) {
+++    pid_t pid;
+++    int fd;
+++    FILE *fp;
+++    fd = open(PIDFILE, O_RDWR | O_CREAT | O_EXCL,
+++             S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
+++
+++    if (fd == -1) {
+++
+++       if (errno != EEXIST)
+++           perr("Cannot open " PIDFILE);
+++
+++       if ((fd = open(PIDFILE, O_RDWR)) < 0)
+++           perr("Cannot open " PIDFILE);
+++
+++       fp = fdopen(fd, "rw");
+++       if (fp == NULL) {
+++           perr("Cannot open " PIDFILE " for reading");
+++       }
+++       pid = -1;
+++       if ((fscanf(fp, "%d", &pid) != 1) || (pid == getpid())
+++           || (lock_fd(fileno(fp)) == 0)) {
+++           int rc;
+++
+++           syslog(LOG_NOTICE, "Removing stale lockfile for pid %d", pid);
+++
+++           rc = unlink(PIDFILE);
+++
+++           if (rc == -1) {
+++               perr("Cannot unlink " PIDFILE);
+++           }
+++       } else {
+++           pabort("Another atd already running with pid %d", pid);
+++       }
+++       fclose(fp);
+++
+++       unlink(PIDFILE);
+++       fd = open(PIDFILE, O_RDWR | O_CREAT | O_EXCL,
+++                 S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
+++
+++
+++       if (fd == -1)
+++           perr("Cannot open " PIDFILE " the second time round");
+++
+++    }
+++
+++    if (lock_fd(fd) == -1)
+++       perr("Cannot lock " PIDFILE);
+++
+++    fp = fdopen(fd, "w");
+++    if (fp == NULL)
+++       perr("Special weirdness: fdopen failed");
+++
+++    fprintf(fp, "%d\n", getpid());
+++
+++    /* We do NOT close fd, since we want to keep the lock. However, we don't
+++     * want to keep the file descriptor in case of an exec().
+++     */
+++    fflush(fp);
+++    fcntl(fd, F_SETFD, (long) 1);
+++    return fp;
+++}
+++
++ int
++ main(int argc, char **argv)
++ {
++@@ -251,6 +373,8 @@ main(int argc, char **argv)
++ 		exit(1);
++ 	}
++ 
+++       save_pidfile();
+++
++ #ifdef LOG_DAEMON
++ 	openlog("portmap", LOG_PID|LOG_NDELAY | ( foreground ? LOG_PERROR : 0),
++ 	    FACILITY);
+--- portmap-6.0.0.orig/debian/patches/03-356784-lotsofinterfaces.diff
++++ portmap-6.0.0/debian/patches/03-356784-lotsofinterfaces.diff
+@@ -0,0 +1,54 @@
++--- a/from_local.c	2009-08-23 20:16:14.000000000 +1000
+++++ b/from_local.c	2009-08-23 20:56:03.000000000 +1000
++@@ -97,7 +97,7 @@ find_local(void)
++     struct ifreq *ifr;
++     struct ifreq *the_end;
++     int     sock;
++-    char    buf[BUFSIZ];
+++    char    *buf=NULL;
++ 
++     /*
++      * Get list of network interfaces. We use a huge buffer to allow for the
++@@ -108,13 +108,27 @@ find_local(void)
++ 	perror("socket");
++ 	return (0);
++     }
++-    ifc.ifc_len = sizeof(buf);
++-    ifc.ifc_buf = buf;
++-    if (ioctl(sock, SIOCGIFCONF, (char *) &ifc) < 0) {
++-	perror("SIOCGIFCONF");
++-	(void) close(sock);
++-	return (0);
++-    }
+++
+++    num_local=0;
+++    do {
+++	num_local++;
+++	buf=realloc(buf,num_local * BUFSIZ);
+++	if(buf == NULL) {
+++	    perror("portmap: out of memory");
+++	    (void) close(sock);
+++	    num_local=0;
+++	    return (0);
+++	}
+++	ifc.ifc_len = (num_local * BUFSIZ);
+++	ifc.ifc_buf = buf;
+++	if (ioctl(sock, SIOCGIFCONF, (char *) &ifc) < 0) {
+++	    perror("SIOCGIFCONF");
+++	    (void) close(sock);
+++	    free(buf);
+++	    num_local=0;
+++	    return (0);
+++	}
+++    } while (ifc.ifc_len > ((num_local * BUFSIZ)-sizeof(struct ifreq)));
++     /* Get IP address of each active IP network interface. */
++ 
++     the_end = (struct ifreq *) (ifc.ifc_buf + ifc.ifc_len);
++@@ -143,6 +157,7 @@ find_local(void)
++ #endif
++     }
++     (void) close(sock);
+++    free(buf);
++     return (num_local);
++ }
++ 
+--- portmap-6.0.0.orig/debian/patches/series
++++ portmap-6.0.0/debian/patches/series
+@@ -0,0 +1,5 @@
++00-420514.portmap.8.diff
++01-437892-portmap.8.diff
++02-448470-pidfile.diff
++03-356784-lotsofinterfaces.diff
++04-460156-no-pie.diff
+--- portmap-6.0.0.orig/debian/patches/01-437892-portmap.8.diff
++++ portmap-6.0.0/debian/patches/01-437892-portmap.8.diff
+@@ -0,0 +1,11 @@
++--- a/portmap.8	2007-07-14 18:56:29.000000000 -0400
+++++ b/portmap.8	2007-08-13 23:07:10.000000000 -0400
++@@ -125,7 +125,7 @@
++ into
++ .Ar dir .
++ .Ar dir
++-should be empty, not writeable by the daemon user, and preferably on a
+++should be empty, not writable by the daemon user, and preferably on a
++ filesystem mounted read-only, noexec, nodev, and nosuid.
++ .It Fl u Ar uid
++ .It Fl g Ar gid
+--- portmap-6.0.0.orig/debian/patches/00-420514.portmap.8.diff
++++ portmap-6.0.0/debian/patches/00-420514.portmap.8.diff
+@@ -0,0 +1,57 @@
++--- portmap-6.0.orig/portmap.8
+++++ portmap-6.0/portmap.8
++@@ -153,7 +153,7 @@
++ to the loop-back address 127.0.0.1.  This is a shorthand for
++ specifying 127.0.0.1 with -i.
++ .El
++-
+++.Pp
++ This
++ .Nm portmap
++ version is protected by the
++@@ -164,16 +164,16 @@
++ .if 'USE_DNS'yes' .ig
++ To allow connects from clients of the network 192.168. you could use
++ the following line in /etc/hosts.allow:
++-
+++.Pp
++ portmap: 192.168.
++-
+++.Pp
++ In order to avoid deadlocks, the
++ .Nm portmap
++ program does not attempt to look up the remote host name or user name, nor will
++ it try to match NIS netgroups. As a consequence only network number patterns
++ (or IP addresses) will work for portmap access control, do not use hostnames.
++ Notice that localhost will always be allowed access to the portmapper.
++-
+++.Pp
++ You have to use the daemon name
++ .Nm portmap
++ for the daemon name (even if the binary has a different name). For the
++@@ -195,14 +195,13 @@
++ to deadlock.
++ Note that localhost will always be allowed access to the portmapper.
++ ..
++-
+++.Pp
++ For further information please have a look at the
++ .Xr tcpd 8 ,
++ .Xr hosts_allow 5
++ and
++ .Xr hosts_access 5
++ manual pages.
++-
++ .Sh SEE ALSO
++ .Xr inetd.conf 5 ,
++ .Xr rpcinfo 8 ,
++@@ -216,7 +215,8 @@
++ The
++ .Nm
++ command appeared in
++-.Bx 4.3
+++.Bx
+++4.3
++ .Sh AUTHORS
++ This
++ manual page was changed by
+--- portmap-6.0.0.orig/debian/patches/04-460156-no-pie.diff
++++ portmap-6.0.0/debian/patches/04-460156-no-pie.diff
+@@ -0,0 +1,11 @@
++--- portmap-6.0.orig/Makefile
+++++ portmap-6.0/Makefile
++@@ -127,7 +127,7 @@
++ CPPFLAGS += $(HOSTS_ACCESS)
++ portmap: CFLAGS   += -fpie
++ portmap: LDLIBS   += $(WRAP_LIB)
++-portmap: LDFLAGS  += -pie
+++#portmap: LDFLAGS  += -pie
++ portmap: portmap.o pmap_check.o from_local.o
++
++ from_local: CPPFLAGS += -DTEST
+--- portmap-6.0.0.orig/debian/po/uk.po
++++ portmap-6.0.0/debian/po/uk.po
+@@ -0,0 +1,70 @@
++# translation of portmap-uk to Ukrainian
++#
++#    Translators, if you are not familiar with the PO format, gettext
++#    documentation is worth reading, especially sections dedicated to
++#    this format, e.g. by running:
++#         info -n '(gettext)PO Files'
++#         info -n '(gettext)Header Entry'
++#    Some information specific to po-debconf are available at
++#            /usr/share/doc/po-debconf/README-trans
++#         or http://www.debian.org/intl/l10n/po-debconf/README-trans#
++#    Developers do not need to manually edit POT or PO files.
++# Eugeniy Meshcheryakov <eugen@univ.kiev.ua>, 2005.
++#
++msgid ""
++msgstr ""
++"Project-Id-Version: portmap-uk_uk\n"
++"Report-Msgid-Bugs-To: anibal@debian.org\n"
++"POT-Creation-Date: 2007-09-19 06:50+0200\n"
++"PO-Revision-Date: 2005-03-30 19:25+0300\n"
++"Last-Translator: Eugeniy Meshcheryakov <eugen@univ.kiev.ua>\n"
++"Language-Team: Ukrainian\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"X-Generator: KBabel 1.9.1\n"
++"Plural-Forms:  nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
++"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid "Should portmap be bound to the loopback address?"
++msgstr "Чи повинен portmap бути прив'язаним до адреси локальної петлі?"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++#, fuzzy
++msgid ""
++"By default, portmap listens to all IP addresses. However, if this machine "
++"does not provide network RPC services (such as NIS or NFS) to remote "
++"clients, you can safely bind it to the loopback IP address (127.0.0.1)."
++msgstr ""
++"За замовчанням portmap прослуховує всі IP адреси. Однак, якщо ви не "
++"використовуєте RPC служби, які з'єднуються до віддалених серверів (таких, як "
++"NFS та NIS), ви безпечно можете прив'язати його до адреси локальної петлі "
++"127.0.0.1."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++#, fuzzy
++msgid ""
++"This will allow RPC local services (like FAM) to work properly, while "
++"preventing remote systems from accessing the RPC services."
++msgstr ""
++"Це дозволить локальним службам RPC (таким, як FAM) коректно працювати, "
++"перешкоджаючи доступу до ваших служб RPC з боку віддалених систем."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++#, fuzzy
++msgid ""
++"This configuration can be changed by editing the OPTIONS line in the /etc/"
++"default/portmap file and adapting the use of the -i option to your needs."
++msgstr ""
++"Ви також можете змінити ці налаштування редагуючи рядок OPTIONS файла /etc/"
++"portmap.conf. Якщо ви не вкажете опцію -i, то portmap буде прослуховувати "
++"всі інтерфейси."
+--- portmap-6.0.0.orig/debian/po/fr.po
++++ portmap-6.0.0/debian/po/fr.po
+@@ -0,0 +1,59 @@
++# Translation of portmap debconf templates to French
++# Copyright (C) 2001-2007 Jean-Christophe Champarnaud <jc.champarnaud@free.fr>
++# This file is distributed under the same license as the portmap package.
++#
++# Original translator: Stephane Fombonne <s.fombonne@laposte.net>
++# Contributions by: Christian Perrier <bubulle@debian.org>, 2007.
++# 
++msgid ""
++msgstr ""
++"Project-Id-Version: portmap\n"
++"Report-Msgid-Bugs-To: anibal@debian.org\n"
++"POT-Creation-Date: 2007-09-19 06:50+0200\n"
++"PO-Revision-Date: 2007-09-19 06:50+0200\n"
++"Last-Translator: Jean-Christophe Champarnaud <jc.champarnaud@free.fr>\n"
++"Language-Team: French <debian-l10n-french@lists.debian.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid "Should portmap be bound to the loopback address?"
++msgstr "Portmap doit-il se limiter à l'adresse de bouclage 127.0.0.1 ?"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"By default, portmap listens to all IP addresses. However, if this machine "
++"does not provide network RPC services (such as NIS or NFS) to remote "
++"clients, you can safely bind it to the loopback IP address (127.0.0.1)."
++msgstr ""
++"Par défaut, portmap est à l'écoute sur toutes les adresses IP. Cependant, si "
++"cette machine ne fournit pas de services RPC à des clients distants (ce qui "
++"est le cas pour un serveur NFS ou NIS), vous pouvez le restreindre en toute "
++"sécurité à l'adresse de bouclage 127.0.0.1."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This will allow RPC local services (like FAM) to work properly, while "
++"preventing remote systems from accessing the RPC services."
++msgstr ""
++"Cela permettra aux services RPC locaux (comme FAM) de fonctionner "
++"correctement, tout en empêchant les systèmes distants d'accéder aux services "
++"RPC."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This configuration can be changed by editing the OPTIONS line in the /etc/"
++"default/portmap file and adapting the use of the -i option to your needs."
++msgstr ""
++"Cette configuration peut également être changée en modifiant la ligne "
++"OPTIONS dans le fichier /etc/default/portmap. Si vous ne précisez pas -i "
++"comme option, portmap sera lié à toutes les interfaces."
+--- portmap-6.0.0.orig/debian/po/pt_BR.po
++++ portmap-6.0.0/debian/po/pt_BR.po
+@@ -0,0 +1,58 @@
++# portmap Brazilian Portuguese translation 
++# Copyright (C) 2007 THE portmap'S COPYRIGHT HOLDER
++# This file is distributed under the same license as the portmap package.
++# Felipe Augusto van de Wiel (faw) <faw@debian.org>, 2007.
++# Eder L. Marques (frolic) <frolic@debian-ce.org>, 2007.
++#
++msgid ""
++msgstr ""
++"Project-Id-Version: portmap 6.0-2\n"
++"Report-Msgid-Bugs-To: anibal@debian.org\n"
++"POT-Creation-Date: 2007-09-19 06:50+0200\n"
++"PO-Revision-Date: 2007-10-03 17:17-0300\n"
++"Last-Translator: Eder L. Marques (frolic) <frolic@debian-ce.org>\n"
++"Language-Team: l10n Portuguese <debian-l10n-portuguese@lists.debian.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"pt_BR utf-8\n"
++"X-Generator: KBabel 1.11.4\n"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid "Should portmap be bound to the loopback address?"
++msgstr "O portmap deveria escutar somente no endereço de loopback?"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"By default, portmap listens to all IP addresses. However, if this machine "
++"does not provide network RPC services (such as NIS or NFS) to remote "
++"clients, you can safely bind it to the loopback IP address (127.0.0.1)."
++msgstr ""
++"Por padrão, o portmap escuta em todos os endereços IP. Entretanto, se esta "
++"máquina não provê serviços de rede RPC (como NIS ou NFS) para clientes "
++"remotos, você pode, com segurança, restringí-lo somente ao endereço IP de "
++"loopback (127.0.0.1)."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This will allow RPC local services (like FAM) to work properly, while "
++"preventing remote systems from accessing the RPC services."
++msgstr ""
++"Isto permitirá que serviços RPC locais (como o FAM) funcionem corretamente, "
++"enquanto previne que sistemas remotos acessem os serviços RPC."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This configuration can be changed by editing the OPTIONS line in the /etc/"
++"default/portmap file and adapting the use of the -i option to your needs."
++msgstr ""
++"Esta configuração pode ser alterada editando a linha OPTIONS no arquivo /etc/"
++"default/portmap e adaptando o uso da opção -i para as suas necessidades."
+--- portmap-6.0.0.orig/debian/po/nl.po
++++ portmap-6.0.0/debian/po/nl.po
+@@ -0,0 +1,56 @@
++# Dutch portmap po-debconf translation,
++# Copyright (C) 2008 THE PACKAGE'S COPYRIGHT HOLDER
++# This file is distributed under the same license as the portmap package.
++# Vincent Zweije <zweije@xs4all.nl>, 2008.
++#
++msgid ""
++msgstr ""
++"Project-Id-Version: portmap 6.0-5\n"
++"Report-Msgid-Bugs-To: anibal@debian.org\n"
++"POT-Creation-Date: 2007-09-19 06:50+0200\n"
++"PO-Revision-Date: 2008-01-13 21:35+0000\n"
++"Last-Translator: Vincent Zweije <zweije@xs4all.nl>\n"
++"Language-Team: Debian-Dutch <debian-l10n-dutch@lists.debian.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=ISO-8859-1\n"
++"Content-Transfer-Encoding: 8bit\n"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid "Should portmap be bound to the loopback address?"
++msgstr "Moet portmap op het loopback-interface luisteren?"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"By default, portmap listens to all IP addresses. However, if this machine "
++"does not provide network RPC services (such as NIS or NFS) to remote "
++"clients, you can safely bind it to the loopback IP address (127.0.0.1)."
++msgstr ""
++"Standaard luistert portmap op alle interfaces. Als deze computer echter "
++"geen RPC-diensten aanbiedt (zoals NIS- of NFS) aan andere computers, dan "
++"kunt u portmap zonder problemen beperken tot het loopback-interface op "
++"adres 127.0.0.1."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This will allow RPC local services (like FAM) to work properly, while "
++"preventing remote systems from accessing the RPC services."
++msgstr ""
++"Hierdoor kunnen lokale RPC-diensten, zoals FAM, goed werken, terwijl wordt "
++"voorkomen dat andere systemen verbinding maken met de RPC-diensten."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This configuration can be changed by editing the OPTIONS line in the /etc/"
++"default/portmap file and adapting the use of the -i option to your needs."
++msgstr ""
++"Deze instelling kan worden gewijzigd met de OPTIONS regel in bestand "
++"/etc/default/portmap, door het gebruik van de -i optie aan uw behoefte aan "
++"te passen."
+--- portmap-6.0.0.orig/debian/po/fi.po
++++ portmap-6.0.0/debian/po/fi.po
+@@ -0,0 +1,52 @@
++msgid ""
++msgstr ""
++"Project-Id-Version: debconf: portmap\n"
++"Report-Msgid-Bugs-To: anibal@debian.org\n"
++"POT-Creation-Date: 2007-09-19 06:50+0200\n"
++"PO-Revision-Date: 2007-09-19 18:50+0200\n"
++"Last-Translator: Esko Arajärvi <edu@iki.fi>\n"
++"Language-Team: Finnish <debian-l10n-finnish@lists.debian.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=utf-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"X-Poedit-Language: Finnish\n"
++"X-Poedit-Country: FINLAND\n"
++"X-Poedit-SourceCharset: utf-8\n"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid "Should portmap be bound to the loopback address?"
++msgstr "Tuleeko portmapin kuunnella vain takaisinkytkentäosoitetta?"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"By default, portmap listens to all IP addresses. However, if this machine "
++"does not provide network RPC services (such as NIS or NFS) to remote "
++"clients, you can safely bind it to the loopback IP address (127.0.0.1)."
++msgstr ""
++"Oletuksena portmap kuuntelee kaikkia IP-osoitteita. Se voidaan kuitenkin "
++"asettaa kuuntelemaan vain takaisinkytkentäosoitetta (127.0.0.1), jos tämä "
++"kone ei tarjoa RPC-verkkopalveluita (kuten NIS tai NFS) etäasiakkaille."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This will allow RPC local services (like FAM) to work properly, while "
++"preventing remote systems from accessing the RPC services."
++msgstr ""
++"Tällöin paikalliset RPC-palvelut (kuten FAM) toimivat oikein, mutta "
++"etäjärjestelmät eivät saa käytettyä RPC-palveluita."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This configuration can be changed by editing the OPTIONS line in the /etc/"
++"default/portmap file and adapting the use of the -i option to your needs."
++msgstr ""
++"Tätä asetusta voidaan muuttaa muokkaamalla tiedostossa /etc/default/portmap "
++"olevan OPTIONS-rivin valitsimen -i parametriä."
+--- portmap-6.0.0.orig/debian/po/eu.po
++++ portmap-6.0.0/debian/po/eu.po
+@@ -0,0 +1,57 @@
++# translation of portmap-eu.po to Euskara
++# Portmap debian debconf basque translation
++# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
++# This file is distributed under the same license as the PACKAGE package.
++#
++# Piarres Beobide <pi@beobide.net>, 2006, 2007.
++msgid ""
++msgstr ""
++"Project-Id-Version: portmap-eu\n"
++"Report-Msgid-Bugs-To: anibal@debian.org\n"
++"POT-Creation-Date: 2007-09-19 06:50+0200\n"
++"PO-Revision-Date: 2007-09-19 09:29+0200\n"
++"Last-Translator: Piarres Beobide <pi@beobide.net>\n"
++"Language-Team: Euskara <Librezale@librezale.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"X-Generator: KBabel 1.11.4\n"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid "Should portmap be bound to the loopback address?"
++msgstr "Portmap loopback helbidera lotu behar al da?"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"By default, portmap listens to all IP addresses. However, if this machine "
++"does not provide network RPC services (such as NIS or NFS) to remote "
++"clients, you can safely bind it to the loopback IP address (127.0.0.1)."
++msgstr ""
++"Lehenespen bezala , Portmap-ek IP helbide guztietan entzungo ditu konexioak. "
++"Hala ere, ez bazaude urruneko makinetara sare RPC zerbitzuez hornitzen (NFS "
++"edo NIS bezalakoak) segurtasunez lotu dezakezu loopback IP helbidera "
++"(127.0.0.1)"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This will allow RPC local services (like FAM) to work properly, while "
++"preventing remote systems from accessing the RPC services."
++msgstr ""
++"Honek RPC zerbitzu lokalak (FAM bezalakoak) behar bezala funtzionatzea "
++"urruneko sistemek zure RPC zerbitzuak erabiltzea ezinduaz egingo du, "
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This configuration can be changed by editing the OPTIONS line in the /etc/"
++"default/portmap file and adapting the use of the -i option to your needs."
++msgstr ""
++"Konfigurazio hau /etc/default/portmap fitxategiko OPTIONS lerroa editatuz "
++"aldatu dezakezu. Ez baduzu -i aukera ezartzen interfaze guztietara lotuko da."
+--- portmap-6.0.0.orig/debian/po/pt.po
++++ portmap-6.0.0/debian/po/pt.po
+@@ -0,0 +1,56 @@
++# Portuguese translation for portmap's debconf messages
++# Copyright (C) 2006 Miguel Figueiredo <elmig@debianpt.org>
++# This file is distributed under the same license as the portmap package.
++# Miguel Figueiredo <elmig@debianpt.org>, 2006-2007
++#
++msgid ""
++msgstr ""
++"Project-Id-Version: portmap 5\n"
++"Report-Msgid-Bugs-To: anibal@debian.org\n"
++"POT-Creation-Date: 2007-09-19 06:50+0200\n"
++"PO-Revision-Date: 2007-09-19 18:59+0100\n"
++"Last-Translator: Miguel Figueiredo <elmig@debianpt.org>\n"
++"Language-Team: Portuguese <traduz@debianpt.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid "Should portmap be bound to the loopback address?"
++msgstr "Deve o portmap ser ligado ao endereço loopback?"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"By default, portmap listens to all IP addresses. However, if this machine "
++"does not provide network RPC services (such as NIS or NFS) to remote "
++"clients, you can safely bind it to the loopback IP address (127.0.0.1)."
++msgstr ""
++"Por pré-definição, o portmap, escuta todos os endereços IP. No entanto, se "
++"esta máquina não disponibilizar serviços RPC (tais como NIS ou NFS) de rede "
++"a clientes remotos, pode liga-lo, em segurança, ao endereço IP de "
++"'loopback' (127.0.0.1)"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This will allow RPC local services (like FAM) to work properly, while "
++"preventing remote systems from accessing the RPC services."
++msgstr ""
++"Isto irá permitir que os serviços locais de RPC (como o FAM) funcionem "
++"correctamente, ao mesmo tempo que previne que sistemas remotos acedam aos "
++"seus serviços de RPC."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This configuration can be changed by editing the OPTIONS line in the /etc/"
++"default/portmap file and adapting the use of the -i option to your needs."
++msgstr ""
++"Esta configuração pode ser modificada ao editar a linha OPTIONS no ficheiro /"
++"etc/default/portmap e adaptar a opção -i às suas necessidades."
+--- portmap-6.0.0.orig/debian/po/POTFILES.in
++++ portmap-6.0.0/debian/po/POTFILES.in
+@@ -0,0 +1 @@
++[type: gettext/rfc822deb] templates
+--- portmap-6.0.0.orig/debian/po/it.po
++++ portmap-6.0.0/debian/po/it.po
+@@ -0,0 +1,57 @@
++# Italian (it) translation of debconf templates for portmap
++# Copyright (C) 2006 Free Software Foundation, Inc.
++# This file is distributed under the same license as the portmap package.
++# Luca Monducci <luca.mo@tiscali.it>, 2005-2007.
++# 
++msgid ""
++msgstr ""
++"Project-Id-Version: portmap 6.0-2 debconf templates\n"
++"Report-Msgid-Bugs-To: anibal@debian.org\n"
++"POT-Creation-Date: 2007-09-19 06:50+0200\n"
++"PO-Revision-Date: 2007-09-21 21:15+0200\n"
++"Last-Translator: Luca Monducci <luca.mo@tiscali.it>\n"
++"Language-Team: Italian <debian-l10n-italian@lists.debian.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid "Should portmap be bound to the loopback address?"
++msgstr "Limitare portmap al solo indirizzo di loopback?"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"By default, portmap listens to all IP addresses. However, if this machine "
++"does not provide network RPC services (such as NIS or NFS) to remote "
++"clients, you can safely bind it to the loopback IP address (127.0.0.1)."
++msgstr ""
++"Normalmente portmap si mette in ascolto su tutti gli indirizzi IP. Tuttavia, "
++"se questa macchina non deve fornire servizi RPC in rete (come NFS o NIS) a "
++"client remoti, è possibile mettere portmap in ascolto solo sull'indirizzo IP "
++"di loopback (127.0.0.1)."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This will allow RPC local services (like FAM) to work properly, while "
++"preventing remote systems from accessing the RPC services."
++msgstr ""
++"Questo consente il corretto funzionamento dei servizi RPC locali (come FAM) "
++"e contemporaneamente impedisce l'accesso da parte di sistemi remoti ai "
++"servizi RPC."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This configuration can be changed by editing the OPTIONS line in the /etc/"
++"default/portmap file and adapting the use of the -i option to your needs."
++msgstr ""
++"È possibile cambiare questa configurazione modificando la riga OPTIONS nel "
++"file /etc/default/portmap e adattando l'uso dell'opzione -i alle proprie "
++"necessità."
+--- portmap-6.0.0.orig/debian/po/es.po
++++ portmap-6.0.0/debian/po/es.po
+@@ -0,0 +1,90 @@
++#
++# portmap debconf translation to Spanish
++# Copyright (C) 2005 Software in the Public Interest
++# This file is distributed under the same license as the portmap package.
++#
++# Changes:
++# - Initial translation
++#       Anibal Monsalve Salazar <A.Monsalve.Salazar@IEEE.org>
++# - Revision:
++#       Jose Carlos Garcia Sogo <jsogo@debian.org>, 2004
++# 	Javier Fernandez-Sanguino Peña <jfs@debian.org>, 2005
++#
++#
++#  Traductores, si no conoce el formato PO, merece la pena leer la 
++#  documentación de gettext, especialmente las secciones dedicadas a este
++#  formato, por ejemplo ejecutando:
++#         info -n '(gettext)PO Files'
++#         info -n '(gettext)Header Entry'
++#
++# Equipo de traducción al español, por favor, lean antes de traducir
++# los siguientes documentos:
++# 
++# - El proyecto de traducción de Debian al español
++#   http://www.debian.org/intl/spanish/coordinacion
++#   especialmente las notas de traducción en
++#   http://www.debian.org/intl/spanish/notas
++#
++# - La guA-a de traducción de po's de debconf:
++#   /usr/share/doc/po-debconf/README-trans
++#   o http://www.debian.org/intl/l10n/po-debconf/README-trans
++#
++msgid ""
++msgstr ""
++"Project-Id-Version: portmap\n"
++"Report-Msgid-Bugs-To: anibal@debian.org\n"
++"POT-Creation-Date: 2007-09-19 06:50+0200\n"
++"PO-Revision-Date: 2007-09-19 21:26+0200\n"
++"Last-Translator: Javier Fernandez-Sanguino Peña <jfs@debian.org>\n"
++"Language-Team: Debian Spanish <debian-l10n-spanish@lists.debian.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid "Should portmap be bound to the loopback address?"
++msgstr ""
++"¿Debería enlazarse «portmap» a la dirección de la interfaz de red local?"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"By default, portmap listens to all IP addresses. However, if this machine "
++"does not provide network RPC services (such as NIS or NFS) to remote "
++"clients, you can safely bind it to the loopback IP address (127.0.0.1)."
++msgstr ""
++"La configuración por omisión de «portmap» hace que este escuche en todas las "
++"direcciones IP disponibles. Sin embargo, si el equipo no proporciona "
++"servicios RPC (como NIS o NFS) a clientes remotos puede enlazar éste sin "
++"problemas a la dirección de IP local (127.0.0.1)."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This will allow RPC local services (like FAM) to work properly, while "
++"preventing remote systems from accessing the RPC services."
++msgstr ""
++"Esto permitirá que los servicios RPC locales (como FAM) funcionen "
++"correctamente mientras que impedirá que otros sistemas remotos accedan a los "
++"servicios RPC."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This configuration can be changed by editing the OPTIONS line in the /etc/"
++"default/portmap file and adapting the use of the -i option to your needs."
++msgstr ""
++"Puede cambiar esta configuración editando la línea OPTIONS en «/etc/default/"
++"portmap» y adaptando el uso de la opción -i a sus necesidades."
++
++#~ msgid ""
++#~ "This portmap version binds to the loopback IP address 127.0.0.1 by "
++#~ "default."
++#~ msgstr ""
++#~ "Esta versión de portmap se enlaza por defecto a la dirección IP 127.0.0.1 "
++#~ "de la interfaz de red local."
+--- portmap-6.0.0.orig/debian/po/bg.po
++++ portmap-6.0.0/debian/po/bg.po
+@@ -0,0 +1,55 @@
++# translation of bg.po to Bulgarian
++# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
++# This file is distributed under the same license as the PACKAGE package.
++#
++# Damyan Ivanov <dam@modsoftsys.com>, 2007.
++msgid ""
++msgstr ""
++"Project-Id-Version: portmap\n"
++"Report-Msgid-Bugs-To: anibal@debian.org\n"
++"POT-Creation-Date: 2007-09-19 06:50+0200\n"
++"PO-Revision-Date: 2007-09-19 22:19+0300\n"
++"Last-Translator: Damyan Ivanov <dam@modsoftsys.com>\n"
++"Language-Team: Bulgarian <dict@fsa-bg.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"X-Generator: KBabel 1.11.4\n"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid "Should portmap be bound to the loopback address?"
++msgstr "Да слуша ли portmap на локалния IP адрес?"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"By default, portmap listens to all IP addresses. However, if this machine "
++"does not provide network RPC services (such as NIS or NFS) to remote "
++"clients, you can safely bind it to the loopback IP address (127.0.0.1)."
++msgstr ""
++"По подразбиране portmap приема връзки от на всички мрежови адреси. Ако обаше "
++"машината не предлага RPC услуги (например NIS или NFS) на отдалечени мрежови "
++"клиенти, то тогава може да се използва локалният IP адрес (127.0.0.1)."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This will allow RPC local services (like FAM) to work properly, while "
++"preventing remote systems from accessing the RPC services."
++msgstr ""
++"Това ще позволи на локалните RPC услуги (като FAM) да работят нормално, "
++"отказвайки достъп до тях на отдалечените машини."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This configuration can be changed by editing the OPTIONS line in the /etc/"
++"default/portmap file and adapting the use of the -i option to your needs."
++msgstr ""
++"Тази настройка може да бъде променена чрез опцията -i в променливата OPTIONS "
++"във файла /etc/default/portmap."
+--- portmap-6.0.0.orig/debian/po/cs.po
++++ portmap-6.0.0/debian/po/cs.po
+@@ -0,0 +1,62 @@
++#
++#    Translators, if you are not familiar with the PO format, gettext
++#    documentation is worth reading, especially sections dedicated to
++#    this format, e.g. by running:
++#         info -n '(gettext)PO Files'
++#         info -n '(gettext)Header Entry'
++#
++#    Some information specific to po-debconf are available at
++#            /usr/share/doc/po-debconf/README-trans
++#         or http://www.debian.org/intl/l10n/po-debconf/README-trans
++#
++#    Developers do not need to manually edit POT or PO files.
++#
++msgid ""
++msgstr ""
++"Project-Id-Version: portmap\n"
++"Report-Msgid-Bugs-To: anibal@debian.org\n"
++"POT-Creation-Date: 2007-09-19 06:50+0200\n"
++"PO-Revision-Date: 2007-09-23 10:41+0200\n"
++"Last-Translator: Miroslav Kure <kurem@debian.cz>\n"
++"Language-Team: Czech <debian-l10n-czech@lists.debian.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid "Should portmap be bound to the loopback address?"
++msgstr "Navázat portmap na adresu lokální smyčky?"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"By default, portmap listens to all IP addresses. However, if this machine "
++"does not provide network RPC services (such as NIS or NFS) to remote "
++"clients, you can safely bind it to the loopback IP address (127.0.0.1)."
++msgstr ""
++"Portmap implicitně naslouchá na všech IP adresách. Pokud ale tento počítač "
++"neposkytuje RPC služby vzdáleným klientům (třeba v podobě NFS a NIS "
++"serveru), můžete portmap navázat na IP adresu lokální smyčky (127.0.0.1)."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This will allow RPC local services (like FAM) to work properly, while "
++"preventing remote systems from accessing the RPC services."
++msgstr ""
++"Tímto umožníte správné fungování lokálních RPC služeb (např. FAM), aniž "
++"byste museli povolit přístup ke svým RPC službám z ostatních počítačů."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This configuration can be changed by editing the OPTIONS line in the /etc/"
++"default/portmap file and adapting the use of the -i option to your needs."
++msgstr ""
++"Toto nastavení můžete změnit úpravou řádky OPTIONS v souboru /etc/default/"
++"portmap, kde si můžete přizpůsobit parametr -i dle potřeby."
+--- portmap-6.0.0.orig/debian/po/de.po
++++ portmap-6.0.0/debian/po/de.po
+@@ -0,0 +1,56 @@
++# Translation of portmap debconf templates to German
++# Copyright (C) Mathias Klein <ma_klein@gmx.de>, 2006.
++# Copyright (C) Helge Kreutzmann <debian@helgefjell.de>, 2007.
++# This file is distributed under the same license as the portmap package.
++#
++msgid ""
++msgstr ""
++"Project-Id-Version: portmap 6.0-2\n"
++"Report-Msgid-Bugs-To: anibal@debian.org\n"
++"POT-Creation-Date: 2007-09-19 06:50+0200\n"
++"PO-Revision-Date: 2007-09-23 16:02+0200\n"
++"Last-Translator: Helge Kreutzmann <debian@helgefjell.de>,\n"
++"Language-Team: German <debian-l10n-german@lists.debian.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid "Should portmap be bound to the loopback address?"
++msgstr "Soll Portmap auf die Loopback-Adresse beschränkt werden?"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"By default, portmap listens to all IP addresses. However, if this machine "
++"does not provide network RPC services (such as NIS or NFS) to remote "
++"clients, you can safely bind it to the loopback IP address (127.0.0.1)."
++msgstr ""
++"Standardmäßig wartet Portmap auf allen IP-Adressen auf Anfragen. Falls diese "
++"Maschine allerdings keine RPC-Dienste für entfernte Clients anbietet (wie "
++"NIS oder NFS), können Sie ihn unbesorgt auf die Loopback-Adresse 127.0.0.1 "
++"beschränken."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This will allow RPC local services (like FAM) to work properly, while "
++"preventing remote systems from accessing the RPC services."
++msgstr ""
++"Dies erlaubt lokalen RPC-Diensten (wie FAM) normal zu arbeiten, während es "
++"entfernten Systemen verwehrt wird, auf die RPC-Dienste zuzugreifen."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This configuration can be changed by editing the OPTIONS line in the /etc/"
++"default/portmap file and adapting the use of the -i option to your needs."
++msgstr ""
++"Diese Einstellung kann auch geändert werden, indem die Zeile OPTIONS in der "
++"Datei /etc/default/portmap bearbeitet wird. Passen Sie hierbei die "
++"Verwendung der Option »-i« Ihren Bedürfnissen an."
+--- portmap-6.0.0.orig/debian/po/ta.po
++++ portmap-6.0.0/debian/po/ta.po
+@@ -0,0 +1,56 @@
++# translation of portmap.po to TAMIL
++# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
++# This file is distributed under the same license as the PACKAGE package.
++#
++# Dr.T.Vasudevan <agnihot3@gmail.com>, 2007.
++msgid ""
++msgstr ""
++"Project-Id-Version: portmap\n"
++"Report-Msgid-Bugs-To: anibal@debian.org\n"
++"POT-Creation-Date: 2007-09-19 06:50+0200\n"
++"PO-Revision-Date: 2007-09-27 19:10+0530\n"
++"Last-Translator: Dr.T.Vasudevan <agnihot3@gmail.com>\n"
++"Language-Team: TAMIL <ubuntu-l10n-tam@lists.ubuntu.com>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"X-Generator: KBabel 1.11.4\n"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid "Should portmap be bound to the loopback address?"
++msgstr "போர்ட்மாப்  துறைப்படம் பின்மடக்கை முகவரியை பயன்படுத்த வேண்டுமா?"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"By default, portmap listens to all IP addresses. However, if this machine "
++"does not provide network RPC services (such as NIS or NFS) to remote "
++"clients, you can safely bind it to the loopback IP address (127.0.0.1)."
++msgstr ""
++"முன்னிருப்பாக போர்ட்மாப் எல்லா ஐபி முகவரிகளிலும் செவி சாய்கும். இருப்பினும் இந்த கணினி "
++"வலை அமைப்பு ஆர்பிசி சேவைகள் (என்.ஐ.எஸ் (NIS) அல்லது என்.எஃப்.எஸ் NFS போன்ற) ஐ தொலைநிலை "
++"சார்ந்தோன்களுக்கு வழங்காவிட்டால் நீங்கள் பாதுகாப்பாக உட்சுழல் ஐபி முகவரிக்கு (127.0.0.1) "
++"அதை பிணைக்கலாம்."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This will allow RPC local services (like FAM) to work properly, while "
++"preventing remote systems from accessing the RPC services."
++msgstr ""
++"இது உள்ளமை ஃபாம் போன்ற ஆர்பிசி உள் சேவைகளை சரியாக் இயங்க அனுமதிக்கும். அதே சமயம் தொலை "
++"கணினிகள் ஆர்பிசி சேவைகளை அணுக இயலாது."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This configuration can be changed by editing the OPTIONS line in the /etc/"
++"default/portmap file and adapting the use of the -i option to your needs."
++msgstr ""
++"/etc/default/portmap கோப்பில் OPTIONS வரிகளை திருத்தி உங்கள் தேவைக்கு தக்கபடி  -i "
++"option தேர்வை அமைத்து இந்த வடிவமைப்பை மாற்றலாம். "
+--- portmap-6.0.0.orig/debian/po/gl.po
++++ portmap-6.0.0/debian/po/gl.po
+@@ -0,0 +1,55 @@
++# Galician translation of portmap's debconf templates
++# This file is distributed under the same license as the portmap package.
++# Jacobo Tarrio <jtarrio@debian.org>, 2007.
++#
++msgid ""
++msgstr ""
++"Project-Id-Version: portmap\n"
++"Report-Msgid-Bugs-To: anibal@debian.org\n"
++"POT-Creation-Date: 2007-09-19 06:50+0200\n"
++"PO-Revision-Date: 2007-09-30 18:53+0100\n"
++"Last-Translator: Jacobo Tarrio <jtarrio@debian.org>\n"
++"Language-Team: Galician <proxecto@trasno.net>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid "Should portmap be bound to the loopback address?"
++msgstr "¿Debería vincularse portmap ao enderezo \"loopback\"?"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"By default, portmap listens to all IP addresses. However, if this machine "
++"does not provide network RPC services (such as NIS or NFS) to remote "
++"clients, you can safely bind it to the loopback IP address (127.0.0.1)."
++msgstr ""
++"Por defecto, portmap escoita en tódolos enderezos IP. Nembargantes, se esta "
++"máquina non fornece servizos de rede RPC (tales coma NIS ou NFS) a clientes "
++"remotos, pode vinculalo sen problemas ao enderezo IP \"loopback"
++"\" (127.0.0.1)."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This will allow RPC local services (like FAM) to work properly, while "
++"preventing remote systems from accessing the RPC services."
++msgstr ""
++"Isto ha permitir que os servizos RPC locais (coma FAM) funcionen "
++"correctamente, ao mesmo tempo que se impide que os sistemas remotos accedan "
++"aos servizos RPC."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This configuration can be changed by editing the OPTIONS line in the /etc/"
++"default/portmap file and adapting the use of the -i option to your needs."
++msgstr ""
++"Pódese cambiar esta configuración editando a liña OPTIONS do ficheiro /etc/"
++"default/portmap , e adaptando o emprego da opción -i ás súas necesidades."
+--- portmap-6.0.0.orig/debian/po/vi.po
++++ portmap-6.0.0/debian/po/vi.po
+@@ -0,0 +1,57 @@
++# Vietnamese translation for portmap.
++# Copyright © 2007 Free Software Foundation, Inc.
++# Clytie Siddall <clytie@riverland.net.au>, 2005-2007.
++# 
++msgid ""
++msgstr ""
++"Project-Id-Version: portmap 6.0-2\n"
++"Report-Msgid-Bugs-To: anibal@debian.org\n"
++"POT-Creation-Date: 2007-09-19 06:50+0200\n"
++"PO-Revision-Date: 2007-09-20 16:42+0930\n"
++"Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
++"Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=utf-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"Plural-Forms: nplurals=1; plural=0;\n"
++"X-Generator: LocFactoryEditor 1.7b1\n"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid "Should portmap be bound to the loopback address?"
++msgstr "Có nên đóng kết trình portmap đến địa chỉ mạch nội bộ không?"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"By default, portmap listens to all IP addresses. However, if this machine "
++"does not provide network RPC services (such as NIS or NFS) to remote "
++"clients, you can safely bind it to the loopback IP address (127.0.0.1)."
++msgstr ""
++"Mặc định là trình portmap lắng nghe trên mọi địa chỉ IP. Tuy nhiên, nếu máy "
++"này không cung cấp dịch vụ RPC mạng (v.d. NIS hay NFS) cho các ứng dụng "
++"khách từ xa, bạn có thể đóng kết an toàn nó đến địa chỉ IP mạch nội bộ "
++"(127.0.0.1)."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This will allow RPC local services (like FAM) to work properly, while "
++"preventing remote systems from accessing the RPC services."
++msgstr ""
++"Tùy chọn này sẽ cho dịch vụ RPC cục bộ (v.d. FAM) hoạt động cho đúng, còn "
++"ngăn cản hệ thống từ xa truy cập đến các dịch vụ RPC."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This configuration can be changed by editing the OPTIONS line in the /etc/"
++"default/portmap file and adapting the use of the -i option to your needs."
++msgstr ""
++"Cũng có thể thay đổi cấu hình này bằng cách hiệu chỉnh dòng OPTIONS (tùy "
++"chọn) trong tập tin « /etc/default/portmap » và chỉnh lại cách sử dụng tùy "
++"chọn « -i » để thích hợp với trường hợp của bạn."
+--- portmap-6.0.0.orig/debian/po/ru.po
++++ portmap-6.0.0/debian/po/ru.po
+@@ -0,0 +1,61 @@
++# translation of ru.po to Russian
++# Russian translation of portmap.
++# Copyright (C) 2006
++# This file is distributed under the same license as the portmap package.
++#
++#
++# Aleksandr Bouksha <abook@purpe.ru>, 2006.
++# Yuri Kozlov <kozlov.y@gmail.com>, 2007.
++msgid ""
++msgstr ""
++"Project-Id-Version: 6.0-4\n"
++"Report-Msgid-Bugs-To: anibal@debian.org\n"
++"POT-Creation-Date: 2007-09-19 06:50+0200\n"
++"PO-Revision-Date: 2007-09-24 21:06+0400\n"
++"Last-Translator: Yuri Kozlov <kozlov.y@gmail.com>\n"
++"Language-Team: Russian <debian-l10n-russian@lists.debian.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"X-Generator: KBabel 1.11.4\n"
++"Plural-Forms:  nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
++"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid "Should portmap be bound to the loopback address?"
++msgstr "Ограничить portmap работой только на интерфейсе обратной связи?"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"By default, portmap listens to all IP addresses. However, if this machine "
++"does not provide network RPC services (such as NIS or NFS) to remote "
++"clients, you can safely bind it to the loopback IP address (127.0.0.1)."
++msgstr ""
++"По умолчанию portmap ожидает соединений со всех IP-адресов машины. Однако, "
++"если эта машина не предоставляет сетевых RPC сервисов (например, NFS и NIS) "
++"для других компьютеров, то допустимо ограничить работу portmap адресом "
++"обратной связи (127.0.0.1)."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This will allow RPC local services (like FAM) to work properly, while "
++"preventing remote systems from accessing the RPC services."
++msgstr ""
++"Это позволит локальным RPC сервисам (например FAM) работать корректно, в то "
++"же время не позволяя другим компьютерам иметь доступ к вашим RPC сервисам."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This configuration can be changed by editing the OPTIONS line in the /etc/"
++"default/portmap file and adapting the use of the -i option to your needs."
++msgstr ""
++"Вы можете поменять эту настройку, отыскав строку OPTIONS в файле /etc/"
++"default/portmap и изменив параметр -i согласно вашим требованиям."
+--- portmap-6.0.0.orig/debian/po/da.po
++++ portmap-6.0.0/debian/po/da.po
+@@ -0,0 +1,80 @@
++#
++#    Translators, if you are not familiar with the PO format, gettext
++#    documentation is worth reading, especially sections dedicated to
++#    this format, e.g. by running:
++#         info -n '(gettext)PO Files'
++#         info -n '(gettext)Header Entry'
++#    Some information specific to po-debconf are available at
++#            /usr/share/doc/po-debconf/README-trans
++#         or http://www.debian.org/intl/l10n/po-debconf/README-trans#
++#    Developers do not need to manually edit POT or PO files.
++#
++# Claus Hindsgaul <claus_h@image.dk>, 2005.
++# Claus Hindsgaul <claus.hindsgaul@gmail.com>, 2006.
++msgid ""
++msgstr ""
++"Project-Id-Version: portmap debconf\n"
++"Report-Msgid-Bugs-To: anibal@debian.org\n"
++"POT-Creation-Date: 2007-09-19 06:50+0200\n"
++"PO-Revision-Date: 2006-03-17 08:49+0100\n"
++"Last-Translator: Claus Hindsgaul <claus.hindsgaul@gmail.com>\n"
++"Language-Team: Danish\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=ISO-8859-1\n"
++"Content-Transfer-Encoding: 8bit\n"
++"X-Generator: KBabel 1.11.2\n"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid "Should portmap be bound to the loopback address?"
++msgstr "Skal portmap bindes til loopback-adressen?"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++#, fuzzy
++#| msgid ""
++#| "Portmap by default listens to all IP addresses. However, if you are not "
++#| "providing network RPC services to remote clients (you are if you are "
++#| "setting up a NFS or NIS server) you can safely bind it to the loopback  "
++#| "IP address (127.0.0.1)"
++msgid ""
++"By default, portmap listens to all IP addresses. However, if this machine "
++"does not provide network RPC services (such as NIS or NFS) to remote "
++"clients, you can safely bind it to the loopback IP address (127.0.0.1)."
++msgstr ""
++"Portmap lytter som udgangspunkt til alle IP-adresser. Men hvis du ikke "
++"tilbyder RPC-services p� netv�rket til fjerne klienter (det g�r du, hvis du "
++"s�tter en NFS- eller NIS-server op), kan du uden videre binde den til "
++"loopback IP-adressen (127.0.0.1)"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++#, fuzzy
++#| msgid ""
++#| "This will allow RPC local services (like FAM) to work properly, while "
++#| "preventing remote systems from accessing your RPC services."
++msgid ""
++"This will allow RPC local services (like FAM) to work properly, while "
++"preventing remote systems from accessing the RPC services."
++msgstr ""
++"Dette vil g�re at lokale RPC-services (s�som FAM) kan fungere ordentligt, "
++"mens fjerne systemer hindres i at tilg� dine RPC-services."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++#, fuzzy
++#| msgid ""
++#| "You can also change this configuration by editing the OPTIONS line in "
++#| "the /etc/default/portmap file. If you just don't specify the -i option it "
++#| "will bind to all interfaces."
++msgid ""
++"This configuration can be changed by editing the OPTIONS line in the /etc/"
++"default/portmap file and adapting the use of the -i option to your needs."
++msgstr ""
++"Du kan ogs� �ndre denne indstilling ved at redigere OPTIONS-linjen i filen /"
++"etc/default/portmap.conf. Hvis du undlader at angive tilvalget -i, vil den "
++"binde sig til alle netkort."
+--- portmap-6.0.0.orig/debian/po/ja.po
++++ portmap-6.0.0/debian/po/ja.po
+@@ -0,0 +1,63 @@
++#
++#    Translators, if you are not familiar with the PO format, gettext
++#    documentation is worth reading, especially sections dedicated to
++#    this format, e.g. by running:
++#         info -n '(gettext)PO Files'
++#         info -n '(gettext)Header Entry'
++#
++#    Some information specific to po-debconf are available at
++#            /usr/share/doc/po-debconf/README-trans
++#         or http://www.debian.org/intl/l10n/po-debconf/README-trans
++#
++#    Developers do not need to manually edit POT or PO files.
++#
++msgid ""
++msgstr ""
++"Project-Id-Version: portmap\n"
++"Report-Msgid-Bugs-To: anibal@debian.org\n"
++"POT-Creation-Date: 2007-09-19 06:50+0200\n"
++"PO-Revision-Date: 2007-09-19 21:33+0900\n"
++"Last-Translator: Kenshi Muto <kmuto@debian.org>\n"
++"Language-Team: Japanese <debian-japanese@lists.debian.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid "Should portmap be bound to the loopback address?"
++msgstr "portmap でループバックアドレスだけをバインドするようにしますか?"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"By default, portmap listens to all IP addresses. However, if this machine "
++"does not provide network RPC services (such as NIS or NFS) to remote "
++"clients, you can safely bind it to the loopback IP address (127.0.0.1)."
++msgstr ""
++"デフォルトで portmap はすべての IP アドレスをリスンします。ただ、このマシンが"
++"リモートのクライアントにネットワーク RPC サービス (NIS や NFS など) を提供し"
++"ないのであれば、ループバックの IP アドレス (127.0.0.1) だけを安全にバインドす"
++"るようにできます。"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This will allow RPC local services (like FAM) to work properly, while "
++"preventing remote systems from accessing the RPC services."
++msgstr ""
++"これにより、リモートのシステムが RPC サービスにアクセスするのを防ぎつつ、 "
++"RPC のローカルサービス (FAM など) が正しく動作するようになります。"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This configuration can be changed by editing the OPTIONS line in the /etc/"
++"default/portmap file and adapting the use of the -i option to your needs."
++msgstr ""
++"この設定は、/etc/ldefault/portmap ファイルの OPTIONS 行を編集し、必要であれ"
++"ば -i オプションを使うようにすることで変更できます。"
+--- portmap-6.0.0.orig/debian/po/templates.pot
++++ portmap-6.0.0/debian/po/templates.pot
+@@ -0,0 +1,48 @@
++# SOME DESCRIPTIVE TITLE.
++# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
++# This file is distributed under the same license as the PACKAGE package.
++# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
++#
++#, fuzzy
++msgid ""
++msgstr ""
++"Project-Id-Version: PACKAGE VERSION\n"
++"Report-Msgid-Bugs-To: anibal@debian.org\n"
++"POT-Creation-Date: 2007-09-19 06:50+0200\n"
++"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
++"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
++"Language-Team: LANGUAGE <LL@li.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=CHARSET\n"
++"Content-Transfer-Encoding: 8bit\n"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid "Should portmap be bound to the loopback address?"
++msgstr ""
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"By default, portmap listens to all IP addresses. However, if this machine "
++"does not provide network RPC services (such as NIS or NFS) to remote "
++"clients, you can safely bind it to the loopback IP address (127.0.0.1)."
++msgstr ""
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This will allow RPC local services (like FAM) to work properly, while "
++"preventing remote systems from accessing the RPC services."
++msgstr ""
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This configuration can be changed by editing the OPTIONS line in the /etc/"
++"default/portmap file and adapting the use of the -i option to your needs."
++msgstr ""
+--- portmap-6.0.0.orig/debian/po/sv.po
++++ portmap-6.0.0/debian/po/sv.po
+@@ -0,0 +1,62 @@
++# Translators, if you are not familiar with the PO format, gettext
++# documentation is worth reading, especially sections dedicated to
++# this format, e.g. by running:
++# info -n '(gettext)PO Files'
++# info -n '(gettext)Header Entry'
++# Some information specific to po-debconf are available at
++# /usr/share/doc/po-debconf/README-trans
++# or http://www.debian.org/intl/l10n/po-debconf/README-trans
++# Developers do not need to manually edit POT or PO files.
++# , fuzzy
++#
++#
++msgid ""
++msgstr ""
++"Project-Id-Version: portmap\n"
++"Report-Msgid-Bugs-To: anibal@debian.org\n"
++"POT-Creation-Date: 2007-09-19 06:50+0200\n"
++"PO-Revision-Date: 2007-09-19 10:58+0100\n"
++"Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
++"Language-Team: Swedish <debian-l10n-swedish@lists.debian.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=iso-8859-1\n"
++"Content-Transfer-Encoding: 8bit\n"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid "Should portmap be bound to the loopback address?"
++msgstr "Ska portmap bindas till \"loopback\"-adressen?"
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"By default, portmap listens to all IP addresses. However, if this machine "
++"does not provide network RPC services (such as NIS or NFS) to remote "
++"clients, you can safely bind it to the loopback IP address (127.0.0.1)."
++msgstr ""
++"Portmap lyssnar som standard p� alla IP-adresser. Om den h�r maskinen inte "
++"tillhandah�ller RPC-tj�nster (till exempel NFS eller NIS) till "
++"fj�rrklienter, kan du med s�kerhet binda den till IP-adressen f�r \"loopback"
++"\" (127.0.0.1)."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This will allow RPC local services (like FAM) to work properly, while "
++"preventing remote systems from accessing the RPC services."
++msgstr ""
++"Detta kommer att till�ta lokala RPC-tj�nster (s�som FAM) att fungera korrekt "
++"medans fj�rrsystem hindras att komma �t dina RPC-tj�nster."
++
++#. Type: boolean
++#. Description
++#: ../templates:2001
++msgid ""
++"This configuration can be changed by editing the OPTIONS line in the /etc/"
++"default/portmap file and adapting the use of the -i option to your needs."
++msgstr ""
++"Denna konfiguration kan �ndras genom att redigera OPTIONS-raden i filen /etc/"
++"default/portmap och justera flaggan -i till att passa dina behov."

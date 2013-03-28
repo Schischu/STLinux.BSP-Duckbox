@@ -1,0 +1,15 @@
+--- ncurses-5.4.orig/mk-1st.awk	2004-01-10 20:48:43.000000000 +0000
++++ ncurses-5.4/mk-1st.awk	2004-07-13 18:44:08.000000000 +0100
+@@ -190,7 +190,11 @@
+ 					print "\t-@rm -f $(SHARED_LIB) $(IMPORT_LIB)";
+ 				} else {
+ 					dst_dirs = "$(DESTDIR)$(libdir)";
+-					printf "../lib/%s : $(%s_OBJS)\n", end_name, OBJS
++					printf "../lib/%s%s_pic.a : $(%s_OBJS)\n", prefix, name, OBJS
++					print  "\t-@rm -f $@"
++					printf "\t$(AR) $(AR_OPTS) ../lib/%s%s_pic.a $(SHARED_OBJS)\n", prefix, name
++					print  ""
++					printf "../lib/%s : $(%s_OBJS) ../lib/%s%s_pic.a\n", end_name, OBJS, prefix, name
+ 					print "\t-@rm -f $@";
+ 				}
+ 				if ( subset == "termlib" || subset == "termlib+ext_tinfo" ) {

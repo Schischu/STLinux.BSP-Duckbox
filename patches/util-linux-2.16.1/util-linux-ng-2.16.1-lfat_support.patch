@@ -1,0 +1,74 @@
+libblkid: make it 'lfat' aware
+
+The probe for 'vfat' now checks for the 'lfat' entry inside the 
+'/proc/filesystems' file, if it is present then returns 'lfat' 
+instead of 'vfat': https://bugzilla.stlinux.com/show_bug.cgi?id=14679
+
+Signed-off-by: Nunzio Raciti <nunzio.raciti@st.som>
+Reviewed-by: Carmelo Amoroso <carmelo.amoroso@st.com>
+
+*** util-linux-ng-2.16.1/shlibs/blkid/src/probers/vfat.c.orig	2009-08-21 15:59:30.000000000 +0200
+--- util-linux-ng-2.16.1/shlibs/blkid/src/probers/vfat.c	2011-12-09 13:36:02.000000000 +0100
+***************
+*** 129,134 ****
+--- 129,171 ----
+  	}
+  	return 0;
+  }
++ /*
++  * Taken from: shlibs/blkid/src/probers/ext.c
++  * Check to see if a filesystem is in /proc/filesystems.
++  * Returns 1 if found, 0 if not
++  */
++ static int fs_proc_check(const char *fs_name)
++ {
++ 	FILE    *f;
++ 	char    buf[80], *cp, *t;
++ 
++ 	f = fopen("/proc/filesystems", "r");
++ 	if (!f)
++ 		return 0;
++ 	while (!feof(f)) {
++ 		if (!fgets(buf, sizeof(buf), f))
++ 			break;
++ 		cp = buf;
++ 		if (!isspace(*cp)) {
++ 			while (*cp && !isspace(*cp))
++ 				cp++;
++ 		}
++ 		while (*cp && isspace(*cp))
++ 			cp++;
++ 		if ((t = strchr(cp, '\n')) != NULL)
++ 			*t = 0;
++ 		if ((t = strchr(cp, '\t')) != NULL)
++ 			*t = 0;
++ 		if ((t = strchr(cp, ' ')) != NULL)
++ 			*t = 0;
++ 		if (!strcmp(fs_name, cp)) {
++ 			fclose(f);
++ 	       		return 1;
++ 	 	}
++ 	}
++ 	fclose(f);
++ 	return (0);
++ }
+  
+  /*
+   * The FAT filesystem could be without a magic string in superblock
+***************
+*** 327,332 ****
+--- 363,376 ----
+  			    memcmp(fsinfo->signature2, "\x00\x00\x00\x00", 4) != 0)
+  				return -1;
+  		}
++ 
++ 		/* Checks for the 'lfat' entry inside the file '/proc/filesystems',
++			 * if it is present then returns 'lfat' instead of 'vfat'.
++               	 * https://bugzilla.stlinux.com/show_bug.cgi?id=14679 */
++ 		if(fs_proc_check("lfat"))
++ 			blkid_probe_set_value(pr, "TYPE", (unsigned char *) "lfat",
++ 				      sizeof("lfat"));
++ 
+  	}
+  
+  	if (vol_label && memcmp(vol_label, no_name, 11))
