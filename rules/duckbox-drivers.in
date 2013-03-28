@@ -1,0 +1,8 @@
+## SECTION=core
+
+config DUCKBOX_DRIVERS
+	tristate
+	select KERNEL
+	prompt "duckbox-drivers"
+	help
+	  FIXME

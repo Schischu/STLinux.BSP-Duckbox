@@ -1,0 +1,10 @@
+## SECTION=python
+
+menuconfig PYTHON_TWISTED
+	tristate
+	select PYTHON
+	prompt "python-twisted                "
+	help
+	  FIXME
+
+

@@ -1,0 +1,10 @@
+## SECTION=python
+
+menuconfig PYTHON_ZOPE_INTERFACE
+	tristate
+	select PYTHON
+	prompt "python-zope-interface                "
+	help
+	  FIXME
+
+

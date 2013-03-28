@@ -1,0 +1,12 @@
+## SECTION=python
+
+menuconfig PYTHON_LXML
+	tristate
+	select PYTHON
+	select LIBXML2
+	select LIBXSLT
+	prompt "python-lxml                "
+	help
+	  FIXME
+
+

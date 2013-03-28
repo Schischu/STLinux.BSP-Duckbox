@@ -1,0 +1,11 @@
+## SECTION=python
+
+menuconfig PYTHON_WIFI
+	tristate
+	select PYTHON
+	select PYTHON_SETUPTOOLS
+	prompt "python-wifi                "
+	help
+	  FIXME
+
+

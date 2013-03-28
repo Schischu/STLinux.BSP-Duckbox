@@ -1,0 +1,10 @@
+## SECTION=python
+
+menuconfig PYTHON_OPENSSL
+	tristate
+	select PYTHON
+	prompt "python-openssl                "
+	help
+	  FIXME
+
+

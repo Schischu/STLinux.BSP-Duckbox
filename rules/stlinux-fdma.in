@@ -1,0 +1,6 @@
+## SECTION=core
+
+config STLINUX_FDMA
+	tristate
+	default m
+	select BASE

@@ -1,0 +1,5 @@
+## SECTION=system_libraries
+
+config LIBGIF
+	tristate
+	prompt "libgif"

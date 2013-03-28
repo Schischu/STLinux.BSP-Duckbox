@@ -1,0 +1,5 @@
+## SECTION=system_libraries
+
+config LIBXMLCCWRAP
+	tristate
+	prompt "libxmlccwrap"

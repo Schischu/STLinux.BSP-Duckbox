@@ -1,0 +1,10 @@
+## SECTION=python
+
+menuconfig PYTHON_SETUPTOOLS
+	tristate
+	select PYTHON
+	prompt "python-setuptools                "
+	help
+	  FIXME
+
+
