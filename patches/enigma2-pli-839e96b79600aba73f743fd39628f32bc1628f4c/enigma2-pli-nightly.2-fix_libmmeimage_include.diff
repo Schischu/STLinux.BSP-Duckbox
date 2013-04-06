@@ -1,0 +1,12 @@
+diff -Nur '--exclude=.git' '--exclude=tuxtxt' enigma2-nightly.org.org/lib/gdi/picload.cpp enigma2-nightly.org/lib/gdi/picload.cpp
+--- enigma2-nightly.org.org/lib/gdi/picload.cpp	2012-03-20 01:26:26.671115298 -0700
++++ enigma2-nightly.org/lib/gdi/picload.cpp	2012-03-20 01:26:31.467115298 -0700
+@@ -4,7 +4,7 @@
+ 
+ #include <lib/gdi/picload.h>
+ #include <lib/gdi/picexif.h>
+-#include "../../../misc/tools/libmmeimage/libmmeimage.h"
++#include <libmmeimage.h>
+ 
+ extern "C" {
+ #include <jpeglib.h>

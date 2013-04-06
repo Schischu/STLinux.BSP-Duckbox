@@ -3,7 +3,6 @@
 config ENIGMA2_PLI
 	tristate
 	select FREETYPE 
-	
 	select EXPAT 
 	select FONTCONFIG 
 	select LIBFRIBIDI 
@@ -25,6 +24,8 @@ config ENIGMA2_PLI
 	select PYTHON_LXML 
 	select LIBXMLCCWRAP
 	select LIBSIGCPP
+	select LIBMMEIMAGE
+	select LIBTUXTXT
 	prompt "enigma2-pli"
 	help
 	  FIXME

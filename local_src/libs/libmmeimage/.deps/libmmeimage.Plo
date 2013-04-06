@@ -1,0 +1,50 @@
+libmmeimage.lo: libmmeimage.c libmmeimage.h libmmeimg_error.h \
+ /home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/cdkroot/usr/include/stdio.h \
+ /home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/cdkroot/usr/include/features.h \
+ /home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/cdkroot/usr/include/sys/cdefs.h \
+ /home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/cdkroot/usr/include/bits/wordsize.h \
+ /home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/cdkroot/usr/include/gnu/stubs.h \
+ /home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/devkit/sh4/lib/gcc/sh4-linux/4.5.2/include/stddef.h \
+ /home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/cdkroot/usr/include/bits/types.h \
+ /home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/cdkroot/usr/include/bits/typesizes.h \
+ /home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/cdkroot/usr/include/libio.h \
+ /home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/cdkroot/usr/include/_G_config.h \
+ /home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/cdkroot/usr/include/wchar.h \
+ /home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/devkit/sh4/lib/gcc/sh4-linux/4.5.2/include/stdarg.h \
+ /home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/cdkroot/usr/include/bits/stdio_lim.h \
+ /home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/cdkroot/usr/include/bits/sys_errlist.h \
+ /home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/cdkroot/usr/include/bits/stdio.h
+
+libmmeimage.h:
+
+libmmeimg_error.h:
+
+/home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/cdkroot/usr/include/stdio.h:
+
+/home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/cdkroot/usr/include/features.h:
+
+/home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/cdkroot/usr/include/sys/cdefs.h:
+
+/home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/cdkroot/usr/include/bits/wordsize.h:
+
+/home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/cdkroot/usr/include/gnu/stubs.h:
+
+/home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/devkit/sh4/lib/gcc/sh4-linux/4.5.2/include/stddef.h:
+
+/home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/cdkroot/usr/include/bits/types.h:
+
+/home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/cdkroot/usr/include/bits/typesizes.h:
+
+/home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/cdkroot/usr/include/libio.h:
+
+/home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/cdkroot/usr/include/_G_config.h:
+
+/home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/cdkroot/usr/include/wchar.h:
+
+/home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/devkit/sh4/lib/gcc/sh4-linux/4.5.2/include/stdarg.h:
+
+/home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/cdkroot/usr/include/bits/stdio_lim.h:
+
+/home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/cdkroot/usr/include/bits/sys_errlist.h:
+
+/home/ubuntu/repos/ufs913_xbmc_frodo_rc3/tdt/tufsbox/cdkroot/usr/include/bits/stdio.h:

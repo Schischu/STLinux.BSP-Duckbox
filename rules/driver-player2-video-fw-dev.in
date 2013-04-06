@@ -1,0 +1,8 @@
+## SECTION=core
+
+config DRIVER_PLAYER2_VIDEO_FW_DEV
+	tristate
+	select KERNEL
+	prompt "driver-player2-video-fw-dev"
+	help
+	  FIXME

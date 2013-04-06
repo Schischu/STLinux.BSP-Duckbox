@@ -1,0 +1,8 @@
+## SECTION=multimedia_libs
+
+config LIBTUXTXT32BPP
+	tristate
+	prompt "libtuxtxt32bpp"
+	select LIBTUXTXT
+	help
+	  FIXME

@@ -1,0 +1,200 @@
+diff -Nur ta/tuxtxt_common.h b/tuxtxt_common.h
+--- a/tuxtxt_common.h	2012-03-21 03:53:24.000000000 -0700
++++ b/tuxtxt_common.h	2012-03-21 05:01:34.008166144 -0700
+
+@@ -32,6 +32,67 @@
+ #include <tdgfx/stb04gfx.h>
+ #endif
+ 
++#if defined(__sh__)
++#include <linux/stmfb.h>
++
++void blit(tstRenderInfo* renderinfo)
++{
++	STMFBIO_BLT_DATA  bltData;
++	memset(&bltData, 0, sizeof(STMFBIO_BLT_DATA));
++
++	bltData.operation  = BLT_OP_COPY;
++	bltData.srcOffset  = 1920*1080*4;
++
++	if (!renderinfo->var_screeninfo.yoffset) // First Buffer
++		;
++	else // Second Buffer
++		bltData.srcOffset += renderinfo->var_screeninfo.xres * renderinfo->var_screeninfo.yres * 4;
++
++	bltData.srcPitch   = 720 * 4;
++	bltData.srcFormat  = SURF_BGRA8888;
++	bltData.dstFormat  = SURF_BGRA8888;
++	bltData.dstOffset  = 0;
++	bltData.dstPitch   = renderinfo->strideSc;
++	bltData.dst_top    = 0;
++	bltData.dst_left   = 0;
++	bltData.dst_right  = renderinfo->xResSc;
++	bltData.dst_bottom = renderinfo->yResSc;
++
++	if (renderinfo->zoommode == 0)
++	{
++		bltData.src_top    = 0;
++		bltData.src_left   = 0;
++		bltData.src_right  = 720;
++		bltData.src_bottom = 576;
++	} else
++	if (renderinfo->zoommode == 1)
++	{
++		bltData.src_top    = 0;
++		bltData.src_left   = 0;
++		bltData.src_right  = 720;
++		bltData.src_bottom = 576 / 2;
++	} else
++	if (renderinfo->zoommode == 2)
++	{
++		bltData.src_top    = 576 / 2;
++		bltData.src_left   = 0;
++		bltData.src_right  = 720;
++		bltData.src_bottom = 576;
++	} else
++		return;
++	
++	if ( ioctl(renderinfo->fb, STMFBIO_BLT, &bltData ) < 0)
++	{
++		perror("ioctl STMFBIO_BLT");
++	}
++
++	if(ioctl(renderinfo->fb, STMFBIO_SYNC_BLITTER) < 0)
++	{
++		perror("ioctl STMFBIO_SYNC_BLITTER");
++	}
++}
++#endif
++
+ const char *ObjectSource[] =
+ {
+ 	"(illegal)",
+@@ -4843,8 +4898,11 @@ void tuxtxt_CopyBB2FB(tstRenderInfo* renderinfo)
+ 			renderinfo->var_screeninfo.yoffset = 0;
+ 		else
+ 			renderinfo->var_screeninfo.yoffset = renderinfo->var_screeninfo.yres;
++#if defined(__sh__)
++#else
+ 		if (ioctl(renderinfo->fb, FBIOPAN_DISPLAY, &renderinfo->var_screeninfo) == -1)
+ 			perror("TuxTxt <FBIOPAN_DISPLAY>");
++#endif
+ #ifdef HAVE_TRIPLEDRAGON
+ 		tdfb_attr();
+ #endif
+@@ -5377,6 +5435,9 @@ void tuxtxt_RenderPage(tstRenderInfo* renderinfo)
+ 
+ 		tuxtxt_cache.pageupdate=0;
+ 	}
++#if defined(__sh__)
++	blit(renderinfo);
++#endif
+ }
+ /******************************************************************************
+  * MyFaceRequester
+@@ -5545,7 +5608,15 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
+ 		FT_Done_FreeType(renderinfo->library);
+ 		return 0;
+ 	}
+-
++printf("%s::%d\n", __FILE__, __LINE__);
++#if defined(__sh__)
++	renderinfo->xResSc = renderinfo->var_screeninfo.xres;
++	renderinfo->yResSc = renderinfo->var_screeninfo.yres;
++	renderinfo->var_screeninfo.xres = 720;
++	renderinfo->var_screeninfo.yres = 576;
++	renderinfo->var_screeninfo.xoffset = 0;
++	renderinfo->var_screeninfo.yoffset = 0;
++#else
+ 	/* change to PAL resolution */
+ 	if (renderinfo->var_screeninfo.xres != 720) 
+ 	{
+@@ -5565,7 +5636,7 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
+ 		FT_Done_FreeType(renderinfo->library);
+ 		return 0;
+ 	}
+-
++#endif
+ 	/* get fixed screeninfo */
+ 	if (ioctl(renderinfo->fb, FBIOGET_FSCREENINFO, &renderinfo->fix_screeninfo) == -1)
+ 	{
+@@ -5589,13 +5661,22 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
+ 	renderinfo->var_screeninfo.xres_virtual, renderinfo->var_screeninfo.yres_virtual,
+ 	renderinfo->var_screeninfo.yoffset);
+ #endif
+ 		/* map framebuffer into memory */
++#if defined(__sh__)
++	// The first 1920x1080x4 bytes are reserved
++	// After that we can take 1280x720x4 bytes for our virtual framebuffer
++	renderinfo->fix_screeninfo.smem_len -= 1920*1080*4;
++	renderinfo->lfb = (unsigned char*)mmap(0, renderinfo->fix_screeninfo.smem_len, PROT_READ | PROT_WRITE, MAP_SHARED, renderinfo->fb, 1920*1080*4);
++
++	renderinfo->strideSc = renderinfo->fix_screeninfo.line_length;
++	renderinfo->fix_screeninfo.line_length = 720*4; 
++#else
+ 	renderinfo->lfb = (unsigned char*)mmap(0, renderinfo->fix_screeninfo.smem_len, PROT_READ | PROT_WRITE, MAP_SHARED, renderinfo->fb, 0);
+-
++#endif
+ 	/* set new colormap */
+ 	tuxtxt_setcolors(renderinfo,(unsigned short *)tuxtxt_defaultcolors, 0, tuxtxt_color_SIZECOLTABLE);
+ 
+ 
+ 	if (!renderinfo->lfb)
+ 	{
+ 		perror("TuxTxt <mmap>");
+@@ -5623,6 +5623,7 @@
+ void tuxtxt_EndRendering(tstRenderInfo* renderinfo)
+ {
+ 	int i;
++#ifndef HAVE_GENERIC_HARDWARE
+ #ifndef HAVE_TRIPLEDRAGON
+ 	if (renderinfo->pig >= 0)
+ 		close(renderinfo->pig);
+@@ -5635,6 +5636,7 @@
+ #else
+ 	system("pzapit --pig 0 0 0 0 0");
+ #endif
++#endif
+ 	/* clear subtitlecache */
+ 	for (i = 0; i < SUBTITLE_CACHESIZE; i++)
+ 	{
+@@ -5645,9 +5734,11 @@ void tuxtxt_EndRendering(tstRenderInfo* renderinfo)
+ 	if (renderinfo->var_screeninfo.yoffset)
+ 	{
+ 		renderinfo->var_screeninfo.yoffset = 0;
+-
++#if defined(__sh__)
++#else
+ 		if (ioctl(renderinfo->fb, FBIOPAN_DISPLAY, &renderinfo->var_screeninfo) == -1)
+ 			perror("TuxTxt <FBIOPAN_DISPLAY>");
++#endif
+ 	}
+ 	 /* close avs */
+ 	if (renderinfo->avs >= 0)
+diff -Nur a/tuxtxt_def.h b/tuxtxt_def.h
+--- a/tuxtxt_def.h	2012-03-21 03:53:24.000000000 -0700
++++ b/tuxtxt_def.h	2012-03-21 05:00:01.192166143 -0700
+@@ -38,9 +38,11 @@
+ #include <linux/fb.h>
+ 
+ #ifndef HAVE_TRIPLEDRAGON
++#ifndef HAVE_GENERIC_HARDWARE
+ #include <dbox/avs_core.h>
+ #include <dbox/saa7126_core.h>
+ #endif
++#endif
+ 
+ #define FLOFSIZE 4
+ 
+@@ -300,6 +302,11 @@ typedef struct
+ 	unsigned char axdrcs[12+1+10+1];
+ 	struct fb_var_screeninfo var_screeninfo;
+ 	struct fb_fix_screeninfo fix_screeninfo;
++#if defined(__sh__)
++	int xResSc;
++	int yResSc;
++	int strideSc;
++#endif
+ 	int TTFWidthFactor16, TTFHeightFactor16, TTFShiftX, TTFShiftY; /* parameters for adapting to various TTF fonts */
+ 	int fontheight, fontwidth, fontwidth_normal, fontwidth_small, fontwidth_topmenumain, fontwidth_topmenusmall, ascender;
+ 	int displaywidth;

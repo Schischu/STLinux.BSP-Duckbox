@@ -1,0 +1,104 @@
+diff --git a/tuxtxt.c b/tuxtxt.c
+index 37f875f..907a878 100644
+--- a/tuxtxt.c
++++ b/tuxtxt.c
+@@ -204,11 +204,22 @@ int tuxtxt_run_ui(int pid, int demux)
+ 	tuxtxt_cache.vtxtpid = pid;
+ 
+ 	/* open Framebuffer */
++#if defined(__sh__)
++	if ((renderinfo.fb=open("/dev/fb/0", O_RDWR)) == -1)
++	{
++		if ((renderinfo.fb=open("/dev/fb0", O_RDWR)) == -1)
++		{
++			perror("TuxTxt <open /dev/fb/0 || /dev/fb0>");
++			return 0;
++		}
++	}
++#else
+ 	if ((renderinfo.fb=open("/dev/fb/0", O_RDWR)) == -1)
+ 	{
+ 		perror("TuxTxt <open /dev/fb/0>");
+ 		return 0;
+ 	}
++#endif
+ 	rc[0] = rc[1] =-1;
+ 	while(rc_num < 2)
+ 	{
+@@ -225,13 +236,21 @@ int tuxtxt_run_ui(int pid, int demux)
+ 		}
+ 		if (ioctl(rc[rc_num], EVIOCGNAME(128), tmp) < 0)
+ 			perror("EVIOCGNAME failed");
++#if defined(__sh__)
++		if (!strstr(tmp, "TDT RC event driver"))
++#else
+ 		if (!strstr(tmp, "remote control"))
++#endif
+ 		{
+ 			close(rc[rc_num]);
+ 			rc[rc_num] = -1;
+ 		}
+ 		else
++#if defined(__sh__)
++			break;
++#else
+ 			++rc_num;
++#endif
+ 		++cnt;
+ 	}
+ 
+@@ -636,10 +655,11 @@ int Init()
+ 	readproc("/proc/stb/avs/0/sb", saved_pin8);
+ 	writeproc("/proc/stb/avs/0/sb", fncmodes[renderinfo.screen_mode1]);
+ 
++#ifndef HAVE_GENERIC_HARDWARE
+ 	/* setup rc */
+ 	if (rc[0] >= 0) ioctl(rc[0], RC_IOCTL_BCODES, 1);
+ 	if (rc[1] >= 0) ioctl(rc[1], RC_IOCTL_BCODES, 1);
+-
++#endif
+ 
+ 	gethotlist();
+ 	tuxtxt_SwitchScreenMode(&renderinfo,renderinfo.screenmode);
+@@ -2967,6 +2987,9 @@ int GetRCCode()
+ 				case KEY_HELP:		RCCode = RC_HELP;	break;
+ 				case KEY_MENU:		RCCode = RC_DBOX;	break;
+ 				case KEY_EXIT:		RCCode = RC_HOME;	break;
++#if defined(__sh__)
++				case KEY_HOME:		RCCode = RC_HOME;	break;
++#endif
+ 				case KEY_POWER:		RCCode = RC_STANDBY;	break;
+ 				default:			RCCode = -1;		break;
+ 				}
+diff --git a/tuxtxt.h b/tuxtxt.h
+index 1b922b9..e636309 100644
+--- a/tuxtxt.h
++++ b/tuxtxt.h
+@@ -49,9 +49,11 @@
+ #include <sys/mman.h>
+ 
+ #ifndef HAVE_TRIPLEDRAGON
++#ifndef HAVE_GENERIC_HARDWARE
+ #include <dbox/fp.h>
+ #include <dbox/lcd-ks0713.h>
+ #endif
++#endif
+ 
+ #include "tuxtxt_def.h"
+ 
+@@ -240,6 +242,7 @@ struct _pid_table
+ 
+ unsigned char restoreaudio = 0;
+ #ifndef HAVE_TRIPLEDRAGON
++#ifndef HAVE_GENERIC_HARDWARE
+ /* 0 Nokia, 1 Philips, 2 Sagem */
+ /* typ_vcr/dvb: 	v1 a1 v2 a2 v3 a3 (vcr_only: fblk) */
+ const int avstable_ioctl[7] =
+@@ -263,6 +266,7 @@ unsigned char avstable_dvb[3][7] =
+ 	{ 0, 0, 0, 0, 0, 0, 0 },
+ };
+ #endif
++#endif
+ 
+ /* language dependent texts */
+ #define MAXMENULANGUAGE 10 /* 0 deutsch, 1 englisch, 2 französisch, 3 niederländisch, 4 griechisch, 5 italienisch, 6 polnisch, 7 schwedisch, 8 suomi, 9 portuguesa, 10 russian */

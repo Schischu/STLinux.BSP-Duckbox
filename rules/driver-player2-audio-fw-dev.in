@@ -1,0 +1,8 @@
+## SECTION=core
+
+config DRIVER_PLAYER2_AUDIO_FW_DEV
+	tristate
+	select KERNEL
+	prompt "driver-player2-audio-fw-dev"
+	help
+	  FIXME

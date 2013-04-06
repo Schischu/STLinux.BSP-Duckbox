@@ -1,0 +1,8 @@
+## SECTION=multimedia_libs
+
+config LIBTUXTXT
+	tristate
+	prompt "libtuxtxt"
+	select DRIVER_AVS
+	help
+	  FIXME

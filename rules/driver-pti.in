@@ -1,0 +1,8 @@
+## SECTION=core
+
+config DRIVER_PTI
+	tristate
+	select KERNEL
+	prompt "driver-pti"
+	help
+	  FIXME
