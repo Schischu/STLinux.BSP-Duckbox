@@ -61,6 +61,14 @@ E2FSPROGS_CONF_OPT	:= \
 	--disable-rpath \
 	--without-diet-libc
 
+$(STATEDIR)/e2fsprogs.compile:
+	@$(call targetinfo)
+
+	cd $(E2FSPROGS_DIR) && $(E2FSPROGS_PATH) $(E2FSPROGS_CONF_ENV) \
+		$(MAKE) $(PARALLELMFLAGS_BROKEN) $(E2FSPROGS_MAKEVARS) all
+	@$(call touch)
+
+
 E2FSPROGS_INSTALL_OPT := install
 
 # ----------------------------------------------------------------------------

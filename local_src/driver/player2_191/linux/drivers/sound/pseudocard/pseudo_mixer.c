@@ -51,7 +51,7 @@
 
 #include <ACC_Transformers/acc_mmedefines.h>
 
-#include <stmdisplay.h>
+#include <linux/stmdisplay.h>
 
 #include "alsa_backend_ops.h"
 #include "pseudo_mixer.h"

@@ -41,8 +41,8 @@ $(STATEDIR)/stlinux-fdma.compile:
 $(STATEDIR)/stlinux-fdma.install:
 	@$(call targetinfo)
 	
-	@mkdir -p $(STLINUX_FDMA_PKGDIR)/lib/fw/
-	@cp -dp $(STLINUX_FDMA_DIR)/$(STLINUX_FDMA_NAME)/* $(STLINUX_FDMA_PKGDIR)/lib/fw/
+	@mkdir -p $(STLINUX_FDMA_PKGDIR)/lib/firmware/
+	@cp -dp $(STLINUX_FDMA_DIR)/$(STLINUX_FDMA_NAME)/* $(STLINUX_FDMA_PKGDIR)/lib/firmware/
 	
 	@$(call touch)
 
@@ -59,7 +59,7 @@ $(STATEDIR)/stlinux-fdma.targetinstall:
 	@$(call install_fixup, stlinux-fdma,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, stlinux-fdma,DESCRIPTION,missing)
 
-	@$(call install_tree, stlinux-fdma, 0, 0, -, /lib/fw/, 0)
+	@$(call install_tree, stlinux-fdma, 0, 0, -, /lib/firmware/, 0)
 
 	@$(call install_finish, stlinux-fdma)
 

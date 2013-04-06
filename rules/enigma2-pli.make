@@ -89,7 +89,9 @@ $(STATEDIR)/enigma2-pli.targetinstall:
 	@$(call install_fixup, enigma2-pli,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, enigma2-pli,DESCRIPTION,missing)
 
-	@$(call install_lib, enigma2-pli, 0, 0, 0644, libdvbsi++)
+	@$(call install_tree, enigma2-pli, 0, 0, -, /usr/bin/)
+	@$(call install_tree, enigma2-pli, 0, 0, -, /usr/lib/)
+	@$(call install_tree, enigma2-pli, 0, 0, -, /usr/share/)
 
 	@$(call install_finish, enigma2-pli)
 

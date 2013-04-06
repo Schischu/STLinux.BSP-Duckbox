@@ -20,13 +20,10 @@ HOST_PACKAGES-$(PTXCONF_HOST_NCURSES) += host-ncurses
 #
 # autoconf
 #
-#TODO: It seems that at this point CROSS_LIB_DIR is not defined!?
-#      Set it manually to /lib
 HOST_NCURSES_CONF_TOOL	:= autoconf
 HOST_NCURSES_CONF_OPT	= \
 	$(HOST_AUTOCONF) \
 	$(NCURSES_AUTOCONF_SHARED)
-	--libdir="/lib" \
 
 $(STATEDIR)/host-ncurses.compile:
 	@$(call targetinfo)

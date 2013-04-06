@@ -80,7 +80,6 @@ endif
 NCURSES_AUTOCONF := \
 	$(CROSS_AUTOCONF_USR) \
 	$(NCURSES_AUTOCONF_SHARED) \
-	--libdir="/usr/lib" \
 	--without-progs
 
 $(STATEDIR)/ncurses.compile:

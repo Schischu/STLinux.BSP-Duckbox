@@ -4,5 +4,7 @@ config LIBTUXTXT
 	tristate
 	prompt "libtuxtxt"
 	select DRIVER_AVS
+	select DRIVER_STMFB
+	select FREETYPE 
 	help
 	  FIXME

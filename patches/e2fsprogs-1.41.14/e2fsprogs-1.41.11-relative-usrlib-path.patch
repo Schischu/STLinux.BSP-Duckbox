@@ -1,0 +1,11 @@
+--- e2fsprogs-1.41.11.orig/lib/Makefile.elf-lib	2009-08-13 03:39:57.000000000 +0200
++++ e2fsprogs-1.41.11/lib/Makefile.elf-lib	2010-04-25 14:02:41.000000000 +0200
+@@ -48,7 +48,7 @@
+ 	$(Q) if test "$(ELF_INSTALL_DIR)" = "$(libdir)"; then \
+ 		$(LN_S) -f $(ELF_SONAME) $(DESTDIR)$(libdir)/$(ELF_IMAGE).so ; \
+ 	else \
+-		$(LN_S) -f $(ELF_INSTALL_DIR)/$(ELF_SONAME) \
++		$(LN_S) -f  ../../lib/$(ELF_SONAME) \
+ 			$(DESTDIR)$(libdir)/$(ELF_IMAGE).so; \
+ 	fi			
+ 	$(E) "	LDCONFIG"

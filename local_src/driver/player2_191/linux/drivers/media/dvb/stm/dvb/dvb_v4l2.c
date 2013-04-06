@@ -62,8 +62,8 @@ license from ST.
 
 #include <linux/stmdisplay.h>
 #include <linux/stm/stmcoredisplay.h>
-#include <stmdisplayplane.h>
-#include <stmdisplayblitter.h>
+#include <linux/stmdisplayplane.h>
+#include <linux/stmdisplayblitter.h>
 
 #include "dvb_module.h"
 #include "backend.h"

@@ -1,0 +1,11 @@
+--- e2fsprogs-1.41.11/e2fsck/Makefile.in.orig	2010-04-28 19:38:49.000000000 +0200
++++ e2fsprogs-1.41.11/e2fsck/Makefile.in	2010-04-28 19:39:02.000000000 +0200
+@@ -117,7 +117,7 @@
+ 	$(E) "	LD $@"
+ 	$(Q) $(LD) $(ALL_LDFLAGS) -o e2fsck $(OBJS) $(LIBS) 
+ 
+-e2fsck.static: $(OBJS) $(STATIC_DEPLIBS)
++e2fsck.static: $(OBJS) 
+ 	$(E) "	LD $@"
+ 	$(Q) $(LD) $(LDFLAGS_STATIC) -o e2fsck.static $(OBJS) $(STATIC_LIBS) 
+ 

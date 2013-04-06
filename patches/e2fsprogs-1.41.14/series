@@ -1,2 +1,4 @@
 e2freefrag.8.in.patch
 e2fsprogs-libcom_err_tls_local_exec.patch
+e2fsprogs-1.41.11-relative-usrlib-path.patch
+e2fsprogs-1.41.11-no-lib-deps.patch

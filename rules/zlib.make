@@ -32,14 +32,6 @@ ZLIB_LICENSE	:= zlib
 # Prepare
 # ----------------------------------------------------------------------------
 
-#CROSS_LIB_DIR   := $(shell ptxd_get_lib_dir)
-
-
-$(STATEDIR)/zlib.get:
-	@$(call targetinfo)
-	echo "CROSS_LIB_DIR $(CROSS_LIB_DIR)" > /dev/stderr
-	@$(call touch)
-
 ZLIB_CONF_ENV := \
 	$(CROSS_ENV) \
 	CROSS_PREFIX=$(PTXCONF_COMPILER_PREFIX) \
@@ -50,8 +42,7 @@ ZLIB_CONF_ENV := \
 #
 ZLIB_AUTOCONF := \
 	--prefix=/usr \
-	--uname=Linux \
-	--libdir=/usr/$(CROSS_LIB_DIR)
+	--uname=Linux
 
 ifdef PTXCONF_ZLIB_STATIC
 ZLIB_AUTOCONF += --static

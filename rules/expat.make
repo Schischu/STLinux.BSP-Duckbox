@@ -37,7 +37,6 @@ EXPAT_LICENSE	:= MIT
 EXPAT_CONF_TOOL	:= autoconf
 EXPAT_CONF_OPT	:= \
 	$(CROSS_AUTOCONF_USR) \
-	--libdir="/usr/lib" \
 	--disable-static
 
 # ----------------------------------------------------------------------------
