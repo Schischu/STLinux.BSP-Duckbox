@@ -66,6 +66,9 @@ $(STATEDIR)/driver-player2.install:
 		INSTALL_MOD_PATH=$(DRIVER_PLAYER2_PKGDIR) \
 		modules_install
 	
+	mkdir -p $(SYSROOT)/usr/include/linux/dvb
+	cp $(DRIVER_PLAYER2_DIR)/linux/include/linux/dvb/stm_ioctls.h $(SYSROOT)/usr/include/linux/dvb
+	
 	@$(call touch)
 
 # ----------------------------------------------------------------------------

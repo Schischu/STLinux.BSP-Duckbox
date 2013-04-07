@@ -1,0 +1,1 @@
+gst-launch -v playbin2 uri=file:///mnt/usb/music.mp3

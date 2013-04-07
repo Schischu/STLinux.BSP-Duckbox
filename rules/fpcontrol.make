@@ -12,51 +12,49 @@
 #
 # We provide this package
 #
-PACKAGES-$(PTXCONF_LIBMMEIMAGE) += libmmeimage
+PACKAGES-$(PTXCONF_FPCONTROL) += fpcontrol
 
 #
 # Paths and names
 #
-LIBMMEIMAGE_VERSION	:=1.0
-LIBMMEIMAGE		:= libmmeimage
-LIBMMEIMAGE_URL		:= lndir://$(PTXDIST_WORKSPACE)/local_src/libs/$(LIBMMEIMAGE)
-LIBMMEIMAGE_DIR		:= $(BUILDDIR)/$(LIBMMEIMAGE)
-LIBMMEIMAGE_LICENSE	:= GPLv2+
+FPCONTROL_VERSION	:=1.0
+FPCONTROL		:= fpcontrol
+FPCONTROL_URL		:= lndir://$(PTXDIST_WORKSPACE)/local_src/tools/fp_control
+FPCONTROL_DIR		:= $(BUILDDIR)/$(FPCONTROL)
+FPCONTROL_LICENSE	:= GPLv2+
 
 # ----------------------------------------------------------------------------
 # Prepare
 # ----------------------------------------------------------------------------
 
-LIBMMEIMAGE_PATH	:= PATH=$(CROSS_PATH)
-LIBMMEIMAGE_ENV 	:= $(CROSS_ENV)
+FPCONTROL_PATH	:= PATH=$(CROSS_PATH)
+FPCONTROL_ENV 	:= $(CROSS_ENV)
 
 #
 # autoconf
 #
-LIBMMEIMAGE_CONF_TOOL := autoconf
-LIBMMEIMAGE_AUTOCONF := \
+FPCONTROL_CONF_TOOL := autoconf
+FPCONTROL_AUTOCONF := \
 	$(CROSS_AUTOCONF_USR)
 
-$(STATEDIR)/libmmeimage.prepare: $(STATEDIR)/driver-multicom.install \
-                                     $(STATEDIR)/driver-bpamem.install \
-                                     $(STATEDIR)/driver-stmfb.install
+$(STATEDIR)/fpcontrol.prepare:
 	@$(call targetinfo)
-	cd $(LIBMMEIMAGE_DIR); \
+	cd $(FPCONTROL_DIR); \
 		cp $(PTXDIST_SYSROOT_HOST)/share/libtool/config/ltmain.sh .; \
 		touch NEWS README AUTHORS ChangeLog; \
 		aclocal; automake -a; autoconf
-	@$(call world/prepare, LIBMMEIMAGE)
+	@$(call world/prepare, FPCONTROL)
 	@$(call touch)
 
 # ----------------------------------------------------------------------------
 # Compile
 # ----------------------------------------------------------------------------
 
-#$(STATEDIR)/libmmeimage.compile:
+#$(STATEDIR)/fpcontrol.compile:
 #	@$(call targetinfo)
 #	
-#	cd $(LIBMMEIMAGE_DIR) && \
-#		$(MAKE) $(CROSS_ENV_CC) libmmeimage.so
+#	cd $(FPCONTROL_DIR) && \
+#		$(MAKE) $(CROSS_ENV_CC) fpcontrol.so
 #	
 #	@$(call touch)
 
@@ -64,13 +62,9 @@ $(STATEDIR)/libmmeimage.prepare: $(STATEDIR)/driver-multicom.install \
 # Install
 # ----------------------------------------------------------------------------
 
-$(STATEDIR)/libmmeimage.install:
+$(STATEDIR)/fpcontrol.install:
 	@$(call targetinfo)
-	@$(call world/install, LIBMMEIMAGE)
-	
-	mkdir -p $(SYSROOT)/usr/include
-	cp $(LIBMMEIMAGE_DIR)/libmmeimage.h $(SYSROOT)/usr/include/
-	cp $(LIBMMEIMAGE_DIR)/libmmeimg_error.h $(SYSROOT)/usr/include/
+	@$(call world/install, FPCONTROL)
 	
 	@$(call touch)
 
@@ -78,18 +72,18 @@ $(STATEDIR)/libmmeimage.install:
 # Target-Install
 # ----------------------------------------------------------------------------
 
-$(STATEDIR)/libmmeimage.targetinstall:
+$(STATEDIR)/fpcontrol.targetinstall:
 	@$(call targetinfo)
 
-	@$(call install_init, libmmeimage)
-	@$(call install_fixup, libmmeimage,PRIORITY,optional)
-	@$(call install_fixup, libmmeimage,SECTION,base)
-	@$(call install_fixup, libmmeimage,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
-	@$(call install_fixup, libmmeimage,DESCRIPTION,missing)
+	@$(call install_init, fpcontrol)
+	@$(call install_fixup, fpcontrol,PRIORITY,optional)
+	@$(call install_fixup, fpcontrol,SECTION,base)
+	@$(call install_fixup, fpcontrol,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup, fpcontrol,DESCRIPTION,missing)
 
-	@$(call install_lib, libmmeimage, 0, 0, 0644, $(LIBMMEIMAGE))
+	@$(call install_copy, fpcontrol, 0, 0, 0755, -, /usr/bin/fp_control)
 
-	@$(call install_finish, libmmeimage)
+	@$(call install_finish, fpcontrol)
 
 	@$(call touch)
 

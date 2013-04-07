@@ -1,0 +1,12 @@
+## SECTION=image2
+
+config IMAGE_MUP
+	tristate
+	select HOST_GENIMAGE
+	select KERNEL
+	depends on PLATFORM_UFS922 || \
+	           PLATFORM_UFS912 || \
+	           PLATFORM_UFS913
+	prompt "Generate image/update.mup"
+	help
+	  FIXME

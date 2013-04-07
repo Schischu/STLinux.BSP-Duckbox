@@ -1,0 +1,10 @@
+## SECTION=multimedia_gstreamer
+
+menuconfig GST_PLUGINS_DVBMEDIASINK
+	tristate
+	select GLIB
+	select GSTREAMER
+	select GST_PLUGINS_BASE
+	prompt "gst-plugins-dvbmediasink              "
+	help
+	  FIXME

@@ -12,51 +12,49 @@
 #
 # We provide this package
 #
-PACKAGES-$(PTXCONF_LIBMMEIMAGE) += libmmeimage
+PACKAGES-$(PTXCONF_STREAMPROXY) += streamproxy
 
 #
 # Paths and names
 #
-LIBMMEIMAGE_VERSION	:=1.0
-LIBMMEIMAGE		:= libmmeimage
-LIBMMEIMAGE_URL		:= lndir://$(PTXDIST_WORKSPACE)/local_src/libs/$(LIBMMEIMAGE)
-LIBMMEIMAGE_DIR		:= $(BUILDDIR)/$(LIBMMEIMAGE)
-LIBMMEIMAGE_LICENSE	:= GPLv2+
+STREAMPROXY_VERSION	:=1.0
+STREAMPROXY		:= streamproxy
+STREAMPROXY_URL		:= lndir://$(PTXDIST_WORKSPACE)/local_src/tools/$(STREAMPROXY)
+STREAMPROXY_DIR		:= $(BUILDDIR)/$(STREAMPROXY)
+STREAMPROXY_LICENSE	:= GPLv2+
 
 # ----------------------------------------------------------------------------
 # Prepare
 # ----------------------------------------------------------------------------
 
-LIBMMEIMAGE_PATH	:= PATH=$(CROSS_PATH)
-LIBMMEIMAGE_ENV 	:= $(CROSS_ENV)
+STREAMPROXY_PATH	:= PATH=$(CROSS_PATH)
+STREAMPROXY_ENV 	:= $(CROSS_ENV)
 
 #
 # autoconf
 #
-LIBMMEIMAGE_CONF_TOOL := autoconf
-LIBMMEIMAGE_AUTOCONF := \
+STREAMPROXY_CONF_TOOL := autoconf
+STREAMPROXY_AUTOCONF := \
 	$(CROSS_AUTOCONF_USR)
 
-$(STATEDIR)/libmmeimage.prepare: $(STATEDIR)/driver-multicom.install \
-                                     $(STATEDIR)/driver-bpamem.install \
-                                     $(STATEDIR)/driver-stmfb.install
+$(STATEDIR)/streamproxy.prepare:
 	@$(call targetinfo)
-	cd $(LIBMMEIMAGE_DIR); \
+	cd $(STREAMPROXY_DIR); \
 		cp $(PTXDIST_SYSROOT_HOST)/share/libtool/config/ltmain.sh .; \
 		touch NEWS README AUTHORS ChangeLog; \
 		aclocal; automake -a; autoconf
-	@$(call world/prepare, LIBMMEIMAGE)
+	@$(call world/prepare, STREAMPROXY)
 	@$(call touch)
 
 # ----------------------------------------------------------------------------
 # Compile
 # ----------------------------------------------------------------------------
 
-#$(STATEDIR)/libmmeimage.compile:
+#$(STATEDIR)/streamproxy.compile:
 #	@$(call targetinfo)
 #	
-#	cd $(LIBMMEIMAGE_DIR) && \
-#		$(MAKE) $(CROSS_ENV_CC) libmmeimage.so
+#	cd $(STREAMPROXY_DIR) && \
+#		$(MAKE) $(CROSS_ENV_CC) streamproxy.so
 #	
 #	@$(call touch)
 
@@ -64,13 +62,9 @@ $(STATEDIR)/libmmeimage.prepare: $(STATEDIR)/driver-multicom.install \
 # Install
 # ----------------------------------------------------------------------------
 
-$(STATEDIR)/libmmeimage.install:
+$(STATEDIR)/streamproxy.install:
 	@$(call targetinfo)
-	@$(call world/install, LIBMMEIMAGE)
-	
-	mkdir -p $(SYSROOT)/usr/include
-	cp $(LIBMMEIMAGE_DIR)/libmmeimage.h $(SYSROOT)/usr/include/
-	cp $(LIBMMEIMAGE_DIR)/libmmeimg_error.h $(SYSROOT)/usr/include/
+	@$(call world/install, STREAMPROXY)
 	
 	@$(call touch)
 
@@ -78,18 +72,18 @@ $(STATEDIR)/libmmeimage.install:
 # Target-Install
 # ----------------------------------------------------------------------------
 
-$(STATEDIR)/libmmeimage.targetinstall:
+$(STATEDIR)/streamproxy.targetinstall:
 	@$(call targetinfo)
 
-	@$(call install_init, libmmeimage)
-	@$(call install_fixup, libmmeimage,PRIORITY,optional)
-	@$(call install_fixup, libmmeimage,SECTION,base)
-	@$(call install_fixup, libmmeimage,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
-	@$(call install_fixup, libmmeimage,DESCRIPTION,missing)
+	@$(call install_init, streamproxy)
+	@$(call install_fixup, streamproxy,PRIORITY,optional)
+	@$(call install_fixup, streamproxy,SECTION,base)
+	@$(call install_fixup, streamproxy,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup, streamproxy,DESCRIPTION,missing)
 
-	@$(call install_lib, libmmeimage, 0, 0, 0644, $(LIBMMEIMAGE))
+	@$(call install_copy, streamproxy, 0, 0, 0755, -, /usr/bin/$(STREAMPROXY))
 
-	@$(call install_finish, libmmeimage)
+	@$(call install_finish, streamproxy)
 
 	@$(call touch)
 

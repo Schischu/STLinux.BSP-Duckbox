@@ -234,6 +234,7 @@ PTXCONF_IMAGE_TGZ=y
 # new image creation options    
 #
 # PTXCONF_IMAGE_BOOT_MLO is not set
+# PTXCONF_IMAGE_MUP is not set
 # PTXCONF_IMAGE_ROOT_CPIO_GZ is not set
 # PTXCONF_IMAGE_ROOT_CPIO is not set
 # PTXCONF_IMAGE_ROOT_EXT is not set

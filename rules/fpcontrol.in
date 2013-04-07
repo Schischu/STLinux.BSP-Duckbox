@@ -1,0 +1,5 @@
+## SECTION=multimedia_libs
+
+config FPCONTROL
+	tristate "fpcontrol"
+

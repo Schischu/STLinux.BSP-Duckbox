@@ -12,51 +12,49 @@
 #
 # We provide this package
 #
-PACKAGES-$(PTXCONF_LIBMMEIMAGE) += libmmeimage
+PACKAGES-$(PTXCONF_EVREMOTE2) += evremote2
 
 #
 # Paths and names
 #
-LIBMMEIMAGE_VERSION	:=1.0
-LIBMMEIMAGE		:= libmmeimage
-LIBMMEIMAGE_URL		:= lndir://$(PTXDIST_WORKSPACE)/local_src/libs/$(LIBMMEIMAGE)
-LIBMMEIMAGE_DIR		:= $(BUILDDIR)/$(LIBMMEIMAGE)
-LIBMMEIMAGE_LICENSE	:= GPLv2+
+EVREMOTE2_VERSION	:=1.0
+EVREMOTE2		:= evremote2
+EVREMOTE2_URL		:= lndir://$(PTXDIST_WORKSPACE)/local_src/tools/$(EVREMOTE2)
+EVREMOTE2_DIR		:= $(BUILDDIR)/$(EVREMOTE2)
+EVREMOTE2_LICENSE	:= GPLv2+
 
 # ----------------------------------------------------------------------------
 # Prepare
 # ----------------------------------------------------------------------------
 
-LIBMMEIMAGE_PATH	:= PATH=$(CROSS_PATH)
-LIBMMEIMAGE_ENV 	:= $(CROSS_ENV)
+EVREMOTE2_PATH	:= PATH=$(CROSS_PATH)
+EVREMOTE2_ENV 	:= $(CROSS_ENV)
 
 #
 # autoconf
 #
-LIBMMEIMAGE_CONF_TOOL := autoconf
-LIBMMEIMAGE_AUTOCONF := \
+EVREMOTE2_CONF_TOOL := autoconf
+EVREMOTE2_AUTOCONF := \
 	$(CROSS_AUTOCONF_USR)
 
-$(STATEDIR)/libmmeimage.prepare: $(STATEDIR)/driver-multicom.install \
-                                     $(STATEDIR)/driver-bpamem.install \
-                                     $(STATEDIR)/driver-stmfb.install
+$(STATEDIR)/evremote2.prepare:
 	@$(call targetinfo)
-	cd $(LIBMMEIMAGE_DIR); \
+	cd $(EVREMOTE2_DIR); \
 		cp $(PTXDIST_SYSROOT_HOST)/share/libtool/config/ltmain.sh .; \
 		touch NEWS README AUTHORS ChangeLog; \
 		aclocal; automake -a; autoconf
-	@$(call world/prepare, LIBMMEIMAGE)
+	@$(call world/prepare, EVREMOTE2)
 	@$(call touch)
 
 # ----------------------------------------------------------------------------
 # Compile
 # ----------------------------------------------------------------------------
 
-#$(STATEDIR)/libmmeimage.compile:
+#$(STATEDIR)/evremote2.compile:
 #	@$(call targetinfo)
 #	
-#	cd $(LIBMMEIMAGE_DIR) && \
-#		$(MAKE) $(CROSS_ENV_CC) libmmeimage.so
+#	cd $(EVREMOTE2_DIR) && \
+#		$(MAKE) $(CROSS_ENV_CC) evremote2.so
 #	
 #	@$(call touch)
 
@@ -64,13 +62,9 @@ $(STATEDIR)/libmmeimage.prepare: $(STATEDIR)/driver-multicom.install \
 # Install
 # ----------------------------------------------------------------------------
 
-$(STATEDIR)/libmmeimage.install:
+$(STATEDIR)/evremote2.install:
 	@$(call targetinfo)
-	@$(call world/install, LIBMMEIMAGE)
-	
-	mkdir -p $(SYSROOT)/usr/include
-	cp $(LIBMMEIMAGE_DIR)/libmmeimage.h $(SYSROOT)/usr/include/
-	cp $(LIBMMEIMAGE_DIR)/libmmeimg_error.h $(SYSROOT)/usr/include/
+	@$(call world/install, EVREMOTE2)
 	
 	@$(call touch)
 
@@ -78,18 +72,18 @@ $(STATEDIR)/libmmeimage.install:
 # Target-Install
 # ----------------------------------------------------------------------------
 
-$(STATEDIR)/libmmeimage.targetinstall:
+$(STATEDIR)/evremote2.targetinstall:
 	@$(call targetinfo)
 
-	@$(call install_init, libmmeimage)
-	@$(call install_fixup, libmmeimage,PRIORITY,optional)
-	@$(call install_fixup, libmmeimage,SECTION,base)
-	@$(call install_fixup, libmmeimage,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
-	@$(call install_fixup, libmmeimage,DESCRIPTION,missing)
+	@$(call install_init, evremote2)
+	@$(call install_fixup, evremote2,PRIORITY,optional)
+	@$(call install_fixup, evremote2,SECTION,base)
+	@$(call install_fixup, evremote2,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup, evremote2,DESCRIPTION,missing)
 
-	@$(call install_lib, libmmeimage, 0, 0, 0644, $(LIBMMEIMAGE))
+	@$(call install_copy, evremote2, 0, 0, 0755, -, /usr/bin/$(EVREMOTE2))
 
-	@$(call install_finish, libmmeimage)
+	@$(call install_finish, evremote2)
 
 	@$(call touch)
 
