@@ -1,8 +1,7 @@
 ## SECTION=multimedia_libs
 
 config LIBMMEIMAGE
-	tristate
-	select DRIVER_MULTICOM
-	select DRIVER_BPAMEM
-	select DRIVER_STMFB
-	prompt "libmmeimage"
+	tristate "libmmeimage"
+#	select DRIVER_MULTICOM
+#	select DRIVER_BPAMEM
+#	select DRIVER_STMFB

@@ -59,7 +59,21 @@ $(STATEDIR)/stlinux-fdma.targetinstall:
 	@$(call install_fixup, stlinux-fdma,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, stlinux-fdma,DESCRIPTION,missing)
 
-	@$(call install_tree, stlinux-fdma, 0, 0, -, /lib/firmware/, 0)
+ifdef PTXCONF_CPU_SUBTYPE_STX7100
+	@$(call install_copy, stlinux-fdma, 0, 0, 644, -, /lib/firmware/fdma_STx7100_0.elf, 0)
+endif
+ifdef PTXCONF_CPU_SUBTYPE_STX7101 || PTXCONF_CPU_SUBTYPE_STX7109
+	@$(call install_copy, stlinux-fdma, 0, 0, 644, -, /lib/firmware/fdma_STx7109_0.elf, 0)
+endif
+
+ifdef PTXCONF_CPU_SUBTYPE_STX7105
+	@$(call install_copy, stlinux-fdma, 0, 0, 644, -, /lib/firmware/fdma_STx7105_0.elf, 0)
+	@$(call install_copy, stlinux-fdma, 0, 0, 644, -, /lib/firmware/fdma_STx7105_1.elf, 0)
+endif
+ifdef PTXCONF_CPU_SUBTYPE_STX7111
+	@$(call install_copy, stlinux-fdma, 0, 0, 644, -, /lib/firmware/fdma_STx7111_0.elf, 0)
+	@$(call install_copy, stlinux-fdma, 0, 0, 644, -, /lib/firmware/fdma_STx7111_1.elf, 0)
+endif
 
 	@$(call install_finish, stlinux-fdma)
 

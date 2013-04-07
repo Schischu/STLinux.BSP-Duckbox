@@ -1,0 +1,8 @@
+## SECTION=kernel_driver
+
+config DRIVER_SIMUBUTTON
+	tristate
+	select KERNEL
+	prompt "driver-simubutton"
+	help
+	  FIXME

@@ -35,6 +35,8 @@ endif
 
 $(STATEDIR)/driver-multicom.prepare:
 	@$(call targetinfo)
+	chmod 644 $(DRIVER_MULTICOM_DIR)/linux/source/include/mme.h
+	chmod 644 $(DRIVER_MULTICOM_DIR)/linux/source/include/mme/*.h
 	@$(call touch)
 
 # ----------------------------------------------------------------------------

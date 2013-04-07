@@ -1,0 +1,17 @@
+## SECTION=kernel_driver
+
+config DRIVER_FRONTENDS_MULTITUNER
+	tristate
+	select KERNEL
+	prompt "driver-frontends-multituner"
+	depends on PLATFORM_ATEVIO7500 || \
+	           PLATFORM_UFS913 || \
+	           PLATFORM_CUBEREVO || \
+	           PLATFORM_CUBEREVO_MINI || \
+	           PLATFORM_CUBEREVO_MINI2 || \
+	           PLATFORM_CUBEREVO_250HD || \
+	           PLATFORM_CUBEREVO_9500HD || \
+	           PLATFORM_CUBEREVO_2000HD || \
+	           PLATFORM_CUBEREVO_MINI_FTA
+	help
+	  FIXME

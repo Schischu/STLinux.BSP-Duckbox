@@ -1,0 +1,29 @@
+## SECTION=kernel_driver
+
+config DRIVER_AVS
+	tristate
+	select KERNEL
+	prompt "driver-avs"
+	help
+	  FIXME
+
+if DRIVER_AVS
+
+config DRIVER_AVS_I2C
+	prompt "driver-avs-i2c"
+	bool
+	default 1
+	help
+	  FIXME
+
+if DRIVER_AVS_I2C
+
+config DRIVER_AVS_I2C_ADDR
+	prompt "driver-avs-i2c-addr"
+	bool
+	default "0x11"
+	help
+	  FIXME
+
+endif
+endif

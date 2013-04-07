@@ -1,0 +1,8 @@
+## SECTION=kernel_driver
+
+config DRIVER_E2PROC
+	tristate
+	select KERNEL
+	prompt "driver-e2proc"
+	help
+	  FIXME

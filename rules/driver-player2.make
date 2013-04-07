@@ -62,8 +62,8 @@ $(STATEDIR)/driver-player2.install:
 	cd $(KERNEL_DIR) && $(KERNEL_PATH) $(KERNEL_ENV) \
 		$(MAKE) $(KERNEL_MAKEVARS) \
 		-C $(KERNEL_DIR) \
-		M=$(DRIVER_PLAYER2_DIR) \
-		INSTALL_MOD_PATH=$(DRIVER_PLAYER2_PKGDIR)/linux \
+		M=$(DRIVER_PLAYER2_DIR)/linux \
+		INSTALL_MOD_PATH=$(DRIVER_PLAYER2_PKGDIR) \
 		modules_install
 	
 	@$(call touch)
@@ -82,8 +82,8 @@ $(STATEDIR)/driver-player2.targetinstall:
 	@$(call install_fixup, driver-player2, DESCRIPTION,missing)
 
 	@cd $(DRIVER_PLAYER2_PKGDIR) && \
-		find lib -type f | while read file; do \
-			$(call install_copy, driver-player2, 0, 0, 0644, -, /$${file}, k) \
+		find lib -type f -name "*.ko" | while read file; do \
+			$(call install_copy, driver-player2, 0, 0, 0644, $(DRIVER_PLAYER2_PKGDIR)/$${file}, /lib/modules/$(call remove_quotes, $(PTXCONF_KERNEL_VERSION)).$(call remove_quotes, $(PTXCONF_KERNEL_LOCALVERSION))/extra/`basename $${file}`, k) \
 	done
 
 	@$(call install_finish, driver-player2)

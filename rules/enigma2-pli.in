@@ -29,3 +29,9 @@ config ENIGMA2_PLI
 	prompt "enigma2-pli"
 	help
 	  FIXME
+
+if ENIGMA2_PLI
+config ENIGMA2_PLI_INSTALL_PY
+	bool "Install .py files"
+	default false
+endif

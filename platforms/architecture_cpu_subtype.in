@@ -1,0 +1,16 @@
+## SECTION=architecture_options
+
+config CPU_SUBTYPE_STX7100
+	bool
+
+config CPU_SUBTYPE_STX7101
+	bool
+
+config CPU_SUBTYPE_STX7109
+	bool
+
+config CPU_SUBTYPE_STX7105
+	bool
+
+config CPU_SUBTYPE_STX7111
+	bool

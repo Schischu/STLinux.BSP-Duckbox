@@ -1,0 +1,6 @@
+kernel//home/ubuntu/repos/ptxdist/fork/STLinux.BSP-Duckbox/platform-ufs913/build-target/frontends-multituner/lnb_pio.ko
+kernel//home/ubuntu/repos/ptxdist/fork/STLinux.BSP-Duckbox/platform-ufs913/build-target/frontends-multituner/lnbh221.ko
+kernel//home/ubuntu/repos/ptxdist/fork/STLinux.BSP-Duckbox/platform-ufs913/build-target/frontends-multituner/lnb_a8293.ko
+kernel//home/ubuntu/repos/ptxdist/fork/STLinux.BSP-Duckbox/platform-ufs913/build-target/frontends-multituner/socket.ko
+kernel//home/ubuntu/repos/ptxdist/fork/STLinux.BSP-Duckbox/platform-ufs913/build-target/frontends-multituner/frontend_platform.ko
+kernel//home/ubuntu/repos/ptxdist/fork/STLinux.BSP-Duckbox/platform-ufs913/build-target/frontends-multituner/avl6222.ko

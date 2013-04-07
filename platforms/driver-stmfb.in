@@ -1,0 +1,8 @@
+## SECTION=kernel_driver
+
+config DRIVER_STMFB
+	tristate
+	select KERNEL
+	prompt "driver-stmfb"
+	help
+	  FIXME

@@ -25,6 +25,9 @@ LIBTUXTXT_SOURCE_GIT	:= $(SRCDIR)/tuxtxt.git
 LIBTUXTXT_DIR	:= $(BUILDDIR)/$(LIBTUXTXT)/libtuxtxt
 LIBTUXTXT_LICENSE	:= libtuxtxt
 
+$(STATEDIR)/libtuxtxt.prepare: $(STATEDIR)/driver-avs.install \
+                                   $(STATEDIR)/driver-stmfb.install
+
 $(STATEDIR)/libtuxtxt.get:
 	@$(call targetinfo)
 	

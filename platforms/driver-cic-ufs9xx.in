@@ -1,0 +1,9 @@
+## SECTION=kernel_driver
+
+config DRIVER_CIC_UFS9XX
+	tristate
+	select KERNEL
+	prompt "driver-cic-ufs9xx"
+	depends on PLATFORM_UFS922 || PLATFORM_UFS912 || PLATFORM_UFS913
+	help
+	  FIXME

@@ -1,8 +1,0 @@
-## SECTION=core
-
-config DRIVER_BPAMEM
-	tristate
-	select KERNEL
-	prompt "driver-bpamem"
-	help
-	  FIXME

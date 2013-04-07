@@ -1,8 +1,0 @@
-## SECTION=core
-
-config DRIVER_MULTICOM
-	tristate
-	select KERNEL
-	prompt "driver-multicom"
-	help
-	  FIXME

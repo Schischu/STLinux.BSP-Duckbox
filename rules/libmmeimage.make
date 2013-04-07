@@ -23,6 +23,10 @@ LIBMMEIMAGE_URL		:= lndir://$(PTXDIST_WORKSPACE)/local_src/libs/$(LIBMMEIMAGE)
 LIBMMEIMAGE_DIR		:= $(BUILDDIR)/$(LIBMMEIMAGE)
 LIBMMEIMAGE_LICENSE	:= GPLv2+
 
+$(STATEDIR)/libmmeimage.prepare: $(STATEDIR)/driver-multicom.install \
+                                     $(STATEDIR)/driver-bpamem.install \
+                                     $(STATEDIR)/driver-stmfb.install
+
 # ----------------------------------------------------------------------------
 # Prepare
 # ----------------------------------------------------------------------------

@@ -1,0 +1,8 @@
+## SECTION=kernel_driver
+
+config DRIVER_CPUFREQU
+	tristate
+	select KERNEL
+	prompt "driver-cpufrequ"
+	help
+	  FIXME

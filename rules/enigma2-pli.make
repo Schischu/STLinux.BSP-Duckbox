@@ -90,7 +90,22 @@ $(STATEDIR)/enigma2-pli.targetinstall:
 	@$(call install_fixup, enigma2-pli,DESCRIPTION,missing)
 
 	@$(call install_tree, enigma2-pli, 0, 0, -, /usr/bin/)
-	@$(call install_tree, enigma2-pli, 0, 0, -, /usr/lib/)
+
+ifdef PTXCONF_ENIGMA2_PLI_INSTALL_PY
+	@cd $(ENIGMA2_PLI_PKGDIR) && \
+		find ./usr/lib/enigma2 -name "*.py" | \
+		while read file; do \
+		$(call install_copy, enigma2-pli, 0, 0, 644, -, $${file##.}); \
+	done
+endif
+
+	@cd $(ENIGMA2_PLI_PKGDIR) && \
+		find ./usr/lib/enigma2 \
+		! -type d -a ! \( -name "*.py" -o -name "*.pyc" \) | \
+		while read file; do \
+		$(call install_copy, enigma2-pli, 0, 0, 644, -, $${file##.}); \
+	done
+
 	@$(call install_tree, enigma2-pli, 0, 0, -, /usr/share/)
 
 	@$(call install_finish, enigma2-pli)

@@ -1,0 +1,9 @@
+## SECTION=kernel_driver
+
+config DRIVER_FRONTCONTROLLER_MICOM
+	tristate
+	select KERNEL
+	prompt "driver-frontcontroller-micom"
+	depends on PLATFORM_UFS922 || PLATFORM_UFS912 || PLATFORM_UFS913
+	help
+	  FIXME

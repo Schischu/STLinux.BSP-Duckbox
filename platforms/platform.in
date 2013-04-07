@@ -1,0 +1,126 @@
+## SECTION=platform
+
+choice
+	prompt "Platform selection"
+
+# Kathrein
+
+config PLATFORM_UFS922
+	bool "Kathrein UFS-922"
+	select CPU_SUBTYPE_STX7101
+
+config PLATFORM_UFS912
+	bool "Kathrein UFS-912"
+	select CPU_SUBTYPE_STX7111
+
+config PLATFORM_UFS913
+	bool "Kathrein UFS-913"
+	select CPU_SUBTYPE_STX7105
+
+config PLATFORM_UFC960
+	bool "Kathrein UFC-960"
+	select CPU_SUBTYPE_STX7101
+
+# Topfield
+
+config PLATFORM_TF7700HDPVR
+	bool "Topfield 7700 HDPVR"
+	select CPU_SUBTYPE_STX7101
+
+# Fortis
+
+config PLATFORM_FORTIS_HDBOX
+	bool "Fortis (HDBOX)"
+	select CPU_SUBTYPE_STX7101
+
+config PLATFORM_ATEVIO7500
+	bool "Atevio 7500"
+	select CPU_SUBTYPE_STX7105
+
+config PLATFORM_FORTIS_HS7810A
+	bool "Fortis HS7810A"
+	select CPU_SUBTYPE_STX7111
+
+config PLATFORM_FORTIS_HS7110
+	bool "Fortis HS7110"
+	select CPU_SUBTYPE_STX7111
+
+config PLATFORM_OCTAGON_1008
+	bool "Octagon 1008"
+	select CPU_SUBTYPE_STX7101
+
+# Cuberevo / Ipbox
+
+config PLATFORM_CUBEREVO
+	bool "Cuberevo (IPBOX 9000)"
+	select CPU_SUBTYPE_STX7101
+
+config PLATFORM_CUBEREVO_MINI
+	bool "Cuberevo mini (IPBOX 900)"
+	select CPU_SUBTYPE_STX7101
+
+config PLATFORM_CUBEREVO_MINI2
+	bool "Cuberevo mini2 (IPBOX 910)"
+	select CPU_SUBTYPE_STX7101
+
+config PLATFORM_CUBEREVO_250HD
+	bool "Cuberevo 250 (IPBOX 91)"
+	select CPU_SUBTYPE_STX7101
+
+config PLATFORM_CUBEREVO_9500HD
+	bool "Cuberevo 9500HD (7000HD)"
+	select CPU_SUBTYPE_STX7101
+
+config PLATFORM_CUBEREVO_2500HD
+	bool "Cuberevo 2000HD"
+	select CPU_SUBTYPE_STX7101
+
+config PLATFORM_CUBEREVO_MINI_FTA
+	bool "Cuberevo mini_fta (200HD)"
+	select CPU_SUBTYPE_STX7101
+
+config PLATFORM_IPBOX9900
+	bool "Ipbox 9900"
+	select CPU_SUBTYPE_STX7101
+
+config PLATFORM_IPBOX99
+	bool "Ipbox 99"
+	select CPU_SUBTYPE_STX7101
+
+config PLATFORM_IPBOX55
+	bool "Ipbox 55"
+	select CPU_SUBTYPE_STX7101
+
+# Spark
+
+config PLATFORM_SPARK
+	bool "Spark"
+	select CPU_SUBTYPE_STX7111
+
+config PLATFORM_SPARK7162
+	bool "Spark 7162"
+	select CPU_SUBTYPE_STX7105
+
+# Misc
+
+config PLATFORM_HL101
+	bool "SpiderBox HL-101"
+	select CPU_SUBTYPE_STX7101
+
+config PLATFORM_VIP
+	bool "Edision Argus vip"
+	select CPU_SUBTYPE_STX7101
+
+config PLATFORM_HOMECAST5101
+	bool "Homecast 5101"
+	select CPU_SUBTYPE_STX7101
+
+config PLATFORM_ADB_BOX
+	bool "B4Team ADB 5800S"
+	select CPU_SUBTYPE_STX7101
+
+config PLATFORM_WHITEBOX
+	bool "WHITEBOX"
+	select CPU_SUBTYPE_STX7101
+
+endchoice

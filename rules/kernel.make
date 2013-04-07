@@ -29,14 +29,18 @@ endif
 #
 # Paths and names
 #
-KERNEL			:= linux-$(PTXCONF_KERNEL_VERSION).$(PTXCONF_KERNEL_LOCALVERSION)
+KERNEL			:= linux-$(call remove_quotes, $(PTXCONF_KERNEL_VERSION)).$(call remove_quotes, $(PTXCONF_KERNEL_LOCALVERSION))
 KERNEL_MD5		:= $(call remove_quotes,$(PTXCONF_KERNEL_MD5))
 KERNEL_SUFFIX		:= tar.xz
 KERNEL_DIR		:= $(KERNEL_BDIR)/$(KERNEL)
 KERNEL_CONFIG		:= $(call remove_quotes, $(PTXDIST_PLATFORMCONFIGDIR)/$(PTXCONF_KERNEL_CONFIG))
 KERNEL_LICENSE		:= GPLv2
-KERNEL_URL		:= $(call kernel-url, KERNEL)
-KERNEL_SOURCE		:= $(SRCDIR)/linux-$(PTXCONF_KERNEL_VERSION).$(KERNEL_SUFFIX)
+
+KERNEL_S			:= linux-$(call remove_quotes, $(PTXCONF_KERNEL_VERSION))
+KERNEL_S_VERSION := $(call remove_quotes, $(PTXCONF_KERNEL_VERSION))
+KERNEL_S_SUFFIX := $(KERNEL_SUFFIX)
+KERNEL_URL		:= $(call kernel-url, KERNEL_S)
+KERNEL_SOURCE		:= $(SRCDIR)/linux-$(call remove_quotes, $(PTXCONF_KERNEL_VERSION)).$(KERNEL_SUFFIX)
 
 # ----------------------------------------------------------------------------
 # Prepare
@@ -175,7 +179,10 @@ endif
 ifdef PTXCONF_KERNEL_DTC
 	@install -m 755 "$(KERNEL_DIR)/scripts/dtc/dtc" "$(PTXCONF_SYSROOT_HOST)/bin/dtc"
 endif
-
+	
+	mkdir -p $(SYSROOT)/usr/include/linux/media/dvb/
+	cp $(KERNEL_DIR)/drivers/media/dvb/dvb-core/*.h $(SYSROOT)/usr/include/linux/media/dvb/
+	
 	@$(call touch)
 
 # ----------------------------------------------------------------------------
