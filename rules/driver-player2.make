@@ -86,7 +86,7 @@ $(STATEDIR)/driver-player2.targetinstall:
 
 	@cd $(DRIVER_PLAYER2_PKGDIR) && \
 		find lib -type f -name "*.ko" | while read file; do \
-			$(call install_copy, driver-player2, 0, 0, 0644, $(DRIVER_PLAYER2_PKGDIR)/$${file}, /lib/modules/$(call remove_quotes, $(PTXCONF_KERNEL_VERSION)).$(call remove_quotes, $(PTXCONF_KERNEL_LOCALVERSION))/extra/`basename $${file}`, k) \
+			$(call install_copy, driver-player2, 0, 0, 0644, $(DRIVER_PLAYER2_PKGDIR)/$${file}, /lib/modules/`basename $${file}`, k) \
 	done
 
 	@$(call install_finish, driver-player2)

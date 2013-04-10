@@ -71,6 +71,7 @@ ENIGMA2_PLI_ENV 	:= $(CROSS_ENV)
 
 ENIGMA2_PLI_AUTOCONF := \
 	$(CROSS_AUTOCONF_USR) \
+		--prefix=/usr/local \
 		--without-libsdl \
 		PY_PATH=$(SYSROOT)/usr \
 		PKG_CONFIG=$(PTXDIST_SYSROOT_HOST)/bin/pkg-config \
@@ -89,7 +90,7 @@ $(STATEDIR)/enigma2-pli.targetinstall:
 	@$(call install_fixup, enigma2-pli,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, enigma2-pli,DESCRIPTION,missing)
 
-	@$(call install_tree, enigma2-pli, 0, 0, -, /usr/bin/)
+	@$(call install_tree, enigma2-pli, 0, 0, -, /usr/local/bin/)
 
 ifdef PTXCONF_ENIGMA2_PLI_INSTALL_PY
 	@cd $(ENIGMA2_PLI_PKGDIR) && \
@@ -106,7 +107,7 @@ endif
 		$(call install_copy, enigma2-pli, 0, 0, 644, -, $${file##.}); \
 	done
 
-	@$(call install_tree, enigma2-pli, 0, 0, -, /usr/share/)
+	@$(call install_tree, enigma2-pli, 0, 0, -, /usr/local/share/)
 
 	@$(call install_finish, enigma2-pli)
 

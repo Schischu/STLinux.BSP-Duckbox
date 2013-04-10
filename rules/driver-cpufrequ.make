@@ -82,8 +82,8 @@ $(STATEDIR)/driver-cpufrequ.targetinstall:
 	@$(call install_fixup, driver-cpufrequ, DESCRICPUFREQUON,missing)
 
 	@cd $(DRIVER_CPUFREQU_PKGDIR) && \
-		find lib -type f -name *.ko | while read file; do \
-			$(call install_copy, driver-cpufrequ, 0, 0, 0644, -, /$${file}, k) \
+		find lib -type f -name "*.ko" | while read file; do \
+			$(call install_copy, driver-cpufrequ, 0, 0, 0644, $(DRIVER_CPUFREQU_PKGDIR)/$${file}, /lib/modules/`basename $${file}`, k) \
 	done
 
 	@$(call install_finish, driver-cpufrequ)

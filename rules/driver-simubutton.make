@@ -82,8 +82,8 @@ $(STATEDIR)/driver-simubutton.targetinstall:
 	@$(call install_fixup, driver-simubutton, DESCRISIMUBUTTONON,missing)
 
 	@cd $(DRIVER_SIMUBUTTON_PKGDIR) && \
-		find lib -type f -name *.ko | while read file; do \
-			$(call install_copy, driver-simubutton, 0, 0, 0644, -, /$${file}, k) \
+		find lib -type f -name "*.ko" | while read file; do \
+			$(call install_copy, driver-simubutton, 0, 0, 0644, $(DRIVER_SIMUBUTTON_PKGDIR)/$${file}, /lib/modules/`basename $${file}`, k) \
 	done
 
 	@$(call install_finish, driver-simubutton)

@@ -81,8 +81,8 @@ $(STATEDIR)/driver-avs.targetinstall:
 	@$(call install_fixup, driver-avs, DESCRIAVSON,missing)
 
 	@cd $(DRIVER_AVS_PKGDIR) && \
-		find lib -type f | while read file; do \
-			$(call install_copy, driver-avs, 0, 0, 0644, -, /$${file}, k) \
+		find lib -type f -name "*.ko" | while read file; do \
+			$(call install_copy, driver-avs, 0, 0, 0644, $(DRIVER_AVS_PKGDIR)/$${file}, /lib/modules/`basename $${file}`, k) \
 	done
 
 	@$(call install_finish, driver-avs)

@@ -93,8 +93,8 @@ $(STATEDIR)/driver-cic-ufs9xx.targetinstall:
 	@$(call install_fixup, driver-cic-ufs9xx, DESCRICIC_UFS9XXON,missing)
 
 	@cd $(DRIVER_CIC_UFS9XX_PKGDIR) && \
-		find lib -type f -name *.ko | while read file; do \
-			$(call install_copy, driver-cic-ufs9xx, 0, 0, 0644, -, /$${file}, k) \
+		find lib -type f -name "*.ko" | while read file; do \
+			$(call install_copy, driver-cic-ufs9xx, 0, 0, 0644, $(DRIVER_CIC_UFS9XX_PKGDIR)/$${file}, /lib/modules/`basename $${file}`, k) \
 	done
 
 	@$(call install_finish, driver-cic-ufs9xx)

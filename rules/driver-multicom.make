@@ -95,8 +95,8 @@ $(STATEDIR)/driver-multicom.targetinstall:
 	@$(call install_fixup, driver-multicom, DESCRIPTION,missing)
 
 	@cd $(DRIVER_MULTICOM_PKGDIR) && \
-		find lib -type f | while read file; do \
-			$(call install_copy, driver-multicom, 0, 0, 0644, -, /$${file}, k) \
+		find lib -type f -name "*.ko" | while read file; do \
+			$(call install_copy, driver-multicom, 0, 0, 0644, $(DRIVER_MULTICOM_PKGDIR)/$${file}, /lib/modules/`basename $${file}`, k) \
 	done
 
 	@$(call install_finish, driver-multicom)

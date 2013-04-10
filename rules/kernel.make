@@ -240,8 +240,8 @@ ifdef PTXCONF_KERNEL_MODULES_INSTALL
 	@$(call install_fixup, kernel-modules, DESCRIPTION,missing)
 
 	@cd $(KERNEL_PKGDIR) && \
-		find lib -type f | while read file; do \
-			$(call install_copy, kernel-modules, 0, 0, 0644, -, /$${file}, k) \
+		find lib -type f -name "*.ko" | while read file; do \
+			$(call install_copy,  kernel-modules, 0, 0, 0644, $(KERNEL_PKGDIR)/$${file}, /lib/modules/`basename $${file}`, k) \
 	done
 
 	@$(call install_finish, kernel-modules)

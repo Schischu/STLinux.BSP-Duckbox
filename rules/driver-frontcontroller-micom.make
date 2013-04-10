@@ -93,8 +93,8 @@ $(STATEDIR)/driver-frontcontroller-micom.targetinstall:
 	@$(call install_fixup, driver-frontcontroller-micom, DESCRIFRONTCONTROLLER_MICOMON,missing)
 
 	@cd $(DRIVER_FRONTCONTROLLER_MICOM_PKGDIR) && \
-		find lib -type f -name *.ko | while read file; do \
-			$(call install_copy, driver-frontcontroller-micom, 0, 0, 0644, -, /$${file}, k) \
+		find lib -type f -name "*.ko" | while read file; do \
+			$(call install_copy, driver-frontcontroller-micom, 0, 0, 0644, $(DRIVER_FRONTCONTROLLER_MICOM_PKGDIR)/$${file}, /lib/modules/`basename $${file}`, k) \
 	done
 
 	@$(call install_finish, driver-frontcontroller-micom)

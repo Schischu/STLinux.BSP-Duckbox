@@ -81,8 +81,8 @@ $(STATEDIR)/driver-pti.targetinstall:
 	@$(call install_fixup, driver-pti, DESCRIPTION,missing)
 
 	@cd $(DRIVER_PTI_PKGDIR) && \
-		find lib -type f | while read file; do \
-			$(call install_copy, driver-pti, 0, 0, 0644, -, /$${file}, k) \
+		find lib -type f -name "*.ko" | while read file; do \
+			$(call install_copy, driver-pti, 0, 0, 0644, $(DRIVER_PTI_PKGDIR)/$${file}, /lib/modules/`basename $${file}`, k) \
 	done
 
 	@$(call install_finish, driver-pti)

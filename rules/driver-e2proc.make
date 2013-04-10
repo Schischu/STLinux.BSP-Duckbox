@@ -90,8 +90,8 @@ $(STATEDIR)/driver-e2proc.targetinstall:
 	@$(call install_fixup, driver-e2proc, DESCRIE2PROCON,missing)
 
 	@cd $(DRIVER_E2PROC_PKGDIR) && \
-		find lib -type f -name *.ko | while read file; do \
-			$(call install_copy, driver-e2proc, 0, 0, 0644, -, /$${file}, k) \
+		find lib -type f -name "*.ko" | while read file; do \
+			$(call install_copy, driver-e2proc, 0, 0, 0644, $(DRIVER_E2PROC_PKGDIR)/$${file}, /lib/modules/`basename $${file}`, k) \
 	done
 
 	@$(call install_finish, driver-e2proc)

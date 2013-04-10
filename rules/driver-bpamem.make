@@ -81,8 +81,8 @@ $(STATEDIR)/driver-bpamem.targetinstall:
 	@$(call install_fixup, driver-bpamem, DESCRIBPAMEMON,missing)
 
 	@cd $(DRIVER_BPAMEM_PKGDIR) && \
-		find lib -type f | while read file; do \
-			$(call install_copy, driver-bpamem, 0, 0, 0644, -, /$${file}, k) \
+		find lib -type f -name "*.ko" | while read file; do \
+			$(call install_copy, driver-bpamem, 0, 0, 0644, $(DRIVER_BPAMEM_PKGDIR)/$${file}, /lib/modules/`basename $${file}`, k) \
 	done
 
 	@$(call install_finish, driver-bpamem)
