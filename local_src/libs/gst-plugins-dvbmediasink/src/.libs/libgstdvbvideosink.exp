@@ -1,0 +1,3 @@
+gst_dvbsink_marshal_INT64__VOID
+gst_dvbvideosink_get_type
+gst_plugin_desc
