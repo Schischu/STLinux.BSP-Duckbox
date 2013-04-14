@@ -3,3 +3,5 @@ platform-*
 selected_*
 logfile*
 src/*
+*.mod.c
+*~

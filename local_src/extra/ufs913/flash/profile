@@ -1,0 +1,8 @@
+mount -t ramfs ramfs /dev
+cp -a /dev_org/* /dev/
+
+export LD_LIBRARY_PATH=/lib:/usr/lib
+
+mount -t devpts none /dev/pts
+
+export LD_LIBRARY_PATH=/lib:/usr/lib
