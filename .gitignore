@@ -5,3 +5,4 @@ logfile*
 src/*
 *.mod.c
 *~
+modules.order

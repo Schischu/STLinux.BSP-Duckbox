@@ -32,7 +32,7 @@ HOST_MUP_CONF_TOOL	:= autoconf
 HOST_MUP_CONF_OPT	:= \
 	$(HOST_AUTOCONF)
 
-$(STATEDIR)/host-mup.prepare:
+$(STATEDIR)/host-mup.prepare: $(STATEDIR)/host-mup.get $(STATEDIR)/host-mup.extract
 	@$(call targetinfo)
 	cd $(HOST_MUP_DIR); \
 		cp $(PTXDIST_SYSROOT_HOST)/share/libtool/config/ltmain.sh .; \
@@ -40,5 +40,16 @@ $(STATEDIR)/host-mup.prepare:
 		aclocal; automake -a; autoconf
 	@$(call world/prepare, HOST_MUP)
 	@$(call touch)
+
+# ----------------------------------------------------------------------------
+# Install
+# ----------------------------------------------------------------------------
+
+$(STATEDIR)/host-mup.install: $(STATEDIR)/host-mup.prepare $(STATEDIR)/host-mup.compile
+	@$(call targetinfo)
+	cp $(HOST_MUP_DIR)/mup $(PTXCONF_SYSROOT_HOST)/bin
+	@$(call touch)
+
+$(STATEDIR)/host-mup.install.post: $(STATEDIR)/host-mup.install
 
 # vim: syntax=make
