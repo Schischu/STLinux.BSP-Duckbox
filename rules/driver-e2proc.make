@@ -30,14 +30,6 @@ endif
 # Prepare
 # ----------------------------------------------------------------------------
 
-ifdef PTXCONF_PLATFORM_ADB
-DRIVER_CIC_UFS9XX_EXTRAS := EXTRA_CFLAGS=-DADB
-endif
-ifdef PTXCONF_PLATFORM_IPBOX9900
-DRIVER_CIC_UFS9XX_EXTRAS := EXTRA_CFLAGS=-DIPBOX9900
-endif
-
-
 $(STATEDIR)/driver-e2proc.prepare:
 	@$(call targetinfo)
 	@$(call touch)
@@ -52,7 +44,6 @@ $(STATEDIR)/driver-e2proc.compile:
 		$(MAKE) $(KERNEL_MAKEVARS) \
 		-C $(KERNEL_DIR) \
 		M=$(DRIVER_E2PROC_DIR) \
-		$(DRIVER_E2PROC_EXTRAS) \
 		modules
 	
 	@$(call touch)

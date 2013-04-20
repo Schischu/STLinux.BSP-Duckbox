@@ -1,0 +1,19 @@
+#!/bin/sh
+
+case $1 in
+start)
+	echo "starting avs"
+
+	insmod /lib/modules/avs.ko
+
+	exit 0
+
+	;;
+stop)
+	echo "stopping avs... error, avs cannot be stopped, aborting"
+	;;
+*)
+	echo "usage: $0 [start|stop]"
+	;;
+esac
+

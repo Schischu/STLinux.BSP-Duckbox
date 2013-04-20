@@ -1,0 +1,19 @@
+#!/bin/sh
+
+case $1 in
+start)
+	echo "starting e2proc"
+
+	insmod /lib/modules/e2_proc.ko
+
+	exit 0
+
+	;;
+stop)
+	echo "stopping e2proc... error, e2proc cannot be stopped, aborting"
+	;;
+*)
+	echo "usage: $0 [start|stop]"
+	;;
+esac
+

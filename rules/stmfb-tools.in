@@ -1,0 +1,86 @@
+## SECTION=multimedia_tools
+
+menuconfig STMFB_TOOLS
+	bool
+	prompt "stmfb-tools                   "
+#	select DRIVER_STMFB
+
+if STMFB_TOOLS
+
+config STMFB_TOOLS_ACP_TRANSMISSION
+	tristate 
+	default n
+	prompt "acp-transmission"
+
+config STMFB_TOOLS_V4L2_FLEXVP_CTRL
+	tristate 
+	default n
+	prompt "v4l2 flexvp-ctrl"
+
+config STMFB_TOOLS_HDMI_AUDIO_CFG
+	tristate 
+	default m
+	prompt "hdmi-audio-cfg"
+
+config STMFB_TOOLS_HDMI_CONTROL
+	tristate 
+	default y
+	prompt "hdmi-control"
+
+config STMFB_TOOLS_HDMI_INFO
+	tristate 
+	default y
+	prompt "hdmi-info"
+
+config STMFB_TOOLS_ISRC_TRANSMISSION
+	tristate 
+	default n
+	prompt "isrc-transmission"
+
+config STMFB_TOOLS_PICTURE_CFG
+	tristate 
+	default m
+	prompt "picture-cfg"
+
+config STMFB_TOOLS_DIRECTFB_SCREEN_ALIGNMENT
+	tristate 
+	default n
+	prompt "directfb screen-alignment"
+
+config STMFB_TOOLS_STFBSET
+	tristate 
+	default y
+	prompt "stfbset"
+
+config STMFB_TOOLS_V4L2_V4L2LAYER_ALIGNMENT
+	tristate 
+	default n
+	prompt "v4l2 v4l2layer-alignment"
+
+config STMFB_TOOLS_V4L2_V4L2LUT8
+	tristate 
+	default n
+	prompt "v4l2 v4l2lut8"
+
+config STMFB_TOOLS_V4L2_V4L2STREAM
+	tristate 
+	default n
+	prompt "v4l2 v4l2stream"
+
+config STMFB_TOOLS_V4L2_V4L2VBI
+	tristate 
+	default n
+	prompt "v4l2 v4l2vbi"
+
+config STMFB_TOOLS_V4L2_YUVPLAYER
+	tristate 
+	default n
+	prompt "v4l2 yuvplayer"
+
+config STMFB_TOOLS_V4L2_ZORDER
+	tristate 
+	default n
+	prompt "v4l2 zorder"
+
+endif
+

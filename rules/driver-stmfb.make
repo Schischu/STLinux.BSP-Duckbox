@@ -30,6 +30,8 @@ endif
 # Prepare
 # ----------------------------------------------------------------------------
 
+DRIVER_STMFB_EXTRAS:="-D__TDT__"
+
 $(STATEDIR)/driver-stmfb.prepare:
 	@$(call targetinfo)
 	@$(call touch)

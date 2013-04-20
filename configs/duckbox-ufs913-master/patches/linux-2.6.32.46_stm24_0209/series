@@ -1,2 +1,4 @@
 linux-sh4-ufs913_setup_stm24_0209.patch
 linux-sh4-lmb_stm24_0209.patch
+
+linux-sh4-ufs913_setup_change_devinit_to_init_stm24_0209.patch

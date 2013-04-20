@@ -1,0 +1,26 @@
+## SECTION=core
+
+config BOOTLOGO
+	tristate
+	default y
+	select BASE
+
+if BOOTLOGO
+
+config BOOTLOGO_ENIGMA2
+	bool
+	default m
+
+config BOOTLOGO_NEUTRINO
+	bool
+	default m
+
+config BOOTLOGO_VDR
+	bool
+	default m
+
+config BOOTLOGO_XBMC
+	bool
+	default m
+
+endif

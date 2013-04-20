@@ -1,0 +1,11 @@
+#
+# /etc/inittab
+#
+
+console::sysinit:/etc/init.d/rcS
+console::respawn:/sbin/getty -n -l /bin/autologin -L ttyAS0 115200 vt102
+
+# Stuff to do before rebooting
+::ctrlaltdel:/sbin/reboot
+::shutdown:/bin/umount -a -r
+

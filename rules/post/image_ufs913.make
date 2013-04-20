@@ -36,7 +36,7 @@ $(IMAGEDIR)/mtd_fw.bin: $(STATEDIR)/image_working_dir_prepared $(STATEDIR)/host-
 	(								\
 		echo -n "$(PTXCONF_SYSROOT_HOST)/sbin/mkfs.jffs2 ";	\
 		echo -n "-d $(image/work_dir)/map/fw ";			\
-		echo -n "-qnUfv -p0x800000 -e0x20000 ";\
+		echo -n "-qnUf -p0x800000 -e0x20000 ";\
 		echo  "-o $@" ) | tee -a "$(PTX_LOGFILE)"		\
 	) | $(FAKEROOT) -i $(IMAGEDIR)/image_working_dir_prepared.state --
 	@echo "done."
@@ -48,7 +48,7 @@ $(IMAGEDIR)/mtd_fw.sum.bin: $(IMAGEDIR)/mtd_fw.bin
 	((								\
 		echo -n "$(PTXCONF_SYSROOT_HOST)/sbin/sumtool ";	\
 		echo -n "-i $< ";					\
-		echo -n "-v -p -e 0x20000 ";	\
+		echo -n "-p -e 0x20000 ";	\
 		echo "-o $@" ) | tee -a "$(PTX_LOGFILE)"		\
 	) | $(FAKEROOT) -i $(IMAGEDIR)/image_working_dir_prepared.state --
 	@echo "done."
@@ -61,7 +61,7 @@ $(IMAGEDIR)/mtd_root.bin: $(STATEDIR)/image_working_dir_prepared $(STATEDIR)/hos
 	(								\
 		echo -n "$(PTXCONF_SYSROOT_HOST)/sbin/mkfs.jffs2 ";	\
 		echo -n "-d $(image/work_dir)/map/root ";			\
-		echo -n "-qnUfv -p0x7800000 -e0x20000 ";\
+		echo -n "-qnUf -p0x7800000 -e0x20000 ";\
 		echo  "-o $@" ) | tee -a "$(PTX_LOGFILE)"		\
 	) | $(FAKEROOT) -i $(IMAGEDIR)/image_working_dir_prepared.state --
 	@echo "done."
@@ -73,7 +73,7 @@ $(IMAGEDIR)/mtd_root.sum.bin: $(IMAGEDIR)/mtd_root.bin
 	((								\
 		echo -n "$(PTXCONF_SYSROOT_HOST)/sbin/sumtool ";	\
 		echo -n "-i $< ";					\
-		echo -n "-v -p -e 0x20000 ";	\
+		echo -n "-p -e 0x20000 ";	\
 		echo "-o $@" ) | tee -a "$(PTX_LOGFILE)"		\
 	) | $(FAKEROOT) -i $(IMAGEDIR)/image_working_dir_prepared.state --
 	@echo "done."
@@ -129,11 +129,11 @@ $(IMAGEDIR)/mtd_tiny.bin: $(STATEDIR)/image_working_dir_prepared2 $(STATEDIR)/ho
 	@echo "done."
 
 $(IMAGEDIR)/uImage_tiny.bin:
-	@echo -n "Creating uImage.bin... "
+	@echo -n "Creating uImage_tiny.bin... "
 	@cd $(image/work_dir);						\
 	((								\
 		echo "cp $(PTXDIST_WORKSPACE)/local_src/extra/ufs913/flash/uImage_rootmtd7 $(IMAGEDIR)/uImage_tiny.bin" ) | tee -a "$(PTX_LOGFILE)"		\
-	) | $(FAKEROOT) -i $(IMAGEDIR)/image_working_dir_prepared2.state --
+	) | $(FAKEROOT) --
 	@echo "done."
 
 #$(image/work_dir)
@@ -158,6 +158,8 @@ $(IMAGEDIR)/ufs913.software.V1.00.B00.data: $(IMAGEDIR)/uImage.bin       \
 		echo -n "       $(IMAGEDIR)/mtd_root.bin ";	\
 		echo -n "       $(IMAGEDIR)/mtd_tiny.bin ";	\
 		echo -n "       $(IMAGEDIR)/uImage_tiny.bin ";	\
+		echo -n "       $(IMAGEDIR)/image_working_dir_prepared.state ";	\
+		echo -n "       $(IMAGEDIR)/image_working_dir_prepared2.state ";	\
 		echo -n "       permissions ";	\
 		echo "          $@.cfg" ) | tee -a "$(PTX_LOGFILE)"		\
 	) | $(FAKEROOT) --

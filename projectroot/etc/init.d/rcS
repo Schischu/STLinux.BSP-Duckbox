@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+# /etc/init.d/rcS
+#
+
+mount /proc
+mount /sys
+
+if grep -q "quiet" /proc/cmdline; then
+	exec 1>/dev/null
+fi
+
+# loadkmap < /etc/boottime.kmap
+
+# set hostname
+test -e /etc/hostname && hostname -F /etc/hostname
+
+echo "running rc.d services..."
+run-parts -a start /etc/rc.d

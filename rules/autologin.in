@@ -1,0 +1,6 @@
+## SECTION=core
+
+config AUTOLOGIN
+	tristate
+	default y
+	select BASE

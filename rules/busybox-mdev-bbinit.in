@@ -1,0 +1,15 @@
+## SECTION=initmethod_bbinit
+
+config BUSYBOX_MDEV_INIT
+	tristate
+	depends on BUSYBOX_MDEV
+	default y
+
+if BUSYBOX_MDEV_INIT
+
+config BUSYBOX_MDEV_BBINIT_LINK
+	string
+	prompt "mdev"
+	default "S00mdev"
+
+endif

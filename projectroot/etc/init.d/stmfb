@@ -1,0 +1,20 @@
+#!/bin/sh
+
+case $1 in
+start)
+	echo "starting stmfb"
+
+	insmod /lib/modules/stmcore-display-sti7105.ko
+	insmod /lib/modules/stmfb.ko display0=1280x720-32@50:15m:pal:yuv:yuv;
+
+	exit 0
+
+	;;
+stop)
+	echo "stopping stmfb... error, stmfb cannot be stopped, aborting"
+	;;
+*)
+	echo "usage: $0 [start|stop]"
+	;;
+esac
+

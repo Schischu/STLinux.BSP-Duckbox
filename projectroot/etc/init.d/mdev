@@ -1,0 +1,80 @@
+#!/bin/sh
+
+mdev_root="/dev"
+mdev_rules="/etc/mdev.conf"
+mdev_log="err"
+
+make_extra_nodes () {
+	# there are a few things that sysfs does not export for us.
+	# these things go here (and remember to remove them in
+	# remove_extra_nodes()
+	#
+	# Thanks to Gentoo for the initial list of these.
+	ln -snf /proc/self/fd /dev/fd
+	ln -snf /proc/self/fd/0 /dev/stdin
+	ln -snf /proc/self/fd/1 /dev/stdout
+	ln -snf /proc/self/fd/2 /dev/stderr
+	ln -snf /proc/kcore /dev/core
+
+	mkdir /dev/pts
+	mkdir /dev/shm
+
+	mknod /dev/null c 1 3
+	mknod /dev/console c 5 1
+	mknod /dev/zero c 1 5
+}
+
+case $1 in
+start)
+	echo "starting mdev"
+
+	# don't use mdev if sysfs is not mounted.
+	if [ ! -d /sys/kernel ]; then
+		echo "failed"
+		echo "error: sysfs not mounted"
+		exit 1
+	fi
+
+	# The reason we don't write to mtab is because we don't ever
+	# want /dev to be unavailable (such as by `umount -a').
+	echo "mounting tmpfs at $mdev_root"
+	mount -n -t tmpfs tmpfs $mdev_root -o mode=755
+
+	# mdev does not handle uevents itself, so we need to have
+	# the kernel call out /sbin/mdev in response to them
+	echo /sbin/mdev > /proc/sys/kernel/hotplug
+
+	echo "creating static nodes"
+	make_extra_nodes
+
+	# We can mount /dev/pts before initialising mdev
+	if [ -d "/dev/pts" ]; then
+		mount /dev/pts
+	fi
+
+	# Start  mdev 
+	echo -n "starting mdev..."
+	/sbin/mdev -s
+	if [ "$?" = "0" ]; then
+		echo "done"
+	else
+		echo "failed"
+	fi
+
+	touch /dev/.udev
+
+	echo -n "mounting filesystems..."
+	mount -a 2>/dev/null
+	echo "done."
+
+	exit 0
+
+	;;
+stop)
+	echo "stopping mdev... error, mdev cannot be stopped, aborting"
+	;;
+*)
+	echo "usage: $0 [start|stop]"
+	;;
+esac
+

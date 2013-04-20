@@ -107,6 +107,8 @@ endif
 		$(call install_copy, enigma2-pli, 0, 0, 644, -, $${file##.}); \
 	done
 
+	@$(call install_lib, enigma2-pli, 0, 0, 0644, libopen)
+
 	@$(call install_tree, enigma2-pli, 0, 0, -, /usr/local/share/)
 
 	@$(call install_finish, enigma2-pli)

@@ -27,16 +27,6 @@ EVREMOTE2_LICENSE	:= GPLv2+
 # Prepare
 # ----------------------------------------------------------------------------
 
-EVREMOTE2_PATH	:= PATH=$(CROSS_PATH)
-EVREMOTE2_ENV 	:= $(CROSS_ENV)
-
-#
-# autoconf
-#
-EVREMOTE2_CONF_TOOL := autoconf
-EVREMOTE2_AUTOCONF := \
-	$(CROSS_AUTOCONF_USR)
-
 $(STATEDIR)/evremote2.prepare:
 	@$(call targetinfo)
 	cd $(EVREMOTE2_DIR); \
