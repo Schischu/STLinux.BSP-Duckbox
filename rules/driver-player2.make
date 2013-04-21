@@ -68,6 +68,12 @@ $(STATEDIR)/driver-player2.install:
 	
 	mkdir -p $(SYSROOT)/usr/include/linux/dvb
 	cp $(DRIVER_PLAYER2_DIR)/linux/include/linux/dvb/stm_ioctls.h $(SYSROOT)/usr/include/linux/dvb
+	cp $(DRIVER_PLAYER2_DIR)/linux/drivers/media/dvb/stm/dvb/backend.h $(SYSROOT)/usr/include/linux/dvb
+	cp $(DRIVER_PLAYER2_DIR)/linux/drivers/media/dvb/stm/dvb/backend_ops.h $(SYSROOT)/usr/include/linux/dvb
+	cp $(DRIVER_PLAYER2_DIR)/linux/drivers/media/dvb/stm/dvb/dvb_module.h $(SYSROOT)/usr/include/linux/dvb
+	cp $(DRIVER_PLAYER2_DIR)/linux/drivers/media/dvb/stm/dvb/dvb_audio.h $(SYSROOT)/usr/include/linux/dvb
+	cp $(DRIVER_PLAYER2_DIR)/linux/drivers/media/dvb/stm/dvb/dvb_video.h $(SYSROOT)/usr/include/linux/dvb
+	cp $(DRIVER_PLAYER2_DIR)/player/standards/dvp.h $(SYSROOT)/usr/include/linux/dvb
 	
 	@$(call touch)
 

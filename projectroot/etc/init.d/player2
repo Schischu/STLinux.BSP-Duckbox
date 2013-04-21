@@ -6,22 +6,7 @@ start)
 
 	insmod /lib/modules/ksound.ko
 	insmod /lib/modules/p2div64.ko
-	insmod /lib/modules/stm_v4l2.ko
 	insmod /lib/modules/pseudocard.ko
-
-	insmod /lib/modules/frontend_platform.ko
-	insmod /lib/modules/socket.ko
-	insmod /lib/modules/lnbh221.ko
-	insmod /lib/modules/lnb_pio.ko
-	insmod /lib/modules/lnb_a8293.ko
-	insmod /lib/modules/avl6222.ko
-	insmod /lib/modules/ufs9xx_cic.ko
-	# Full feature pti
-	insmod /lib/modules/pti.ko waitMS=20 videoMem=4096
-	if [ $?=='2' ]; then
-		# Simple pti
-		insmod /lib/modules/pti.ko
-	fi
 	insmod /lib/modules/stm_monitor.ko
 	insmod /lib/modules/stmsysfs.ko
 	insmod /lib/modules/stmdvb.ko

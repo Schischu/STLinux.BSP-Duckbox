@@ -6,6 +6,7 @@ start)
 
 	insmod /lib/modules/stmcore-display-sti7105.ko
 	insmod /lib/modules/stmfb.ko display0=1280x720-32@50:15m:pal:yuv:yuv;
+	insmod /lib/modules/stm_v4l2.ko
 
 	exit 0
 

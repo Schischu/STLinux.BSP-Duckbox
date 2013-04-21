@@ -1,0 +1,24 @@
+#!/bin/sh
+
+case $1 in
+start)
+	echo "starting frontend"
+
+	insmod /lib/modules/frontend_platform.ko
+	insmod /lib/modules/socket.ko
+	insmod /lib/modules/lnbh221.ko
+	insmod /lib/modules/lnb_pio.ko
+	insmod /lib/modules/lnb_a8293.ko
+	insmod /lib/modules/avl6222.ko
+
+	exit 0
+
+	;;
+stop)
+	echo "stopping frontend... error, frontend cannot be stopped, aborting"
+	;;
+*)
+	echo "usage: $0 [start|stop]"
+	;;
+esac
+

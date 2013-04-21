@@ -6,3 +6,21 @@ config DRIVER_MULTICOM
 	prompt "driver-multicom"
 	help
 	  FIXME
+
+if DRIVER_MULTICOM
+
+config DRIVER_MULTICOM_V3
+	bool
+	prompt "driver-multicom version3"
+	default n
+	help
+	  FIXME
+
+config DRIVER_MULTICOM_V4
+	bool
+	prompt "driver-multicom version4"
+	default y
+	help
+	  FIXME
+
+endif

@@ -1,0 +1,24 @@
+#!/bin/sh
+
+case $1 in
+start)
+	echo "starting pti"
+
+	# Full feature pti
+	insmod /lib/modules/pti.ko waitMS=20 videoMem=4096
+	if [ $?=='2' ]; then
+		# Simple pti
+		insmod /lib/modules/pti.ko
+	fi
+
+	exit 0
+
+	;;
+stop)
+	echo "stopping pti... error, pti cannot be stopped, aborting"
+	;;
+*)
+	echo "usage: $0 [start|stop]"
+	;;
+esac
+

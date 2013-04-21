@@ -1,0 +1,35 @@
+#!/bin/sh
+
+case $1 in
+start)
+	echo "starting multicom"
+
+	if [ -e /lib/modules/ics.ko ]; then
+		insmod /lib/modules/ics.ko firmware=1:video.elf,2:audio.elf bpa2_part=LMI_IO
+		insmod /lib/modules/embx.ko
+		insmod /lib/modules/embxmailbox.ko mailbox0=0xb9211000:136:set2 mailbox1=0xb9212000:137:set2
+		insmod /lib/modules/mme.ko
+		insmod /lib/modules/mme_user.ko
+	else
+		echo "load a firmware"
+		/bin/ustslave /dev/st231-1 /lib/firmware/audio.elf
+		echo "load v firmware"
+		/bin/ustslave /dev/st231-0 /lib/firmware/video.elf
+		
+		insmod /lib/modules/embxshell.ko
+		insmod /lib/modules/embxmailbox.ko mailbox0=0xfe211000:136:set2 mailbox1=0xfe212000:0 ;
+		insmod /lib/modules/embxshm.ko mailbox0=shm:0:7:0x60000000:0:256:256:0:512:0x40000000:0x10000000 ;
+		insmod /lib/modules/mme_host.ko transport0=shm
+	fi
+
+	exit 0
+
+	;;
+stop)
+	echo "stopping multicom... error, multicom4 cannot be stopped, aborting"
+	;;
+*)
+	echo "usage: $0 [start|stop]"
+	;;
+esac
+
