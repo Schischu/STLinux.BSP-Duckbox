@@ -1,0 +1,14 @@
+## SECTION=initmethod_bbinit
+
+config DRIVER_CEC_INIT
+	tristate
+	default y
+
+if DRIVER_CEC_INIT
+
+config DRIVER_CEC_BBINIT_LINK
+	string
+	prompt "cec"
+	default "S48cec"
+
+endif

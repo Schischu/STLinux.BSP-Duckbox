@@ -90,11 +90,34 @@ $(STATEDIR)/driver-pti.targetinstall:
 	@$(call touch)
 
 # ----------------------------------------------------------------------------
-# Clean
+# Init
 # ----------------------------------------------------------------------------
 
-#$(STATEDIR)/driver-pti.clean:
-#	@$(call targetinfo)
-#	@$(call clean_pkg, DRIVER_PTI)
+PACKAGES-$(PTXCONF_DRIVER_PTI_INIT) += driver-pti-init
+
+DRIVER_PTI_INIT_VERSION	:= head13
+
+$(STATEDIR)/driver-pti-init.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init, driver-pti-init)
+	@$(call install_fixup, driver-pti-init,PRIORITY,optional)
+	@$(call install_fixup, driver-pti-init,SECTION,base)
+	@$(call install_fixup, driver-pti-init,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup, driver-pti-init,DESCRIPTION,missing)
+	
+ifdef PTXCONF_INITMETHOD_BBINIT
+	@$(call install_alternative, driver-pti-init, 0, 0, 0755, /etc/init.d/pti)
+	
+ifneq ($(call remove_quotes,$(PTXCONF_DRIVER_PTI_BBINIT_LINK)),)
+	@$(call install_link, driver-pti-init, \
+		../init.d/pti, \
+		/etc/rc.d/$(PTXCONF_DRIVER_PTI_BBINIT_LINK))
+endif
+endif
+	
+	@$(call install_finish, driver-pti-init)
+	
+	@$(call touch)
 
 # vim: syntax=make

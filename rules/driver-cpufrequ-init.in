@@ -1,0 +1,14 @@
+## SECTION=initmethod_bbinit
+
+config DRIVER_CPUFREQU_INIT
+	tristate
+	default y
+
+if DRIVER_CPUFREQU_INIT
+
+config DRIVER_CPUFREQU_BBINIT_LINK
+	string
+	prompt "cpufrequ"
+	default "S40cpufrequ"
+
+endif

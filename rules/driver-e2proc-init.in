@@ -1,0 +1,14 @@
+## SECTION=initmethod_bbinit
+
+config DRIVER_E2PROC_INIT
+	tristate
+	default y
+
+if DRIVER_E2PROC_INIT
+
+config DRIVER_E2PROC_BBINIT_LINK
+	string
+	prompt "e2proc"
+	default "S41e2proc"
+
+endif

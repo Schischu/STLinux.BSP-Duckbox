@@ -1,0 +1,14 @@
+## SECTION=initmethod_bbinit
+
+config DRIVER_AVS_INIT
+	tristate
+	default y
+
+if DRIVER_AVS_INIT
+
+config DRIVER_AVS_BBINIT_LINK
+	string
+	prompt "avs"
+	default "S45avs"
+
+endif

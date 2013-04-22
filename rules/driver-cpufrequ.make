@@ -91,11 +91,34 @@ $(STATEDIR)/driver-cpufrequ.targetinstall:
 	@$(call touch)
 
 # ----------------------------------------------------------------------------
-# Clean
+# Init
 # ----------------------------------------------------------------------------
 
-#$(STATEDIR)/driver-cpufrequ.clean:
-#	@$(call targetinfo)
-#	@$(call clean_pkg, DRIVER_CPUFREQU)
+PACKAGES-$(PTXCONF_DRIVER_CPUFREQU_INIT) += driver-cpufrequ-init
+
+DRIVER_CPUFREQU_INIT_VERSION	:= head7
+
+$(STATEDIR)/driver-cpufrequ-init.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init, driver-cpufrequ-init)
+	@$(call install_fixup, driver-cpufrequ-init,PRIORITY,optional)
+	@$(call install_fixup, driver-cpufrequ-init,SECTION,base)
+	@$(call install_fixup, driver-cpufrequ-init,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup, driver-cpufrequ-init,DESCRIPTION,missing)
+	
+ifdef PTXCONF_INITMETHOD_BBINIT
+	@$(call install_alternative, driver-cpufrequ-init, 0, 0, 0755, /etc/init.d/cpufrequ)
+	
+ifneq ($(call remove_quotes,$(PTXCONF_DRIVER_CPUFREQU_BBINIT_LINK)),)
+	@$(call install_link, driver-cpufrequ-init, \
+		../init.d/cpufrequ, \
+		/etc/rc.d/$(PTXCONF_DRIVER_CPUFREQU_BBINIT_LINK))
+endif
+endif
+	
+	@$(call install_finish, driver-cpufrequ-init)
+	
+	@$(call touch)
 
 # vim: syntax=make

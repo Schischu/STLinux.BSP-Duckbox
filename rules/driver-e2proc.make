@@ -90,11 +90,34 @@ $(STATEDIR)/driver-e2proc.targetinstall:
 	@$(call touch)
 
 # ----------------------------------------------------------------------------
-# Clean
+# Init
 # ----------------------------------------------------------------------------
 
-#$(STATEDIR)/driver-e2proc.clean:
-#	@$(call targetinfo)
-#	@$(call clean_pkg, DRIVER_E2PROC)
+PACKAGES-$(PTXCONF_DRIVER_E2PROC_INIT) += driver-e2proc-init
+
+DRIVER_E2PROC_INIT_VERSION	:= head8
+
+$(STATEDIR)/driver-e2proc-init.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init, driver-e2proc-init)
+	@$(call install_fixup, driver-e2proc-init,PRIORITY,optional)
+	@$(call install_fixup, driver-e2proc-init,SECTION,base)
+	@$(call install_fixup, driver-e2proc-init,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup, driver-e2proc-init,DESCRIPTION,missing)
+	
+ifdef PTXCONF_INITMETHOD_BBINIT
+	@$(call install_alternative, driver-e2proc-init, 0, 0, 0755, /etc/init.d/e2proc)
+	
+ifneq ($(call remove_quotes,$(PTXCONF_DRIVER_E2PROC_BBINIT_LINK)),)
+	@$(call install_link, driver-e2proc-init, \
+		../init.d/e2proc, \
+		/etc/rc.d/$(PTXCONF_DRIVER_E2PROC_BBINIT_LINK))
+endif
+endif
+	
+	@$(call install_finish, driver-e2proc-init)
+	
+	@$(call touch)
 
 # vim: syntax=make

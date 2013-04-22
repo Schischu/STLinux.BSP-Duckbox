@@ -1,0 +1,14 @@
+## SECTION=initmethod_bbinit
+
+config DRIVER_FRONTCONTROLLER_MICOM_INIT
+	tristate
+	default y
+
+if DRIVER_FRONTCONTROLLER_MICOM_INIT
+
+config DRIVER_FRONTCONTROLLER_MICOM_BBINIT_LINK
+	string
+	prompt "frontcontroller-micom"
+	default "S42frontcontroller-micom"
+
+endif

@@ -1,0 +1,14 @@
+## SECTION=initmethod_bbinit
+
+config DRIVER_PLAYER2_INIT
+	tristate
+	default y
+
+if DRIVER_PLAYER2_INIT
+
+config DRIVER_PLAYER2_BBINIT_LINK
+	string
+	prompt "player2"
+	default "S49player2"
+
+endif

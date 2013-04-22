@@ -1,0 +1,19 @@
+#!/bin/sh
+
+case $1 in
+start)
+	echo "starting bpamem"
+
+	insmod /lib/modules/bpamem.ko
+
+	exit 0
+
+	;;
+stop)
+	echo "stopping bpamem... error, bpamem cannot be stopped, aborting"
+	;;
+*)
+	echo "usage: $0 [start|stop]"
+	;;
+esac
+

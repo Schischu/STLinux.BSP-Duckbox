@@ -2,7 +2,7 @@
 
 case $1 in
 start)
-	echo "starting frontend"
+	echo "starting frontend-multituner"
 
 	insmod /lib/modules/frontend_platform.ko
 	insmod /lib/modules/socket.ko
@@ -15,7 +15,7 @@ start)
 
 	;;
 stop)
-	echo "stopping frontend... error, frontend cannot be stopped, aborting"
+	echo "stopping frontend-multituner... error, frontend-multituner cannot be stopped, aborting"
 	;;
 *)
 	echo "usage: $0 [start|stop]"

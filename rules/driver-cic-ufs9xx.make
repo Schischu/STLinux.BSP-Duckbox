@@ -102,11 +102,34 @@ $(STATEDIR)/driver-cic-ufs9xx.targetinstall:
 	@$(call touch)
 
 # ----------------------------------------------------------------------------
-# Clean
+# Init
 # ----------------------------------------------------------------------------
 
-#$(STATEDIR)/driver-cic-ufs9xx.clean:
-#	@$(call targetinfo)
-#	@$(call clean_pkg, DRIVER_CIC_UFS9XX)
+PACKAGES-$(PTXCONF_DRIVER_CIC_UFS9XX_INIT) += driver-cic-ufs9xx-init
+
+DRIVER_CIC_UFS9XX_INIT_VERSION	:= head6
+
+$(STATEDIR)/driver-cic-ufs9xx-init.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init, driver-cic-ufs9xx-init)
+	@$(call install_fixup, driver-cic-ufs9xx-init,PRIORITY,optional)
+	@$(call install_fixup, driver-cic-ufs9xx-init,SECTION,base)
+	@$(call install_fixup, driver-cic-ufs9xx-init,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup, driver-cic-ufs9xx-init,DESCRIPTION,missing)
+	
+ifdef PTXCONF_INITMETHOD_BBINIT
+	@$(call install_alternative, driver-cic-ufs9xx-init, 0, 0, 0755, /etc/init.d/cic-ufs9xx)
+	
+ifneq ($(call remove_quotes,$(PTXCONF_DRIVER_CIC_UFS9XX_BBINIT_LINK)),)
+	@$(call install_link, driver-cic-ufs9xx-init, \
+		../init.d/cic-ufs9xx, \
+		/etc/rc.d/$(PTXCONF_DRIVER_CIC_UFS9XX_BBINIT_LINK))
+endif
+endif
+	
+	@$(call install_finish, driver-cic-ufs9xx-init)
+	
+	@$(call touch)
 
 # vim: syntax=make

@@ -1,26 +1,26 @@
 ## SECTION=core
 
 config BOOTLOGO
-	tristate
+	bool
 	default y
 	select BASE
 
 if BOOTLOGO
 
 config BOOTLOGO_ENIGMA2
-	bool
+	tristate
 	default m
 
 config BOOTLOGO_NEUTRINO
-	bool
+	tristate
 	default m
 
 config BOOTLOGO_VDR
-	bool
+	tristate
 	default m
 
 config BOOTLOGO_XBMC
-	bool
+	tristate
 	default m
 
 endif

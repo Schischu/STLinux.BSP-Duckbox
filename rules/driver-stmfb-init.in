@@ -1,0 +1,14 @@
+## SECTION=initmethod_bbinit
+
+config DRIVER_STMFB_INIT
+	tristate
+	default y
+
+if DRIVER_STMFB_INIT
+
+config DRIVER_STMFB_BBINIT_LINK
+	string
+	prompt "stmfb"
+	default "S44stmfb"
+
+endif

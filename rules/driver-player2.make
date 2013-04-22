@@ -100,11 +100,34 @@ $(STATEDIR)/driver-player2.targetinstall:
 	@$(call touch)
 
 # ----------------------------------------------------------------------------
-# Clean
+# Init
 # ----------------------------------------------------------------------------
 
-#$(STATEDIR)/driver-player2.clean:
-#	@$(call targetinfo)
-#	@$(call clean_pkg, DRIVER_PLAYER2)
+PACKAGES-$(PTXCONF_DRIVER_PLAYER2_INIT) += driver-player2-init
+
+DRIVER_PLAYER2_INIT_VERSION	:= head12
+
+$(STATEDIR)/driver-player2-init.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init, driver-player2-init)
+	@$(call install_fixup, driver-player2-init,PRIORITY,optional)
+	@$(call install_fixup, driver-player2-init,SECTION,base)
+	@$(call install_fixup, driver-player2-init,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup, driver-player2-init,DESCRIPTION,missing)
+	
+ifdef PTXCONF_INITMETHOD_BBINIT
+	@$(call install_alternative, driver-player2-init, 0, 0, 0755, /etc/init.d/player2)
+	
+ifneq ($(call remove_quotes,$(PTXCONF_DRIVER_PLAYER2_BBINIT_LINK)),)
+	@$(call install_link, driver-player2-init, \
+		../init.d/player2, \
+		/etc/rc.d/$(PTXCONF_DRIVER_PLAYER2_BBINIT_LINK))
+endif
+endif
+	
+	@$(call install_finish, driver-player2-init)
+	
+	@$(call touch)
 
 # vim: syntax=make

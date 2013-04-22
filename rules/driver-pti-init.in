@@ -1,0 +1,14 @@
+## SECTION=initmethod_bbinit
+
+config DRIVER_PTI_INIT
+	tristate
+	default y
+
+if DRIVER_PTI_INIT
+
+config DRIVER_PTI_BBINIT_LINK
+	string
+	prompt "pti"
+	default "S48pti"
+
+endif

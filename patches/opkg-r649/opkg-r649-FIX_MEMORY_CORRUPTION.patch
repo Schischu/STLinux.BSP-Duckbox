@@ -1,0 +1,11 @@
+--- opkg-r649/libopkg/opkg_download.c
++++ opkg-r649/libopkg/opkg_download.c
+@@ -341,7 +341,7 @@
+      hash_insert_pkg(pkg, 1);
+ 
+      if (namep) {
+-	  *namep = pkg->name;
++	  strcpy(*namep, pkg->name);
+      }
+      return 0;
+ }

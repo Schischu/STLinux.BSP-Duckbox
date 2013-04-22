@@ -1,9 +1,9 @@
 ## SECTION=kernel_driver
 
-config DRIVER_FRONTENDS_MULTITUNER
+config DRIVER_FRONTEND_MULTITUNER
 	tristate
 	select KERNEL
-	prompt "driver-frontends-multituner"
+	prompt "driver-frontend-multituner"
 	depends on PLATFORM_ATEVIO7500 || \
 	           PLATFORM_UFS913 || \
 	           PLATFORM_CUBEREVO || \

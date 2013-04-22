@@ -1,0 +1,14 @@
+## SECTION=initmethod_bbinit
+
+config DRIVER_SIMUBUTTON_INIT
+	tristate
+	default y
+
+if DRIVER_SIMUBUTTON_INIT
+
+config DRIVER_SIMUBUTTON_BBINIT_LINK
+	string
+	prompt "simubutton"
+	default "S52simubutton"
+
+endif

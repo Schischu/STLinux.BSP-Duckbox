@@ -105,11 +105,34 @@ $(STATEDIR)/driver-stmfb.targetinstall:
 	@$(call touch)
 
 # ----------------------------------------------------------------------------
-# Clean
+# Init
 # ----------------------------------------------------------------------------
 
-#$(STATEDIR)/driver-stmfb.clean:
-#	@$(call targetinfo)
-#	@$(call clean_pkg, DRIVER_STMFB)
+PACKAGES-$(PTXCONF_DRIVER_STMFB_INIT) += driver-stmfb-init
+
+DRIVER_STMFB_INIT_VERSION	:= head15
+
+$(STATEDIR)/driver-stmfb-init.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init, driver-stmfb-init)
+	@$(call install_fixup, driver-stmfb-init,PRIORITY,optional)
+	@$(call install_fixup, driver-stmfb-init,SECTION,base)
+	@$(call install_fixup, driver-stmfb-init,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup, driver-stmfb-init,DESCRIPTION,missing)
+	
+ifdef PTXCONF_INITMETHOD_BBINIT
+	@$(call install_alternative, driver-stmfb-init, 0, 0, 0755, /etc/init.d/stmfb)
+	
+ifneq ($(call remove_quotes,$(PTXCONF_DRIVER_STMFB_BBINIT_LINK)),)
+	@$(call install_link, driver-stmfb-init, \
+		../init.d/stmfb, \
+		/etc/rc.d/$(PTXCONF_DRIVER_STMFB_BBINIT_LINK))
+endif
+endif
+	
+	@$(call install_finish, driver-stmfb-init)
+	
+	@$(call touch)
 
 # vim: syntax=make

@@ -1,13 +1,13 @@
 ## SECTION=image
 
 config IMAGE_UFS913
-	tristate
+	bool
 	select HOST_GENIMAGE
 	select HOST_MTD_UTILS
 	select HOST_MUP
 	select HOST_CRAMFS
 	select KERNEL
 	depends on PLATFORM_UFS913
-	prompt "Generate images/ufs913.software.V1.00.B00.data"
+	prompt "Generate images/ufs913.data"
 	help
 	  FIXME

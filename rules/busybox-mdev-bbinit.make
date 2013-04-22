@@ -16,12 +16,12 @@ PACKAGES-$(PTXCONF_BUSYBOX_MDEV_INIT) += busybox-mdev-init
 #
 # Paths and names
 #
-BUSYBOX_MDEV_INIT_VERSION	:= head
+BUSYBOX_MDEV_INIT_VERSION	:= head3
 
 $(STATEDIR)/busybox-mdev-init.targetinstall:
 	@$(call targetinfo)
 
-	@$(call install_init, busybox_mdev_init)
+	@$(call install_init, busybox-mdev-init)
 	@$(call install_fixup, busybox-mdev-init,PRIORITY,optional)
 	@$(call install_fixup, busybox-mdev-init,SECTION,base)
 	@$(call install_fixup, busybox-mdev-init,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")

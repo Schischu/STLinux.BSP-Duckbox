@@ -1,0 +1,19 @@
+#!/bin/sh
+
+case $1 in
+start)
+	echo "starting cec"
+
+	insmod /lib/modules/cec.ko
+
+	exit 0
+
+	;;
+stop)
+	echo "stopping cec... error, cec cannot be stopped, aborting"
+	;;
+*)
+	echo "usage: $0 [start|stop]"
+	;;
+esac
+

@@ -1,0 +1,14 @@
+## SECTION=initmethod_bbinit
+
+config DRIVER_FRONTEND_MULTITUNER_INIT
+	tristate
+	default y
+
+if DRIVER_FRONTEND_MULTITUNER_INIT
+
+config DRIVER_FRONTEND_MULTITUNER_BBINIT_LINK
+	string
+	prompt "frontend-multituner"
+	default "S46frontend-multituner"
+
+endif

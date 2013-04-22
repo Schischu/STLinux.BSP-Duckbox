@@ -1,0 +1,24 @@
+#!/bin/sh
+
+cpufrequ_rules="/etc/cpufrequ.conf"
+
+case $1 in
+start)
+	echo "starting cpufrequ"
+
+	insmod /lib/modules/cpufrequ.ko
+	
+	if [-e $cpufrequ_rules ]; then
+		cat $cpufrequ_rules > /proc/cpu_frequ/pll0_ndiv_mdiv
+	fi
+	exit 0
+
+	;;
+stop)
+	echo "stopping bpamem... error, bpamem cannot be stopped, aborting"
+	;;
+*)
+	echo "usage: $0 [start|stop]"
+	;;
+esac
+

@@ -17,7 +17,7 @@ PACKAGES-$(PTXCONF_AUTOLOGIN) += autologin
 #
 # Paths and names
 #
-AUTOLOGIN_VERSION	:= head
+AUTOLOGIN_VERSION	:= head1
 AUTOLOGIN := autologin
 AUTOLOGIN_URL		:= lndir://$(PTXDIST_WORKSPACE)/local_src/tools/$(AUTOLOGIN)
 AUTOLOGIN_DIR		:= $(BUILDDIR)/$(AUTOLOGIN)

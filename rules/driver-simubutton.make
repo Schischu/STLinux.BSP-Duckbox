@@ -91,11 +91,34 @@ $(STATEDIR)/driver-simubutton.targetinstall:
 	@$(call touch)
 
 # ----------------------------------------------------------------------------
-# Clean
+# Init
 # ----------------------------------------------------------------------------
 
-#$(STATEDIR)/driver-simubutton.clean:
-#	@$(call targetinfo)
-#	@$(call clean_pkg, DRIVER_SIMUBUTTON)
+PACKAGES-$(PTXCONF_DRIVER_SIMUBUTTON_INIT) += driver-simubutton-init
+
+DRIVER_SIMUBUTTON_INIT_VERSION	:= head14
+
+$(STATEDIR)/driver-simubutton-init.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init, driver-simubutton-init)
+	@$(call install_fixup, driver-simubutton-init,PRIORITY,optional)
+	@$(call install_fixup, driver-simubutton-init,SECTION,base)
+	@$(call install_fixup, driver-simubutton-init,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup, driver-simubutton-init,DESCRIPTION,missing)
+	
+ifdef PTXCONF_INITMETHOD_BBINIT
+	@$(call install_alternative, driver-simubutton-init, 0, 0, 0755, /etc/init.d/simubutton)
+	
+ifneq ($(call remove_quotes,$(PTXCONF_DRIVER_SIMUBUTTON_BBINIT_LINK)),)
+	@$(call install_link, driver-simubutton-init, \
+		../init.d/simubutton, \
+		/etc/rc.d/$(PTXCONF_DRIVER_SIMUBUTTON_BBINIT_LINK))
+endif
+endif
+	
+	@$(call install_finish, driver-simubutton-init)
+	
+	@$(call touch)
 
 # vim: syntax=make

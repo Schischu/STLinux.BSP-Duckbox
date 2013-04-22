@@ -1,0 +1,19 @@
+#!/bin/sh
+
+case $1 in
+start)
+	echo "starting frontcontroller-micom"
+
+	insmod /lib/modules/micom.ko
+
+	exit 0
+
+	;;
+stop)
+	echo "stopping frontcontroller-micom... error, frontcontroller-micom cannot be stopped, aborting"
+	;;
+*)
+	echo "usage: $0 [start|stop]"
+	;;
+esac
+

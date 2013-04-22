@@ -2,7 +2,7 @@
 
 case $1 in
 start)
-	echo "starting cic"
+	echo "starting cic-ufs9xx"
 
 	insmod /lib/modules/ufs9xx_cic.ko
 
@@ -10,7 +10,7 @@ start)
 
 	;;
 stop)
-	echo "stopping cic... error, cic cannot be stopped, aborting"
+	echo "stopping cic-ufs9xx... error, cic-ufs9xx cannot be stopped, aborting"
 	;;
 *)
 	echo "usage: $0 [start|stop]"

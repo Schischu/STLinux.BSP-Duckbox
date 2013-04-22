@@ -17,7 +17,7 @@ PACKAGES-$(PTXCONF_BOOTLOGO) += bootlogo
 #
 # Paths and names
 #
-BOOTLOGO_VERSION	:= head
+BOOTLOGO_VERSION	:= head2
 BOOTLOGO := bootlogo
 BOOTLOGO_URL		:= lndir://$(PTXDIST_WORKSPACE)/local_src/extra/$(BOOTLOGO)
 BOOTLOGO_DIR		:= $(BUILDDIR)/$(BOOTLOGO)

@@ -1,0 +1,19 @@
+#!/bin/sh
+
+case $1 in
+start)
+	echo "starting simubutton"
+
+	insmod /lib/modules/simubutton.ko
+
+	exit 0
+
+	;;
+stop)
+	echo "stopping simubutton... error, simubutton cannot be stopped, aborting"
+	;;
+*)
+	echo "usage: $0 [start|stop]"
+	;;
+esac
+

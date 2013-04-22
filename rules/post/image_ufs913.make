@@ -8,10 +8,10 @@
 # see the README file.
 #
 
-IMAGE_PACKAGES-$(PTXCONF_IMAGE_UFS913)	+= $(IMAGEDIR)/ufs913.software.V1.00.B00.data
+SEL_ROOTFS-$(PTXCONF_IMAGE_UFS913)	+= $(IMAGEDIR)/ufs913.software.V1.00.B00.data
 
 
-$(STATEDIR)/image_working_dir_prepared: $(STATEDIR)/image_working_dir
+$(STATEDIR)/image_working_dir_prepared:
 	@echo -n "Preparing... "
 	cd $(image/work_dir);	\
 	((								\
@@ -86,7 +86,7 @@ $(IMAGEDIR)/uImage.bin: $(IMAGEDIR)/linuximage
 	) | $(FAKEROOT) --
 	@echo "done."
 
-$(STATEDIR)/image_working_dir_prepared2: $(STATEDIR)/image_working_dir
+$(STATEDIR)/image_working_dir_prepared2:
 	@echo -n "Preparing... "
 	@cd $(image/work_dir);	\
 	((								\
@@ -137,11 +137,12 @@ $(IMAGEDIR)/uImage_tiny.bin:
 	@echo "done."
 
 #$(image/work_dir)
-$(IMAGEDIR)/ufs913.software.V1.00.B00.data: $(IMAGEDIR)/uImage.bin       \
-                                            $(IMAGEDIR)/mtd_root.sum.bin \
-                                            $(IMAGEDIR)/mtd_fw.sum.bin   \
-                                            $(IMAGEDIR)/uImage_tiny.bin  \
-                                            $(IMAGEDIR)/mtd_tiny.bin     \
+$(IMAGEDIR)/ufs913.software.V1.00.B00.data: $(STATEDIR)/image_working_dir \
+                                            $(IMAGEDIR)/uImage.bin        \
+                                            $(IMAGEDIR)/mtd_root.sum.bin  \
+                                            $(IMAGEDIR)/mtd_fw.sum.bin    \
+                                            $(IMAGEDIR)/uImage_tiny.bin   \
+                                            $(IMAGEDIR)/mtd_tiny.bin      \
                                             $(STATEDIR)/host-mup.install.post
 	@echo -n "Creating ufs913.software.V1.00.B00.data... "
 	cd $(IMAGEDIR);						\

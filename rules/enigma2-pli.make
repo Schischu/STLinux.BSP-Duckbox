@@ -90,7 +90,7 @@ $(STATEDIR)/enigma2-pli.targetinstall:
 	@$(call install_fixup, enigma2-pli,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, enigma2-pli,DESCRIPTION,missing)
 
-	@$(call install_tree, enigma2-pli, 0, 0, -, /usr/local/bin/)
+	@$(call install_copy, enigma2-pli, 0, 0, 755, -, /usr/local/bin/enigma2)
 
 ifdef PTXCONF_ENIGMA2_PLI_INSTALL_PY
 	@cd $(ENIGMA2_PLI_PKGDIR) && \
