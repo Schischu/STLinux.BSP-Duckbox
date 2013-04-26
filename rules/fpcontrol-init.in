@@ -1,0 +1,15 @@
+## SECTION=initmethod_bbinit
+
+config FPCONTROL_INIT
+	tristate
+	depends on FPCONTROL
+	default y
+
+if FPCONTROL_INIT
+
+config FPCONTROL_BBINIT_LINK
+	string
+	prompt "fpcontrol"
+	default "S43fpcontrol"
+
+endif

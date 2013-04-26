@@ -1,0 +1,11 @@
+#NAME Bouquets (TV)
+#SERVICE: 1:7:1:0:0:0:0:0:0:0:userbouquet.favourites.tv
+#SERVICE: 1:7:1:0:0:0:0:0:0:0:userbouquet.dbe00.tv
+#SERVICE: 1:7:1:0:0:0:0:0:0:0:userbouquet.dbe03.tv
+#SERVICE: 1:7:1:0:0:0:0:0:0:0:userbouquet.dbe01.tv
+#SERVICE: 1:7:1:0:0:0:0:0:0:0:userbouquet.dbe02.tv
+#SERVICE: 1:7:1:0:0:0:0:0:0:0:userbouquet.hdtv__tv_.tv
+#SERVICE: 1:7:1:0:0:0:0:0:0:0:userbouquet.dbe04.tv
+#SERVICE: 1:7:1:0:0:0:0:0:0:0:userbouquet.dbe05.tv
+#SERVICE: 1:7:1:0:0:0:0:0:0:0:userbouquet.bouquetname__tv_.tv
+#SERVICE: 1:7:1:0:0:0:0:0:0:0:userbouquet.favourites.radio

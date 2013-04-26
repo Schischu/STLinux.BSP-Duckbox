@@ -77,4 +77,35 @@ $(STATEDIR)/evremote2.targetinstall:
 
 	@$(call touch)
 
+# ----------------------------------------------------------------------------
+# Init
+# ----------------------------------------------------------------------------
+
+PACKAGES-$(PTXCONF_EVREMOTE2_INIT) += evremote2-init
+
+EVREMOTE2_INIT_VERSION	:= head15
+
+$(STATEDIR)/evremote2-init.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init, evremote2-init)
+	@$(call install_fixup, evremote2-init,PRIORITY,optional)
+	@$(call install_fixup, evremote2-init,SECTION,base)
+	@$(call install_fixup, evremote2-init,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup, evremote2-init,DESCRIPTION,missing)
+	
+ifdef PTXCONF_INITMETHOD_BBINIT
+	@$(call install_alternative, evremote2-init, 0, 0, 0755, /etc/init.d/evremote2)
+	
+ifneq ($(call remove_quotes,$(PTXCONF_EVREMOTE2_BBINIT_LINK)),)
+	@$(call install_link, evremote2-init, \
+		../init.d/evremote2, \
+		/etc/rc.d/$(PTXCONF_EVREMOTE2_BBINIT_LINK))
+endif
+endif
+	
+	@$(call install_finish, evremote2-init)
+	
+	@$(call touch)
+
 # vim: syntax=make

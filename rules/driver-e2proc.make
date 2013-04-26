@@ -44,6 +44,7 @@ $(STATEDIR)/driver-e2proc.compile:
 		$(MAKE) $(KERNEL_MAKEVARS) \
 		-C $(KERNEL_DIR) \
 		M=$(DRIVER_E2PROC_DIR) \
+		EXTRA_CFLAGS=-DPLATFORM="$(PTXCONF_PLATFORM)" \
 		modules
 	
 	@$(call touch)

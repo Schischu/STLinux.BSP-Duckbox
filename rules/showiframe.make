@@ -87,4 +87,35 @@ $(STATEDIR)/showiframe.targetinstall:
 
 	@$(call touch)
 
+# ----------------------------------------------------------------------------
+# Init
+# ----------------------------------------------------------------------------
+
+PACKAGES-$(PTXCONF_SHOWIFRAME_INIT) += showiframe-init
+
+SHOWIFRAME_INIT_VERSION	:= head15
+
+$(STATEDIR)/showiframe-init.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init, showiframe-init)
+	@$(call install_fixup, showiframe-init,PRIORITY,optional)
+	@$(call install_fixup, showiframe-init,SECTION,base)
+	@$(call install_fixup, showiframe-init,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup, showiframe-init,DESCRIPTION,missing)
+	
+ifdef PTXCONF_INITMETHOD_BBINIT
+	@$(call install_alternative, showiframe-init, 0, 0, 0755, /etc/init.d/showiframe)
+	
+ifneq ($(call remove_quotes,$(PTXCONF_SHOWIFRAME_BBINIT_LINK)),)
+	@$(call install_link, showiframe-init, \
+		../init.d/showiframe, \
+		/etc/rc.d/$(PTXCONF_SHOWIFRAME_BBINIT_LINK))
+endif
+endif
+	
+	@$(call install_finish, showiframe-init)
+	
+	@$(call touch)
+
 # vim: syntax=make

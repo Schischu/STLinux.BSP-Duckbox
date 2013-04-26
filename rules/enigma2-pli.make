@@ -47,6 +47,7 @@ $(STATEDIR)/enigma2-pli.get:
 	
 	@$(call touch)
 
+PATH_PATCHES = $(subst :, ,$(PTXDIST_PATH_PATCHES))
 
 $(STATEDIR)/enigma2-pli.extract:
 	@$(call targetinfo)
@@ -56,6 +57,9 @@ $(STATEDIR)/enigma2-pli.extract:
 	@$(call shell, rm -rf $(ENIGMA2_PLI_DIR)/.git;)
 	
 	@$(call patchin, ENIGMA2_PLI)
+	
+	cp $(word 1, $(PATH_PATCHES))/$(ENIGMA2_PLI)/valis_enigma.ttf $(ENIGMA2_PLI_DIR)/data/fonts/
+	cp $(word 1, $(PATH_PATCHES))/$(ENIGMA2_PLI)/valis_lcd.ttf $(ENIGMA2_PLI_DIR)/data/fonts/
 	
 	#sed -e 's|#!/usr/bin/python|#!$(PTXDIST_SYSROOT_CROSS)/bin/python|' -i $(ENIGMA2_PLI_DIR)/po/xml2po.py
 	cd $(ENIGMA2_PLI_DIR) && sh autogen.sh
@@ -113,6 +117,37 @@ endif
 
 	@$(call install_finish, enigma2-pli)
 
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+# Init
+# ----------------------------------------------------------------------------
+
+PACKAGES-$(PTXCONF_ENIGMA2_PLI_INIT) += enigma2-pli-init
+
+ENIGMA2_PLI_INIT_VERSION	:= head15
+
+$(STATEDIR)/enigma2-pli-init.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init, enigma2-pli-init)
+	@$(call install_fixup, enigma2-pli-init,PRIORITY,optional)
+	@$(call install_fixup, enigma2-pli-init,SECTION,base)
+	@$(call install_fixup, enigma2-pli-init,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup, enigma2-pli-init,DESCRIPTION,missing)
+	
+ifdef PTXCONF_INITMETHOD_BBINIT
+	@$(call install_alternative, enigma2-pli-init, 0, 0, 0755, /etc/init.d/enigma2)
+	
+ifneq ($(call remove_quotes,$(PTXCONF_ENIGMA2_PLI_BBINIT_LINK)),)
+	@$(call install_link, enigma2-pli-init, \
+		../init.d/enigma2, \
+		/etc/rc.d/$(PTXCONF_ENIGMA2_PLI_BBINIT_LINK))
+endif
+endif
+	
+	@$(call install_finish, enigma2-pli-init)
+	
 	@$(call touch)
 
 # vim: syntax=make

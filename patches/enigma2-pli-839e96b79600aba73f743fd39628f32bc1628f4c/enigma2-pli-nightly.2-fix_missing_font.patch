@@ -1,0 +1,11 @@
+diff -Nur '--exclude=.git' '--exclude=tuxtxt' enigma2-nightly.org.org/data/fonts/Makefile.am enigma2-nightly.org/data/fonts/Makefile.am
+--- enigma2-nightly.org.org/data/fonts/Makefile.am	2012-03-20 01:26:26.671115298 -0700
++++ enigma2-nightly.org/data/fonts/Makefile.am	2012-03-20 01:26:31.467115298 -0700
+@@ -5,4 +5,6 @@
+ 	andale.ttf \
+ 	lcd.ttf \
+ 	md_khmurabi_10.ttf \
+-	nmsbd.ttf
++	nmsbd.ttf \
++	valis_enigma.ttf \
++	valis_lcd.ttf

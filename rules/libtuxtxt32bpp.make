@@ -75,8 +75,8 @@ LIBTUXTXT32BPP_AUTOCONF := \
 	$(CROSS_AUTOCONF_USR) \
 	--with-boxtype=generic \
 	--with-configdir=/usr \
-	--with-datadir=/usr/share/tuxtxt \
-	--with-fontdir=/usr/share/fonts
+	--with-datadir=/usr/share/local/tuxtxt \
+	--with-fontdir=/usr/share/local/fonts
 
 # ----------------------------------------------------------------------------
 # Target-Install
@@ -84,17 +84,19 @@ LIBTUXTXT32BPP_AUTOCONF := \
 
 $(STATEDIR)/libtuxtxt32bpp.targetinstall:
 	@$(call targetinfo)
-
+	
 	@$(call install_init, libtuxtxt32bpp)
 	@$(call install_fixup, libtuxtxt32bpp,PRIORITY,optional)
 	@$(call install_fixup, libtuxtxt32bpp,SECTION,base)
 	@$(call install_fixup, libtuxtxt32bpp,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, libtuxtxt32bpp,DESCRIPTION,missing)
-
+	
 	@$(call install_lib, libtuxtxt32bpp, 0, 0, 0644, libtuxtxt32bpp)
-
+	
+	@$(call install_tree, libtuxtxt32bpp, 0, 0, -, /usr/local/share/)
+	
 	@$(call install_finish, libtuxtxt32bpp)
-
+	
 	@$(call touch)
 
 # vim: syntax=make

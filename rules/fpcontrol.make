@@ -87,4 +87,35 @@ $(STATEDIR)/fpcontrol.targetinstall:
 
 	@$(call touch)
 
+# ----------------------------------------------------------------------------
+# Init
+# ----------------------------------------------------------------------------
+
+PACKAGES-$(PTXCONF_FPCONTROL_INIT) += fpcontrol-init
+
+FPCONTROL_INIT_VERSION	:= head15
+
+$(STATEDIR)/fpcontrol-init.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init, fpcontrol-init)
+	@$(call install_fixup, fpcontrol-init,PRIORITY,optional)
+	@$(call install_fixup, fpcontrol-init,SECTION,base)
+	@$(call install_fixup, fpcontrol-init,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup, fpcontrol-init,DESCRIPTION,missing)
+	
+ifdef PTXCONF_INITMETHOD_BBINIT
+	@$(call install_alternative, fpcontrol-init, 0, 0, 0755, /etc/init.d/fpcontrol)
+	
+ifneq ($(call remove_quotes,$(PTXCONF_FPCONTROL_BBINIT_LINK)),)
+	@$(call install_link, fpcontrol-init, \
+		../init.d/fpcontrol, \
+		/etc/rc.d/$(PTXCONF_FPCONTROL_BBINIT_LINK))
+endif
+endif
+	
+	@$(call install_finish, fpcontrol-init)
+	
+	@$(call touch)
+
 # vim: syntax=make

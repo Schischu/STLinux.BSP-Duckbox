@@ -230,10 +230,13 @@ static int get_player_version(char *page, char **start, off_t off, int count,
   return len;
 }
 
+#define STRINGIZE_(x) #x
+#define STRINGIZE(x) STRINGIZE_(x)
+
 static int info_model_read(char *page, char **start, off_t off, int count,
                            int *eof, void *data)
 {
-  int len = sprintf(page, "PLATFORM\n");
+  int len = sprintf(page, "%s\n", STRINGIZE(PLATFORM));
   return len;
 }
 
@@ -509,6 +512,7 @@ struct ProcStructure_s e2Proc[] =
 
 	{cProcDir  , "stb/vmpeg"                                                        , NULL, NULL, NULL, NULL, ""},
 	{cProcDir  , "stb/vmpeg/0"                                                      , NULL, NULL, NULL, NULL, ""},
+	{cProcEntry, "stb/vmpeg/0/dst_apply"                                            , NULL, NULL, NULL, NULL, ""},
 	{cProcEntry, "stb/vmpeg/0/dst_left"                                             , NULL, NULL, NULL, NULL, ""},
 	{cProcEntry, "stb/vmpeg/0/dst_top"                                              , NULL, NULL, NULL, NULL, ""},
 	{cProcEntry, "stb/vmpeg/0/dst_width"                                            , NULL, NULL, NULL, NULL, ""},
@@ -520,6 +524,7 @@ struct ProcStructure_s e2Proc[] =
 	{cProcEntry, "stb/vmpeg/0/framerate"                                            , NULL, NULL, NULL, NULL, ""},
 
 	{cProcDir  , "stb/vmpeg/1"                                                      , NULL, NULL, NULL, NULL, ""},
+	{cProcEntry, "stb/vmpeg/1/dst_apply"                                            , NULL, NULL, NULL, NULL, ""},
 	{cProcEntry, "stb/vmpeg/1/dst_left"                                             , NULL, NULL, NULL, NULL, ""},
 	{cProcEntry, "stb/vmpeg/1/dst_top"                                              , NULL, NULL, NULL, NULL, ""},
 	{cProcEntry, "stb/vmpeg/1/dst_width"                                            , NULL, NULL, NULL, NULL, ""},
