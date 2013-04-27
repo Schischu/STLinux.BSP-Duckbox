@@ -6,16 +6,16 @@ case $1 in
 start)
 	echo "starting cpufrequ"
 
-	insmod /lib/modules/cpufrequ.ko
+	insmod /lib/modules/cpu_frequ.ko
 	
-	if [-e $cpufrequ_rules ]; then
+	if [ -e $cpufrequ_rules ]; then
 		cat $cpufrequ_rules > /proc/cpu_frequ/pll0_ndiv_mdiv
 	fi
 	exit 0
 
 	;;
 stop)
-	echo "stopping bpamem... error, bpamem cannot be stopped, aborting"
+	echo "stopping cpufrequ... error, cpufrequ cannot be stopped, aborting"
 	;;
 *)
 	echo "usage: $0 [start|stop]"

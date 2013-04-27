@@ -1,0 +1,39 @@
+## SECTION=core
+
+config DVB_FIRMWARE
+	bool
+	default y
+
+if DVB_FIRMWARE
+
+config DVB_FIRMWARE_AS102
+	tristate
+	prompt "dvb-firmware as102"
+	default m
+
+config DVB_FIRMWARE_AVL2108
+	tristate
+	prompt "dvb-firmware avl2108"
+	default m
+
+config DVB_FIRMWARE_AVL6222
+	tristate
+	prompt "dvb-firmware avl6222"
+	default m
+
+config DVB_FIRMWARE_CX21143
+	tristate
+	prompt "dvb-firmware cx21143"
+	default m
+
+config DVB_FIRMWARE_CX24116
+	tristate
+	prompt "dvb-firmware cx24116"
+	default m
+
+config DVB_FIRMWARE_STV6306
+	tristate
+	prompt "dvb-firmware stv6306"
+	default m
+
+endif

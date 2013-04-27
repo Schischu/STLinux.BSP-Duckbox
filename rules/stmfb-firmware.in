@@ -1,0 +1,6 @@
+## SECTION=core
+
+config STMFB_FIRMWARE
+	tristate
+	default m
+	select BASE

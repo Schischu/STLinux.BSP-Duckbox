@@ -6,12 +6,12 @@ case $1 in
 start)
 	echo "starting fpcontrol"
 
-	if [ -e "$(fpcontrol_conf)" ]; then
-		for param in `cat $(fpcontrol_conf)`; do
+	if [ -e $fpcontrol_conf ]; then
+		while read param; do
 			[ "${param%${param#?}}"x = '#x' ] || fp_control $param
-		done
+		done < $fpcontrol_conf
 	else
-		echo "starting fpcontrol... error, no such file $(fpcontrol_conf), aborting"
+		echo "starting fpcontrol... error, no such file $fpcontrol_conf, aborting"
 	fi
 
 	exit 0

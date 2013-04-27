@@ -6,8 +6,8 @@ case $1 in
 start)
 	echo "starting evremote2"
 
-	if [ -e "$(evremote2_conf)" ]; then
-		evremote2 `cat $(evremote2_conf)` &
+	if [ -e $evremote2_conf ]; then
+		evremote2 `cat $evremote2_conf` &
 	else
 		evremote2 &
 	fi

@@ -161,7 +161,6 @@ $(IMAGEDIR)/ufs913.software.V1.00.B00.data: $(STATEDIR)/image_working_dir \
 		echo -n "       $(IMAGEDIR)/uImage_tiny.bin ";	\
 		echo -n "       $(STATEDIR)/image_working_dir_prepared ";	\
 		echo -n "       $(STATEDIR)/image_working_dir_prepared2 ";	\
-		echo -n "       permissions ";	\
 		echo "          $@.cfg" ) | tee -a "$(PTX_LOGFILE)"		\
 	) | $(FAKEROOT) --
 	@echo "done."

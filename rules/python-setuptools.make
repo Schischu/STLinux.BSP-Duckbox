@@ -75,7 +75,7 @@ $(STATEDIR)/python-setuptools.targetinstall:
 
 	@for file in easy_install pkg_resources site ; do \
 		$(call install_copy, python-setuptools, 0, 0, 0644, -, \
-			/usr/lib/python$(PYTHON_MAJORMINOR)/site-packages/$$file.pyc); \
+			/usr/lib/python$(PYTHON_MAJORMINOR)/site-packages/$$file.py[co]); \
 	done
 
 	@for file in `cd $(PYTHON_SETUPTOOLS_PKGDIR)/usr/lib/python$(PYTHON_MAJORMINOR)/site-packages/setuptools; find .  \

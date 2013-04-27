@@ -4,7 +4,7 @@ case $1 in
 start)
 	echo "starting simubutton"
 
-	insmod /lib/modules/simubutton.ko
+	insmod /lib/modules/simu_button.ko
 
 	exit 0
 

@@ -8,13 +8,13 @@ case $1 in
 start)
 	echo "starting showiframe"
 
-	if [ -e "$(showiframe_logodir)/$(showiframe_logo)" ]; then
-		showiframe -p "$(showiframe_logodir)/$(showiframe_logo)" &
+	if [ -e $showiframe_logodir/$showiframe_logo ]; then
+		showiframe -p $showiframe_logodir/$showiframe_logo &
 	else
-		if [ -e "$(showiframe_logodiralt)/$(showiframe_logo)" ]; then
-			showiframe -p "$(showiframe_logodiralt)/$(showiframe_logo)" &
+		if [ -e $showiframe_logodiralt/$showiframe_logo ]; then
+			showiframe -p $showiframe_logodiralt/$showiframe_logo &
 		else
-			echo "starting showiframe... error, no such file $(showiframe_logo), aborting"
+			echo "starting showiframe... error, no such file $showiframe_logo, aborting"
 		fi
 	fi
 

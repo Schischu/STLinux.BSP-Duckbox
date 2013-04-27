@@ -6431,7 +6431,7 @@ diff -Nur '--exclude=.git' '--exclude=tuxtxt' enigma2-nightly.org.org/m4/ax_pyth
  	if test -z "$PYTHON_SITE_PKG"; then
 -		PYTHON_SITE_PKG=`$PYTHON -c "import distutils.sysconfig; \
 -			print (distutils.sysconfig.get_python_lib(0,0));"`
-+		PYTHON_SITE_PKG="$PY_PATH//lib/python2.6/site-packages"
++		PYTHON_SITE_PKG="$PY_PATH/lib/python2.6/site-packages"
 +#		PYTHON_SITE_PKG=`$PYTHON -c "import distutils.sysconfig; \
 +#			print (distutils.sysconfig.get_python_lib(0,0));"`
  	fi

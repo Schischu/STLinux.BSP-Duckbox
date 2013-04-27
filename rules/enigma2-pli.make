@@ -61,7 +61,7 @@ $(STATEDIR)/enigma2-pli.extract:
 	cp $(word 1, $(PATH_PATCHES))/$(ENIGMA2_PLI)/valis_enigma.ttf $(ENIGMA2_PLI_DIR)/data/fonts/
 	cp $(word 1, $(PATH_PATCHES))/$(ENIGMA2_PLI)/valis_lcd.ttf $(ENIGMA2_PLI_DIR)/data/fonts/
 	
-	#sed -e 's|#!/usr/bin/python|#!$(PTXDIST_SYSROOT_CROSS)/bin/python|' -i $(ENIGMA2_PLI_DIR)/po/xml2po.py
+	sed -e 's|#!/usr/bin/python|#!$(PTXDIST_SYSROOT_CROSS)/bin/python|' -i $(ENIGMA2_PLI_DIR)/po/xml2po.py
 	cd $(ENIGMA2_PLI_DIR) && sh autogen.sh
 	
 	@$(call touch)
@@ -77,6 +77,7 @@ ENIGMA2_PLI_AUTOCONF := \
 	$(CROSS_AUTOCONF_USR) \
 		--prefix=/usr/local \
 		--without-libsdl \
+		PYTHON=$(PTXDIST_SYSROOT_HOST)/bin/python2.6 \
 		PY_PATH=$(SYSROOT)/usr \
 		PKG_CONFIG=$(PTXDIST_SYSROOT_HOST)/bin/pkg-config \
 		PKG_CONFIG_PATH=$(SYSROOT)/usr/lib/pkgconfig
@@ -104,6 +105,8 @@ ifdef PTXCONF_ENIGMA2_PLI_INSTALL_PY
 	done
 endif
 
+	$(call install_copy, enigma2-pli, 0, 0, 644, -, /usr/lib/enigma2/python/mytest.py);
+
 	@cd $(ENIGMA2_PLI_PKGDIR) && \
 		find ./usr/lib/enigma2 \
 		! -type d -a ! \( -name "*.py" -o -name "*.pyc" \) | \
@@ -114,6 +117,9 @@ endif
 	@$(call install_lib, enigma2-pli, 0, 0, 0644, libopen)
 
 	@$(call install_tree, enigma2-pli, 0, 0, -, /usr/local/share/)
+
+	@$(call install_alternative_tree, enigma2-pli, 0, 0, /etc/enigma2)
+	@$(call install_alternative_tree, enigma2-pli, 0, 0, /etc/tuxbox)
 
 	@$(call install_finish, enigma2-pli)
 
