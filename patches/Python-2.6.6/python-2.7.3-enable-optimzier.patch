@@ -1,0 +1,12 @@
+diff -Nur '--exclude-from=diff-ignore' python-2.7.3.org/Python/compile.c python-2.7.3/Python/compile.c
+--- python-2.7.3.org/Python/compile.c	2012-04-10 01:07:35.000000000 +0200
++++ python-2.7.3/Python/compile.c	2012-11-16 23:07:56.635237310 +0100
+@@ -32,7 +32,7 @@
+ #include "symtable.h"
+ #include "opcode.h"
+ 
+-int Py_OptimizeFlag = 0;
++int Py_OptimizeFlag = 1;
+ 
+ #define DEFAULT_BLOCK_SIZE 16
+ #define DEFAULT_BLOCKS 8

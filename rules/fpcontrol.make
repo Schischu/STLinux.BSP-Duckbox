@@ -87,6 +87,25 @@ $(STATEDIR)/fpcontrol.targetinstall:
 
 	@$(call touch)
 
+PACKAGES-$(PTXCONF_FPCONTROL_CONF) += fpcontrol-conf
+FPCONTROL_CONF_VERSION	:= head
+
+$(STATEDIR)/fpcontrol-conf.targetinstall:
+	@$(call targetinfo)
+
+	@$(call install_init, fpcontrol-conf)
+	@$(call install_fixup, fpcontrol-conf,PRIORITY,optional)
+	@$(call install_fixup, fpcontrol-conf,SECTION,base)
+	@$(call install_fixup, fpcontrol-conf,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup, fpcontrol-conf,DESCRIPTION,missing)
+
+	@$(call install_alternative, fpcontrol-conf, 0, 0, 0644, /etc/fpcontrol.conf)
+	@$(call install_alternative, fpcontrol-conf, 0, 0, 0644, /etc/vdstandby.cfg)
+
+	@$(call install_finish, fpcontrol-conf)
+
+	@$(call touch)
+
 # ----------------------------------------------------------------------------
 # Init
 # ----------------------------------------------------------------------------

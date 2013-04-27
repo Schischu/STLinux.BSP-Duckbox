@@ -3,3 +3,10 @@
 config FPCONTROL
 	tristate "fpcontrol"
 
+if FPCONTROL
+
+config FPCONTROL_CONF
+	tristate "fpcontrol-conf"
+
+endif
+

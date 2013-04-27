@@ -77,6 +77,24 @@ $(STATEDIR)/evremote2.targetinstall:
 
 	@$(call touch)
 
+PACKAGES-$(PTXCONF_EVREMOTE2_CONF) += evremote2-conf
+EVREMOTE2_CONF_VERSION	:= head
+
+$(STATEDIR)/evremote2-conf.targetinstall:
+	@$(call targetinfo)
+
+	@$(call install_init, evremote2-conf)
+	@$(call install_fixup, evremote2-conf,PRIORITY,optional)
+	@$(call install_fixup, evremote2-conf,SECTION,base)
+	@$(call install_fixup, evremote2-conf,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup, evremote2-conf,DESCRIPTION,missing)
+
+	@$(call install_alternative, evremote2-conf, 0, 0, 0644, /etc/evremote2.conf)
+
+	@$(call install_finish, evremote2-conf)
+
+	@$(call touch)
+
 # ----------------------------------------------------------------------------
 # Init
 # ----------------------------------------------------------------------------

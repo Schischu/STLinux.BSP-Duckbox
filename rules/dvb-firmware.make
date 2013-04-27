@@ -14,7 +14,7 @@
 #
 
 ifdef PTXCONF_DVB_FIRMWARE
-PACKAGES-$(PTXCONF_DVB_FIRMWARE_AS102) += dvb-firmware-as102
+PACKAGES-$(PTXCONF_DVB_FIRMWARE_AS102)   += dvb-firmware-as102
 PACKAGES-$(PTXCONF_DVB_FIRMWARE_AVL2108) += dvb-firmware-avl2108
 PACKAGES-$(PTXCONF_DVB_FIRMWARE_AVL6222) += dvb-firmware-avl6222
 PACKAGES-$(PTXCONF_DVB_FIRMWARE_CX21143) += dvb-firmware-cx21143
@@ -37,6 +37,7 @@ $(STATEDIR)/dvb-firmware-as102.targetinstall:
 	@$(call targetinfo)
 
 	@$(call install_init,  dvb-firmware-as102)
+	@$(call install_fixup, dvb-firmware-as102,ARCH,noarch)
 	@$(call install_fixup, dvb-firmware-as102,PRIORITY,optional)
 	@$(call install_fixup, dvb-firmware-as102,SECTION,base)
 	@$(call install_fixup, dvb-firmware-as102,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")

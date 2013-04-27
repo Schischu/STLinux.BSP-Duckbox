@@ -3,3 +3,10 @@
 config EVREMOTE2
 	tristate "evremote2"
 
+if EVREMOTE2
+
+config EVREMOTE2_CONF
+	tristate "evremote2-conf"
+
+endif
+
