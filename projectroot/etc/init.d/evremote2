@@ -1,0 +1,27 @@
+#!/bin/sh
+
+evremote2_conf="/etc/evremote2.conf"
+
+case $1 in
+start)
+	echo "starting evremote2"
+
+	if [ -e "$(evremote2_conf)" ]; then
+		evremote2 `cat $(evremote2_conf)` &
+	else
+		evremote2 &
+	fi
+
+	exit 0
+
+	;;
+stop)
+	echo "stopping evremote2"
+	killall evremote2
+	killall -9 evremote2
+	;;
+*)
+	echo "usage: $0 [start|stop]"
+	;;
+esac
+

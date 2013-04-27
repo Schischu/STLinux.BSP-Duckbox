@@ -1,0 +1,28 @@
+#!/bin/sh
+
+case $1 in
+start)
+	echo "starting ufs913-mac"
+
+	NFS=`grep -c nfs /proc/cmdline`
+	if [ "$NFS" -eq "1" ]; then
+		# We can not correct the mac from userspace if we are booting from nfsroot
+		echo "starting ufs913-mac... error, can not correct mac if booting from nfs, aborting"
+	else
+		HWADDR=`strings /dev/mtdblock2 | tail -n 1`
+		ifconfig eth0 down
+		ifconfig eth0 hw ether ${HWADDR}
+		ifconfig eth0 up
+	fi
+
+	exit 0
+
+	;;
+stop)
+	echo "stopping ufs913-mac... error, ufs913-mac cannot be stopped, aborting"
+	;;
+*)
+	echo "usage: $0 [start|stop]"
+	;;
+esac
+

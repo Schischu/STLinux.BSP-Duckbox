@@ -75,8 +75,8 @@ LIBTUXTXT32BPP_AUTOCONF := \
 	$(CROSS_AUTOCONF_USR) \
 	--with-boxtype=generic \
 	--with-configdir=/usr \
-	--with-datadir=/usr/share/local/tuxtxt \
-	--with-fontdir=/usr/share/local/fonts
+	--with-datadir=/usr/local/share/tuxtxt \
+	--with-fontdir=/usr/local/share/fonts
 
 # ----------------------------------------------------------------------------
 # Target-Install

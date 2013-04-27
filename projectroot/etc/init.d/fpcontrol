@@ -1,0 +1,27 @@
+#!/bin/sh
+
+fpcontrol_conf="/etc/fpcontrol.conf"
+
+case $1 in
+start)
+	echo "starting fpcontrol"
+
+	if [ -e "$(fpcontrol_conf)" ]; then
+		for param in `cat $(fpcontrol_conf)`; do
+			[ "${param%${param#?}}"x = '#x' ] || fp_control $param
+		done
+	else
+		echo "starting fpcontrol... error, no such file $(fpcontrol_conf), aborting"
+	fi
+
+	exit 0
+
+	;;
+stop)
+	echo "stopping fpcontrol... error, fpcontrol cannot be stopped, aborting"
+	;;
+*)
+	echo "usage: $0 [start|stop]"
+	;;
+esac
+

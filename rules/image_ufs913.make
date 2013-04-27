@@ -22,7 +22,7 @@ $(STATEDIR)/image_working_dir_prepared:
 		echo -n "rm -rf $(image/work_dir)/map/root/boot/*.elf; ";	\
 		echo -n "cp -a $(image/work_dir)/boot/*.elf $(image/work_dir)/map/fw/; ";	\
 		echo -n "echo \"/dev/mtdblock8	/boot	jffs2	defaults	0	0\" >> $(image/work_dir)/map/root/etc/fstab" ) | tee -a "$(PTX_LOGFILE)"		\
-	) | $(FAKEROOT) -s $(IMAGEDIR)/image_working_dir_prepared.state --
+	) | $(FAKEROOT) -s $(STATEDIR)/image_working_dir_prepared --
 	
 	@echo "done."
 	@$(call touch)
@@ -38,7 +38,7 @@ $(IMAGEDIR)/mtd_fw.bin: $(STATEDIR)/image_working_dir_prepared $(STATEDIR)/host-
 		echo -n "-d $(image/work_dir)/map/fw ";			\
 		echo -n "-qnUf -p0x800000 -e0x20000 ";\
 		echo  "-o $@" ) | tee -a "$(PTX_LOGFILE)"		\
-	) | $(FAKEROOT) -i $(IMAGEDIR)/image_working_dir_prepared.state --
+	) | $(FAKEROOT) -i $(STATEDIR)/image_working_dir_prepared --
 	@echo "done."
 
 # $SUMTOOL -v -p -e 0x20000 -i $CURDIR/mtd_fw.bin -o $CURDIR/mtd_fw.sum.bin
@@ -50,7 +50,7 @@ $(IMAGEDIR)/mtd_fw.sum.bin: $(IMAGEDIR)/mtd_fw.bin
 		echo -n "-i $< ";					\
 		echo -n "-p -e 0x20000 ";	\
 		echo "-o $@" ) | tee -a "$(PTX_LOGFILE)"		\
-	) | $(FAKEROOT) -i $(IMAGEDIR)/image_working_dir_prepared.state --
+	) | $(FAKEROOT) -i $(STATEDIR)/image_working_dir_prepared --
 	@echo "done."
 
 # $MKFSJFFS2 -qnUfv -p0x7800000 -e0x20000 -r $TMPROOTDIR -o $CURDIR/mtd_root.bin
@@ -63,7 +63,7 @@ $(IMAGEDIR)/mtd_root.bin: $(STATEDIR)/image_working_dir_prepared $(STATEDIR)/hos
 		echo -n "-d $(image/work_dir)/map/root ";			\
 		echo -n "-qnUf -p0x7800000 -e0x20000 ";\
 		echo  "-o $@" ) | tee -a "$(PTX_LOGFILE)"		\
-	) | $(FAKEROOT) -i $(IMAGEDIR)/image_working_dir_prepared.state --
+	) | $(FAKEROOT) -i $(STATEDIR)/image_working_dir_prepared --
 	@echo "done."
 
 # $SUMTOOL -v -p -e 0x20000 -i $CURDIR/mtd_root.bin -o $CURDIR/mtd_root.sum.bin
@@ -75,7 +75,7 @@ $(IMAGEDIR)/mtd_root.sum.bin: $(IMAGEDIR)/mtd_root.bin
 		echo -n "-i $< ";					\
 		echo -n "-p -e 0x20000 ";	\
 		echo "-o $@" ) | tee -a "$(PTX_LOGFILE)"		\
-	) | $(FAKEROOT) -i $(IMAGEDIR)/image_working_dir_prepared.state --
+	) | $(FAKEROOT) -i $(STATEDIR)/image_working_dir_prepared --
 	@echo "done."
 
 $(IMAGEDIR)/uImage.bin: $(IMAGEDIR)/linuximage
@@ -112,7 +112,7 @@ $(STATEDIR)/image_working_dir_prepared2:
 		echo -n "chmod 755 $(image/work_dir)/map/tiny/etc/init.d/rcS; ";	\
 		echo -n "cp $(PTXDIST_WORKSPACE)/local_src/extra/ufs913/flash/update $(image/work_dir)/map/tiny/bin; ";	\
 		echo -n "chmod 755 $(image/work_dir)/map/tiny/bin/update" ) | tee -a "$(PTX_LOGFILE)"		\
-	) | $(FAKEROOT) -s $(IMAGEDIR)/image_working_dir_prepared2.state --
+	) | $(FAKEROOT) -s $(STATEDIR)/image_working_dir_prepared2 --
 	
 	@echo "done."
 	@$(call touch)
@@ -125,7 +125,7 @@ $(IMAGEDIR)/mtd_tiny.bin: $(STATEDIR)/image_working_dir_prepared2 $(STATEDIR)/ho
 		echo -n "$(PTXCONF_SYSROOT_HOST)/bin/mkcramfs ";	\
 		echo -n "$(image/work_dir)/map/tiny ";	\
 		echo  "$@" ) | tee -a "$(PTX_LOGFILE)"		\
-	) | $(FAKEROOT) -i $(IMAGEDIR)/image_working_dir_prepared2.state --
+	) | $(FAKEROOT) -i $(STATEDIR)/image_working_dir_prepared2 --
 	@echo "done."
 
 $(IMAGEDIR)/uImage_tiny.bin:
@@ -159,8 +159,8 @@ $(IMAGEDIR)/ufs913.software.V1.00.B00.data: $(STATEDIR)/image_working_dir \
 		echo -n "       $(IMAGEDIR)/mtd_root.bin ";	\
 		echo -n "       $(IMAGEDIR)/mtd_tiny.bin ";	\
 		echo -n "       $(IMAGEDIR)/uImage_tiny.bin ";	\
-		echo -n "       $(IMAGEDIR)/image_working_dir_prepared.state ";	\
-		echo -n "       $(IMAGEDIR)/image_working_dir_prepared2.state ";	\
+		echo -n "       $(STATEDIR)/image_working_dir_prepared ";	\
+		echo -n "       $(STATEDIR)/image_working_dir_prepared2 ";	\
 		echo -n "       permissions ";	\
 		echo "          $@.cfg" ) | tee -a "$(PTX_LOGFILE)"		\
 	) | $(FAKEROOT) --
