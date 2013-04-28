@@ -1,0 +1,12 @@
+diff -Nur '--exclude-from=diff-ignore' python-2.7.3.org/configure.in python-2.7.3/configure.in
+--- python-2.7.3.org/configure.in	2012-04-10 01:07:36.000000000 +0200
++++ python-2.7.3/configure.in	2012-11-18 13:32:01.396962900 +0100
+@@ -3139,7 +3139,7 @@
+ 
+ AC_MSG_RESULT($ac_cv_buggy_getaddrinfo)
+ 
+-if test $have_getaddrinfo = no -o "$ac_cv_buggy_getaddrinfo" = yes
++if test $have_getaddrinfo = no -o "$ac_cv_buggy_getaddrinfo" = yes -a x"$cross_compiling" != "xyes"
+ then
+ 	if test $ipv6 = yes
+ 	then

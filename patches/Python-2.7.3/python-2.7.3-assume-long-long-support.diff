@@ -1,0 +1,24 @@
+diff -Nur '--exclude-from=diff-ignore' python-2.7.3.org/configure.in python-2.7.3/configure.in
+--- python-2.7.3.org/configure.in	2012-04-10 01:07:36.000000000 +0200
++++ python-2.7.3/configure.in	2012-11-18 13:32:01.396962900 +0100
+@@ -4222,7 +4222,7 @@
+   ]]])],
+   [ac_cv_have_long_long_format=yes],
+   [ac_cv_have_long_long_format=no],
+-  [ac_cv_have_long_long_format=no])
++  [ac_cv_have_long_long_format=yes])
+   )
+   AC_MSG_RESULT($ac_cv_have_long_long_format)
+ fi
+diff -Nur '--exclude-from=diff-ignore' python-2.7.3.org/Include/pyport.h python-2.7.3/Include/pyport.h
+--- python-2.7.3.org/Include/pyport.h	2012-04-10 01:07:29.000000000 +0200
++++ python-2.7.3/Include/pyport.h	2012-11-18 13:32:01.396962900 +0100
+@@ -846,7 +846,7 @@
+  * rather than waiting for integer multiplication to trigger bogus
+  * overflows.
+  */
+-#error "LONG_BIT definition appears wrong for platform (bad gcc/glibc config?)."
++/* #error "LONG_BIT definition appears wrong for platform (bad gcc/glibc config?)." */
+ #endif
+ 
+ #ifdef __cplusplus

@@ -16,8 +16,12 @@ PACKAGES-$(PTXCONF_PYTHON) += python
 #
 # Paths and names
 #
-PYTHON_VERSION		:= 2.6.6
-PYTHON_MD5		:= cf4e6881bb84a7ce6089e4a307f71f14
+#PYTHON_VERSION		:= 2.6.6
+#PYTHON_MD5		:= cf4e6881bb84a7ce6089e4a307f71f14
+
+PYTHON_VERSION		:= 2.7.3
+PYTHON_MD5		:= c57477edd6d18bd9eeca2f21add73919
+
 PYTHON_MAJORMINOR	:= $(basename $(PYTHON_VERSION))
 PYTHON_SITEPACKAGES	:= /usr/lib/python$(PYTHON_MAJORMINOR)/site-packages
 PYTHON			:= Python-$(PYTHON_VERSION)
@@ -38,6 +42,7 @@ CROSS_PYTHON		:= $(PTXCONF_SYSROOT_CROSS)/bin/python$(PYTHON_MAJORMINOR)
 PYTHON_PATH	:= PATH=$(CROSS_PATH)
 PYTHON_ENV 	:= \
 	$(CROSS_ENV) \
+	PYTHON_XCOMPILE_DEPENDENCIES_PREFIX=$(PTXCONF_SYSROOT_CROSS)/usr \
 	PYTHON_FOR_BUILD=$(PTXCONF_SYSROOT_HOST)/bin/python$(PYTHON_MAJORMINOR) \
 	ac_sys_system=Linux \
 	ac_sys_release=2 \
@@ -63,7 +68,8 @@ PYTHON_AUTOCONF := \
 	--without-doc-strings
 
 PYTHON_MAKEVARS := \
-	PGEN_FOR_BUILD=$(PTXCONF_SYSROOT_HOST)/bin/pgen
+	PGEN_FOR_BUILD=$(PTXCONF_SYSROOT_HOST)/bin/pgen \
+	
 
 # ----------------------------------------------------------------------------
 # Install

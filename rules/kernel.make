@@ -180,6 +180,9 @@ ifdef PTXCONF_KERNEL_DTC
 	@install -m 755 "$(KERNEL_DIR)/scripts/dtc/dtc" "$(PTXCONF_SYSROOT_HOST)/bin/dtc"
 endif
 	
+	mkdir -p $(SYSROOT)/usr/include/linux/dvb/
+	cp $(KERNEL_DIR)/include/linux/dvb/frontend.h $(SYSROOT)/usr/include/linux/dvb/
+	
 	mkdir -p $(SYSROOT)/usr/include/linux/media/dvb/
 	cp $(KERNEL_DIR)/drivers/media/dvb/dvb-core/*.h $(SYSROOT)/usr/include/linux/media/dvb/
 	

@@ -34,4 +34,26 @@ if ENIGMA2_PLI
 config ENIGMA2_PLI_INSTALL_PY
 	bool "Install .py files"
 	default false
+
+choice
+	prompt "enigma2-pli version   "
+	default ENIGMA2_PLI_VERSION_201205181526
+
+	config ENIGMA2_PLI_VERSION_201203171951
+		bool
+		prompt "Sat, 17 Mar 2012 19:51"
+
+	config ENIGMA2_PLI_VERSION_201205181526
+		bool
+		prompt "Sat, 18 May 2012 15:26"
+
+	config ENIGMA2_PLI_VERSION_201301282130
+		bool
+		prompt "Mon, 28 Jan 2013 21:30"
+
+	config ENIGMA2_PLI_VERSION_201303022136
+		bool
+		prompt "Sat,  2 Mar 2013 21:36"
+endchoice
+
 endif
