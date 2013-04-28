@@ -2,5 +2,5 @@
 
 config STLINUX_FDMA
 	tristate
-	default m
+	default y
 	select BASE

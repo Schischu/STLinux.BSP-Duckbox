@@ -2,5 +2,5 @@
 
 config STMFB_FIRMWARE
 	tristate
-	default m
+	default y
 	select BASE
