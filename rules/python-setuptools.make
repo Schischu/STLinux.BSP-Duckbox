@@ -68,7 +68,7 @@ $(STATEDIR)/python-setuptools.targetinstall:
 	@$(call install_fixup, python-setuptools,AUTHOR,"Michael Olbrich <m.olbrich@pengutronix.de>")
 	@$(call install_fixup, python-setuptools,DESCRIPTION,missing)
 
-	@for file in easy_install easy_install-2.6 ; do \
+	@for file in easy_install easy_install-$(PYTHON_MAJORMINOR) ; do \
 		$(call install_copy, python-setuptools, 0, 0, 0755, -, \
 			/usr/bin/$$file); \
 	done

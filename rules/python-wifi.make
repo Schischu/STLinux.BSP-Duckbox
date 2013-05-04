@@ -40,7 +40,7 @@ PYTHON_WIFI_MAKE_ENV		:= $(CROSS_ENV)
 $(STATEDIR)/python-wifi.compile:
 	@$(call targetinfo)
 	cd $(PYTHON_WIFI_DIR) && \
-		$(PYTHON_WIFI_PATH) $(PYTHON_WIFI_MAKE_ENV) PYTHONPATH=$(SYSROOT)/usr/lib/python2.6/site-packages \
+		$(PYTHON_WIFI_PATH) $(PYTHON_WIFI_MAKE_ENV) PYTHONPATH=$(SYSROOT)/usr/lib/python$(PYTHON_MAJORMINOR)/site-packages \
 		$(CROSS_PYTHON) setup.py build
 	@$(call touch)
 
@@ -51,7 +51,7 @@ $(STATEDIR)/python-wifi.compile:
 $(STATEDIR)/python-wifi.install:
 	@$(call targetinfo)
 	cd $(PYTHON_WIFI_DIR) && \
-		$(PYTHON_WIFI_PATH) $(PYTHON_WIFI_MAKE_ENV) PYTHONPATH=$(SYSROOT)/usr/lib/python2.6/site-packages \
+		$(PYTHON_WIFI_PATH) $(PYTHON_WIFI_MAKE_ENV) PYTHONPATH=$(SYSROOT)/usr/lib/python$(PYTHON_MAJORMINOR)/site-packages \
 		python$(PYTHON_MAJORMINOR) setup.py install --root=$(PYTHON_WIFI_PKGDIR) --prefix=/usr
 	@$(call touch)
 
