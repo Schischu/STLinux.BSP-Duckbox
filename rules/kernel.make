@@ -114,6 +114,7 @@ $(STATEDIR)/kernel.prepare: $(KERNEL_CONFIG)
 	@$(call targetinfo)
 
 	@echo "Using kernel config file: $(<)"
+	@echo "Using kernel config file: "$(KERNEL_DIR)/.config""
 	@install -m 644 "$(<)" "$(KERNEL_DIR)/.config"
 ifdef PTXCONF_KERNEL_IMAGE_SIMPLE
 	cp $(PTXCONF_KERNEL_IMAGE_SIMPLE_DTS) \
@@ -138,6 +139,16 @@ ifdef KERNEL_INITRAMFS_SOURCE_y
 	@sed -i -e 's,^CONFIG_INITRAMFS_SOURCE.*$$,CONFIG_INITRAMFS_SOURCE=\"# Automatically set by PTXDist\",g' \
 		"$(<)"
 endif
+
+	@echo "Using kernel debug"
+ifdef PTXCONF_KERNEL_DEBUG
+	@echo "Using kernel debug"
+	@grep -v "CONFIG_PRINTK" "$(KERNEL_DIR)/.config" > "$(KERNEL_DIR)/.config.tmp"
+	cp "$(KERNEL_DIR)/.config.tmp" "$(KERNEL_DIR)/.config"
+	@echo "CONFIG_PRINTK=y" >> "$(KERNEL_DIR)/.config"
+	@echo "CONFIG_PRINTK_TIME=y" >> "$(KERNEL_DIR)/.config"
+endif
+
 	@$(call touch)
 
 

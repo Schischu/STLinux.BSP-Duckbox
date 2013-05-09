@@ -6,3 +6,5 @@ src/*
 *.mod.c
 *~
 modules.order
+.series
+*.old

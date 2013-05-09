@@ -3,6 +3,7 @@
 menuconfig PYTHON_OPENSSL
 	tristate
 	select PYTHON
+	select OPENSSL
 	prompt "python-openssl                "
 	help
 	  FIXME
