@@ -1,0 +1,12 @@
+## SECTION=image
+
+config IMAGE_UFS912
+	bool
+	select HOST_GENIMAGE
+	select HOST_MTD_UTILS
+	select HOST_MUP
+	select KERNEL
+	depends on PLATFORM_UFS912
+	prompt "Generate images/ufs912.data"
+	help
+	  FIXME

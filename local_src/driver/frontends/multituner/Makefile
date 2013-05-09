@@ -28,6 +28,13 @@ avl2108-objs +=        frontends/avl2108/stv6306.o
 obj-m += avl2108.o
 endif
 
+ifdef UFS912
+stv090x-objs +=        frontends/stv090x/stv090x.o
+stv090x-objs +=        frontends/stv090x/stv6110x.o
+stv090x-objs +=        frontends/stv090x/core.o
+obj-m += stv090x.o
+endif
+
 ifdef UFS913
 avl6222-objs +=        frontends/avl6222/avl6222.o
 avl6222-objs +=        frontends/avl6222/stv6110a.o

@@ -5,6 +5,7 @@ config DRIVER_FRONTEND_MULTITUNER
 	select KERNEL
 	prompt "driver-frontend-multituner"
 	depends on PLATFORM_ATEVIO7500 || \
+	           PLATFORM_UFS912 || \
 	           PLATFORM_UFS913 || \
 	           PLATFORM_CUBEREVO || \
 	           PLATFORM_CUBEREVO_MINI || \

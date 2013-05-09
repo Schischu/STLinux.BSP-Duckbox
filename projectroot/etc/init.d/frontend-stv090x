@@ -1,0 +1,19 @@
+#!/bin/sh
+
+case $1 in
+start)
+	echo "starting frontend-stv090x"
+
+	insmod /lib/modules/stv090x.ko
+
+	exit 0
+
+	;;
+stop)
+	echo "stopping frontend-stv090x... error, frontend-stv090x cannot be stopped, aborting"
+	;;
+*)
+	echo "usage: $0 [start|stop]"
+	;;
+esac
+

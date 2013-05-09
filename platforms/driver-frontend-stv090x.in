@@ -1,0 +1,13 @@
+## SECTION=kernel_driver
+
+config DRIVER_FRONTEND_STV090X
+	tristate
+	select KERNEL
+	prompt "driver-frontend-stv090x"
+	depends on PLATFORM_UFS912 || \
+	           PLATFORM_HS7110 || \
+	           PLATFORM_WHITEBOX || \
+	           PLATFORM_HS7810A || \
+	           PLATFORM_FORTIS_HDBOX
+	help
+	  FIXME

@@ -41,7 +41,7 @@
 #include <linux/semaphore.h>
 #endif
 
-#include "dvb_frontend.h"
+#include <linux/media/dvb/dvb_frontend.h>
 #include "core.h"
 #include "stv6110x_reg.h"
 #include "stv6110x.h"

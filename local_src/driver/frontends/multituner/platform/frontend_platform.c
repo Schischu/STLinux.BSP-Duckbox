@@ -55,6 +55,10 @@
 
 #include "ufs913_platform.h"
 
+#elif defined(UFS912)
+
+#include "ufs912_platform.h"
+
 #else
 
 #error unsupported arch

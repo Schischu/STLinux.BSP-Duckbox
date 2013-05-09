@@ -8,7 +8,7 @@
 #include <linux/dvb/dmx.h>
 #include <linux/proc_fs.h>
 
-#include <pvr_config.h>
+#include "pvr_config.h"
 
 short paramDebug = 0;
 int bbgain = -1;
