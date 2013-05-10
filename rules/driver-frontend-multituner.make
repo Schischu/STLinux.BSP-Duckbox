@@ -106,7 +106,7 @@ $(STATEDIR)/driver-frontend-multituner.targetinstall:
 	@$(call targetinfo)
 
 	@$(call install_init,  driver-frontend-multituner)
-	@$(call install_fixup, driver-frontend-multituner, PRIORITY,ofrontend-multituneronal)
+	@$(call install_fixup, driver-frontend-multituner, PRIORITY,optional)
 	@$(call install_fixup, driver-frontend-multituner, SECTION,base)
 	@$(call install_fixup, driver-frontend-multituner, AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, driver-frontend-multituner, DESCRIFRONTEND_MULTITUNERON,missing)

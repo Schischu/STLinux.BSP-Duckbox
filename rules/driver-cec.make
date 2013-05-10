@@ -75,7 +75,7 @@ $(STATEDIR)/driver-cec.targetinstall:
 	@$(call targetinfo)
 
 	@$(call install_init,  driver-cec)
-	@$(call install_fixup, driver-cec, PRIORITY,oceconal)
+	@$(call install_fixup, driver-cec, PRIORITY,optional)
 	@$(call install_fixup, driver-cec, SECTION,base)
 	@$(call install_fixup, driver-cec, AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, driver-cec, DESCRICECON,missing)

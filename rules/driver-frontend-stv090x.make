@@ -106,7 +106,7 @@ $(STATEDIR)/driver-frontend-stv090x.targetinstall:
 	@$(call targetinfo)
 
 	@$(call install_init,  driver-frontend-stv090x)
-	@$(call install_fixup, driver-frontend-stv090x, PRIORITY,ofrontend-stv090xonal)
+	@$(call install_fixup, driver-frontend-stv090x, PRIORITY,optional)
 	@$(call install_fixup, driver-frontend-stv090x, SECTION,base)
 	@$(call install_fixup, driver-frontend-stv090x, AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, driver-frontend-stv090x, DESCRIFRONTEND_STV090XON,missing)

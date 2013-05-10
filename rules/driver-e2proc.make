@@ -76,7 +76,7 @@ $(STATEDIR)/driver-e2proc.targetinstall:
 	@$(call targetinfo)
 
 	@$(call install_init,  driver-e2proc)
-	@$(call install_fixup, driver-e2proc, PRIORITY,oe2proconal)
+	@$(call install_fixup, driver-e2proc, PRIORITY,optional)
 	@$(call install_fixup, driver-e2proc, SECTION,base)
 	@$(call install_fixup, driver-e2proc, AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, driver-e2proc, DESCRIE2PROCON,missing)
