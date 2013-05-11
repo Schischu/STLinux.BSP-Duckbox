@@ -26,6 +26,9 @@ config ENIGMA2_PLI
 	select LIBSIGCPP
 	select LIBMMEIMAGE
 	select LIBTUXTXT
+	select LIBTUXTXT32BPP
+	select GST_PLUGINS_DVBMEDIASINK
+	select LIBDVBSIPP
 	prompt "enigma2-pli"
 	help
 	  FIXME
