@@ -75,7 +75,7 @@ $(STATEDIR)/driver-bpamem.targetinstall:
 	@$(call targetinfo)
 
 	@$(call install_init,  driver-bpamem)
-	@$(call install_fixup, driver-bpamem, PRIORITY,obpamemonal)
+	@$(call install_fixup, driver-bpamem, PRIORITY,optional)
 	@$(call install_fixup, driver-bpamem, SECTION,base)
 	@$(call install_fixup, driver-bpamem, AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, driver-bpamem, DESCRIBPAMEMON,missing)

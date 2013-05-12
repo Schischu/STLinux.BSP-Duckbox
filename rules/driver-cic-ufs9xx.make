@@ -87,7 +87,7 @@ $(STATEDIR)/driver-cic-ufs9xx.targetinstall:
 	@$(call targetinfo)
 
 	@$(call install_init,  driver-cic-ufs9xx)
-	@$(call install_fixup, driver-cic-ufs9xx, PRIORITY,ocic-ufs9xxonal)
+	@$(call install_fixup, driver-cic-ufs9xx, PRIORITY,optional)
 	@$(call install_fixup, driver-cic-ufs9xx, SECTION,base)
 	@$(call install_fixup, driver-cic-ufs9xx, AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, driver-cic-ufs9xx, DESCRICIC_UFS9XXON,missing)

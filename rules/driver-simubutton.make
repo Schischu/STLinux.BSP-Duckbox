@@ -76,7 +76,7 @@ $(STATEDIR)/driver-simubutton.targetinstall:
 	@$(call targetinfo)
 
 	@$(call install_init,  driver-simubutton)
-	@$(call install_fixup, driver-simubutton, PRIORITY,osimubuttononal)
+	@$(call install_fixup, driver-simubutton, PRIORITY,optional)
 	@$(call install_fixup, driver-simubutton, SECTION,base)
 	@$(call install_fixup, driver-simubutton, AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, driver-simubutton, DESCRISIMUBUTTONON,missing)

@@ -76,7 +76,7 @@ $(STATEDIR)/driver-cpufrequ.targetinstall:
 	@$(call targetinfo)
 
 	@$(call install_init,  driver-cpufrequ)
-	@$(call install_fixup, driver-cpufrequ, PRIORITY,ocpufrequonal)
+	@$(call install_fixup, driver-cpufrequ, PRIORITY,optional)
 	@$(call install_fixup, driver-cpufrequ, SECTION,base)
 	@$(call install_fixup, driver-cpufrequ, AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, driver-cpufrequ, DESCRICPUFREQUON,missing)
