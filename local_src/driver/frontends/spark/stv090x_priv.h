@@ -22,7 +22,7 @@
 #ifndef __STV090x_PRIV_H
 #define __STV090x_PRIV_H
 
-#include "dvb_frontend.h"
+#include <linux/media/dvb/dvb_frontend.h>
 
 #define FE_ERROR				0
 #define FE_NOTICE				1
@@ -75,6 +75,7 @@
 	STV090x_SEARCH_AGC2_TH_CUT30)
 
 enum stv090x_signal_state {
+    STV090x_NOAGC1,
 	STV090x_NOCARRIER,
 	STV090x_NODATA,
 	STV090x_DATAOK,
@@ -249,7 +250,7 @@ struct stv090x_state {
 
 	s32				DemodTimeout;
 	s32				FecTimeout;
-	
+
 };
 
 #endif /* __STV090x_PRIV_H */
