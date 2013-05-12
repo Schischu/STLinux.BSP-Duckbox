@@ -1,0 +1,21 @@
+#!/bin/sh
+
+vsftpd_rules="/etc/vsftpd.conf"
+
+case $1 in
+start)
+	echo "starting vsftpd"
+
+	/usr/sbin/vsftpd -b -c $udhcp_rules
+
+	exit 0
+
+	;;
+stop)
+	echo "stopping vsftpd... error, vsftpd cannot be stopped, aborting"
+	;;
+*)
+	echo "usage: $0 [start|stop]"
+	;;
+esac
+
