@@ -3,6 +3,10 @@ STLinux.BSP-Duckbox
 
 STLinux Duckbox BSP for ptxdist
 
+Prerequisites
+=============
+Install rpm2cpio, setuptdt.sh
+
 Installation
 ============
 Selecting a Software Platform<br />
