@@ -1,0 +1,15 @@
+## SECTION=initmethod_bbinit
+
+config VSFTPD_INIT
+	tristate
+	depends on VSFTPD
+	default y
+
+if VSFTPD_INIT
+
+config VSFTPD_BBINIT_LINK
+	string
+	prompt "vsftpd"
+	default "S16vsftpd"
+
+endif
