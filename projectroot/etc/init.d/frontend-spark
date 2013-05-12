@@ -3,8 +3,14 @@
 case $1 in
 start)
 	echo "starting frontend-spark"
-
+	
+	if [ -e /lib/modules/spark.ko ]; then
 	insmod /lib/modules/spark.ko
+	fi
+
+	if [ -e /lib/modules/spark7162.ko ]; then
+	insmod /lib/modules/spark7162.ko
+	fi
 
 	exit 0
 
