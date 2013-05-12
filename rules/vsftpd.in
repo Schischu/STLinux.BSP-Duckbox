@@ -1,0 +1,6 @@
+## SECTION=networking
+
+config VSFTPD
+	tristate "vsftpd"
+	select LIBC_CRYPT
+

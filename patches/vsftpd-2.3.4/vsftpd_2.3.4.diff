@@ -1,0 +1,61 @@
+--- vsftpd-2.0.5/builddefs.h	2006-07-02 23:53:47.000000000 +0200
++++ vsftpd-2.0.5/builddefs.h-new	2007-07-14 15:56:41.000000000 +0200
+@@ -2,7 +2,7 @@
+ #define VSF_BUILDDEFS_H
+ 
+ #undef VSF_BUILD_TCPWRAPPERS
+-#define VSF_BUILD_PAM
++#undef VSF_BUILD_PAM
+ #undef VSF_BUILD_SSL
+ 
+ #endif /* VSF_BUILDDEFS_H */
+--- vsftpd-2.0.5/Makefile	2006-07-03 14:25:41.000000000 +0200
++++ vsftpd-2.0.5/Makefile-new	2007-07-14 15:57:21.000000000 +0200
+@@ -5,7 +5,7 @@
+ #CFLAGS = -g
+ CFLAGS	=	-O2 -Wall -W -Wshadow #-pedantic -Werror -Wconversion
+ 
+-LIBS	=	`./vsf_findlibs.sh`
++LIBS	=	-lcrypt -ldl -lnsl -lresolv -lutil
+ LINK	=	-Wl,-s
+ 
+ OBJS	=	main.o utility.o prelogin.o ftpcmdio.o postlogin.o privsock.o \
+--- vsftpd-2.0.5/Makefile	2007-07-09 16:02:07.000000000 +0200
++++ vsftpd-2.0.5/Makefile-new	2007-07-14 16:14:05.000000000 +0200
+@@ -24,21 +24,11 @@
+ 	$(CC) -o vsftpd $(OBJS) $(LINK) $(LIBS) $(LDFLAGS)
+ 
+ install:
+-	if [ -x /usr/local/sbin ]; then \
+-		$(INSTALL) -m 755 vsftpd /usr/local/sbin/vsftpd; \
+-	else \
+-		$(INSTALL) -m 755 vsftpd /usr/sbin/vsftpd; fi
+-	if [ -x /usr/local/man ]; then \
+-		$(INSTALL) -m 644 vsftpd.8 /usr/local/man/man8/vsftpd.8; \
+-		$(INSTALL) -m 644 vsftpd.conf.5 /usr/local/man/man5/vsftpd.conf.5; \
+-	elif [ -x /usr/share/man ]; then \
+-		$(INSTALL) -m 644 vsftpd.8 /usr/share/man/man8/vsftpd.8; \
+-		$(INSTALL) -m 644 vsftpd.conf.5 /usr/share/man/man5/vsftpd.conf.5; \
+-	else \
+-		$(INSTALL) -m 644 vsftpd.8 /usr/man/man8/vsftpd.8; \
+-		$(INSTALL) -m 644 vsftpd.conf.5 /usr/man/man5/vsftpd.conf.5; fi
+-	if [ -x /etc/xinetd.d ]; then \
+-		$(INSTALL) -m 644 xinetd.d/vsftpd /etc/xinetd.d/vsftpd; fi
++	$(INSTALL) -m 755 vsftpd $(PREFIX)/usr/sbin/vsftpd; $(INSTALL) -m 644 vsftpd.conf $(PREFIX)/etc/
++	( [ -f vsftpd.8 ] && gzip -9f vsftpd.8; $(INSTALL) -m 644 vsftpd.8.gz $(PREFIX)/usr/share/man/man8/; \
++	[ -f vsftpd.conf.5 ] && gzip -9f vsftpd.conf.5; $(INSTALL) -m 644 vsftpd.conf.5.gz $(PREFIX)/usr/share/man/man5/ )
++	if [ -x $(PREFIX)/etc/xinetd.d ]; then \
++		$(INSTALL) -m 644 xinetd.d/vsftpd $(PREFIX)/etc/xinetd.d/vsftpd; fi
+ 
+ clean:
+ 	rm -f *.o *.swp vsftpd
+--- vsftpd-2.3.4/parseconf.c	2010-03-27 23:20:56.903712923 +0100
++++ vsftpd-2.3.4/parseconf.c	2010-03-27 23:20:38.691538456 +0100
+@@ -223,7 +223,6 @@
+      * race conditions.
+      */
+     if (vsf_sysutil_retval_is_error(retval) ||
+-        vsf_sysutil_statbuf_get_uid(p_statbuf) != vsf_sysutil_getuid() ||
+         !vsf_sysutil_statbuf_is_regfile(p_statbuf))
+     {
+       die("config file not owned by correct user, or not a file");
