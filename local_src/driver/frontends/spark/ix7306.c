@@ -22,7 +22,7 @@
 #include <linux/kernel.h>
 #include <linux/module.h>
 
-#include <linux/media/dvb/dvb_frontend.h>
+#include <linux/dvb/dvb_frontend.h>
 #include "ix7306.h"
 
 struct ix7306_state {

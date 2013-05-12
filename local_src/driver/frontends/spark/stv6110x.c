@@ -42,7 +42,7 @@
 #endif
 
 
-#include <linux/media/dvb/dvb_frontend.h>
+#include <linux/dvb/dvb_frontend.h>
 
 #include "stv6110x_reg.h"
 #include "stv6110x.h"

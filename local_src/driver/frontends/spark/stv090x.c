@@ -31,7 +31,7 @@
 #include <linux/dvb/version.h>
 #include <asm/io.h> /* ctrl_xy */
 #include <linux/dvb/frontend.h>
-#include <linux/media/dvb/dvb_frontend.h>
+#include <linux/dvb/dvb_frontend.h>
 #include "stv6110x.h" /* for demodulator internal modes */
 #include "stv090x_reg.h"
 #include "stv090x.h"
