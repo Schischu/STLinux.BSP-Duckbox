@@ -147,6 +147,7 @@ ifdef PTXCONF_KERNEL_DEBUG
 	cp "$(KERNEL_DIR)/.config.tmp" "$(KERNEL_DIR)/.config"
 	@echo "CONFIG_PRINTK=y" >> "$(KERNEL_DIR)/.config"
 	@echo "CONFIG_PRINTK_TIME=y" >> "$(KERNEL_DIR)/.config"
+	@echo "# CONFIG_DYNAMIC_DEBUG is not set" >> "$(KERNEL_DIR)/.config"
 endif
 
 	@$(call touch)
