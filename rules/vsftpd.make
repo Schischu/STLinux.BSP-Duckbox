@@ -93,6 +93,16 @@ $(STATEDIR)/vsftpd-init.targetinstall:
 	@$(call install_fixup, vsftpd-init,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, vsftpd-init,DESCRIPTION,missing)
 	
+ifdef PTXCONF_INITMETHOD_BBINIT
+	@$(call install_alternative, vsftpd-init, 0, 0, 0755, /etc/init.d/vsftpd)
+	
+ifneq ($(call remove_quotes,$(PTXCONF_VSFTPD_BBINIT_LINK)),)
+	@$(call install_link, vsftpd-init, \
+		../init.d/vsftpd, \
+		/etc/rc.d/$(PTXCONF_VSFTPD_BBINIT_LINK))
+endif
+endif
+	
 	@$(call install_finish, vsftpd-init)
 	
 	@$(call touch)
