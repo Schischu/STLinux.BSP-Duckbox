@@ -1,0 +1,16 @@
+From c41b1e33784ba9beb44689d9bcec913e6e6b84a6 Mon Sep 17 00:00:00 2001
+From: Stefan Seyfried <seife@tuxbox-git.slipkontur.de>
+Date: Sun, 29 Jul 2012 01:18:43 +0200
+Subject: [PATCH] sparkkernel: ignore bigphysarea= parameter
+--- linux-sh4/mm/bpa2.c.org	2012-10-28 14:46:11.954932669 +0100
++++ linux-sh4/mm/bpa2.c	2012-10-28 14:46:03.470932651 +0100
+@@ -350,7 +350,7 @@
+ 
+ 	return 1;
+ }
+-__setup("bigphysarea=", bpa2_bigphys_setup);
++__setup("bigphysarea2=", bpa2_bigphys_setup);
+ 
+ /*
+  * Create "bpa2parts"-defined partitions
+

@@ -87,7 +87,7 @@ $(STATEDIR)/driver-frontcontroller-micom.targetinstall:
 	@$(call targetinfo)
 
 	@$(call install_init,  driver-frontcontroller-micom)
-	@$(call install_fixup, driver-frontcontroller-micom, PRIORITY,ofrontcontroller-micomonal)
+	@$(call install_fixup, driver-frontcontroller-micom, PRIORITY,optional)
 	@$(call install_fixup, driver-frontcontroller-micom, SECTION,base)
 	@$(call install_fixup, driver-frontcontroller-micom, AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, driver-frontcontroller-micom, DESCRIFRONTCONTROLLER_MICOMON,missing)

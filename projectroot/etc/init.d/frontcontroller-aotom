@@ -1,0 +1,19 @@
+#!/bin/sh
+
+case $1 in
+start)
+	echo "starting frontcontroller-aotom"
+
+	insmod /lib/modules/aotom.ko
+
+	exit 0
+
+	;;
+stop)
+	echo "stopping frontcontroller-aotom... error, frontcontroller-aotom cannot be stopped, aborting"
+	;;
+*)
+	echo "usage: $0 [start|stop]"
+	;;
+esac
+

@@ -1,0 +1,11 @@
+## SECTION=image
+
+config IMAGE_SPARK
+	bool
+	select HOST_GENIMAGE
+	select HOST_MTD_UTILS
+	select KERNEL
+	depends on PLATFORM_SPARK
+	prompt "Generate images/spark.data"
+	help
+	  FIXME

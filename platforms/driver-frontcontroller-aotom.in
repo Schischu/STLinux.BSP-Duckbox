@@ -1,0 +1,9 @@
+## SECTION=kernel_driver
+
+config DRIVER_FRONTCONTROLLER_AOTOM
+	tristate
+	select KERNEL
+	prompt "driver-frontcontroller-aotom"
+	depends on PLATFORM_SPARK || PLATFORM_SPARK7162
+	help
+	  FIXME

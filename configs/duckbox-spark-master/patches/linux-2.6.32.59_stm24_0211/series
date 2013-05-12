@@ -1,0 +1,6 @@
+linux-sh4-stmmac_stm24_0211.patch
+linux-sh4-lmb_stm24_0211.patch
+linux-sh4-spark_setup_stm24_0211.patch
+linux-sh4-lirc_stm_stm24_0211.patch
+af901x-NXP-TDA18218.patch
+dvb-as102.patch
