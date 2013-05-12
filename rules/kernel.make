@@ -193,6 +193,7 @@ ifdef PTXCONF_KERNEL_DTC
 endif
 	
 	mkdir -p $(SYSROOT)/usr/include/linux/dvb/
+	cp $(KERNEL_DIR)/include/linux/dvb/frontend.h $(SYSROOT)/usr/include/linux/dvb/
 	cp $(KERNEL_DIR)/drivers/media/dvb/dvb-core/*.h $(SYSROOT)/usr/include/linux/dvb/
 	
 	@$(call touch)
