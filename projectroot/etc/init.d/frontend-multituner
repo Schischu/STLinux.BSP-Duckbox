@@ -9,7 +9,18 @@ start)
 	insmod /lib/modules/lnbh221.ko
 	insmod /lib/modules/lnb_pio.ko
 	insmod /lib/modules/lnb_a8293.ko
-	insmod /lib/modules/avl6222.ko
+	if [ -e /lib/modules/avl2108.ko ]; then
+		insmod /lib/modules/avl2108.ko
+	fi
+	if [ -e /lib/modules/avl6222.ko ]; then
+		insmod /lib/modules/avl6222.ko
+	fi
+	if [ -e /lib/modules/cx24116.ko ]; then
+		insmod /lib/modules/cx24116.ko
+	fi
+	if [ -e /lib/modules/stv090x.ko ]; then
+		insmod /lib/modules/stv090x.ko
+	fi
 
 	exit 0
 
