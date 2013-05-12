@@ -1,0 +1,35 @@
+#!/bin/sh
+
+udhcp_rules="/usr/share/udhcpc/default.script"
+
+case $1 in
+start)
+	echo "starting udhcpc"
+
+	NFS=`grep -c nfs /proc/cmdline`
+	if [ "$NFS" -eq "1" ]; then
+		echo "Booting from nfs, don't set network"
+	else
+		if [ -e /etc/network/interfaces ]; then 
+			ip addr flush eth0
+			/etc/init.d/networking stop
+			DHCP=`grep -c dhcp /etc/network/interfaces`
+			if [ "$DHCP" -eq "1" ]; then
+				echo "Starting dhcp"
+				/sbin/udhcpc --script=/$udhcp_rules -t 10 -q -n -i eth0
+			fi
+			/etc/init.d/networking start
+		fi
+	fi
+
+	exit 0
+
+	;;
+stop)
+	echo "stopping pti... error, udhcpc cannot be stopped, aborting"
+	;;
+*)
+	echo "usage: $0 [start|stop]"
+	;;
+esac
+

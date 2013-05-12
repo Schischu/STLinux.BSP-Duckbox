@@ -1,0 +1,15 @@
+## SECTION=initmethod_bbinit
+
+config BUSYBOX_UDHCPC_INIT
+	tristate
+	depends on BUSYBOX_UDHCPC
+	default y
+
+if BUSYBOX_UDHCPC_INIT
+
+config BUSYBOX_UDHCPC_BBINIT_LINK
+	string
+	prompt "udhcpc"
+	default "S15udhcpc"
+
+endif
