@@ -23,7 +23,7 @@
 #include <linux/module.h>
 
 #include "core.h"
-#include <linux/media/dvb/dvb_frontend.h>
+#include <linux/dvb/dvb_frontend.h>
 #include "ix7306.h"
 
 extern short paramDebug;

@@ -1,8 +1,8 @@
 #ifndef _UFS9XX_CIC_H_
 #define _UFS9XX_CIC_H_
 
-#include <linux/media/dvb/dvb_ca_en50221.h>
-#include <linux/media/dvb/dvb_frontend.h>
+#include <linux/dvb/dvb_ca_en50221.h>
+#include <linux/dvb/dvb_frontend.h>
 
 #define cNumberSlots   2
 

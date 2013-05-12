@@ -1,14 +1,14 @@
 #ifndef __CORE_DVB__
 #define __CORE_DVB__
 
-#include <linux/media/dvb/dvb_frontend.h>
-#include <linux/media/dvb/dvbdev.h>
-#include <linux/media/dvb/demux.h>
-#include <linux/media/dvb/dvb_demux.h>
-#include <linux/media/dvb/dmxdev.h>
-#include <linux/media/dvb/dvb_filter.h>
-#include <linux/media/dvb/dvb_net.h>
-#include <linux/media/dvb/dvb_ca_en50221.h>
+#include <linux/dvb/dvb_frontend.h>
+#include <linux/dvb/dvbdev.h>
+#include <linux/dvb/demux.h>
+#include <linux/dvb/dvb_demux.h>
+#include <linux/dvb/dmxdev.h>
+#include <linux/dvb/dvb_filter.h>
+#include <linux/dvb/dvb_net.h>
+#include <linux/dvb/dvb_ca_en50221.h>
 
 #include <linux/dvb/frontend.h>
 
