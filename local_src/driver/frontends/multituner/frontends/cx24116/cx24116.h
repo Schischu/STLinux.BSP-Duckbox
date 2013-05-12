@@ -23,17 +23,17 @@
 #ifndef _CX24116_H_
 #define _CX24116_H_
 
-#include "dvb_frontend.h"
-#include "dvbdev.h"
-#include "demux.h"
-#include "dvb_demux.h"
-#include "dmxdev.h"
-#include "dvb_filter.h"
-#include "dvb_net.h"
-#include "dvb_ca_en50221.h"
+#include <linux/dvb/dvb_frontend.h>
+#include <linux/dvb/dvbdev.h>
+#include <linux/dvb/demux.h>
+#include <linux/dvb/linux/dvb/dvb_demux.h>
+#include <linux/dvb/dmxdev.h>
+#include <linux/dvb/dvb_filter.h>
+#include <linux/dvb/dvb_net.h>
+#include <linux/dvb/dvb_ca_en50221.h>
 
 #include <linux/dvb/frontend.h>
-#include "dvb_frontend.h"
+#include <linux/dvb/dvb_frontend.h>
 
 #include <linux/proc_fs.h>
 

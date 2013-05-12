@@ -35,7 +35,7 @@
 #include <linux/version.h>
 #include <linux/stm/pio.h>
 #include <linux/mutex.h>
-#include <linux/media/dvb/dvb_frontend.h>
+#include <linux/dvb/dvb_frontend.h>
 #include "avl6222_platform.h"
 #include "equipment.h"
 

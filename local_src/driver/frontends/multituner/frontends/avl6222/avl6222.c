@@ -41,7 +41,7 @@
 #include <linux/proc_fs.h>
 #include <linux/stm/pio.h>
 #include <linux/proc_fs.h>
-#include <linux/media/dvb/dvb_frontend.h>
+#include <linux/dvb/dvb_frontend.h>
 #include "avl6222.h"
 #include "avl6222_reg.h"
 #include "avl6222_platform.h"

@@ -6,7 +6,7 @@
 
 #include <asm/io.h>
 
-#include <linux/media/dvb/dvb_frontend.h>
+#include <linux/dvb/dvb_frontend.h>
 #include "equipment.h"
 
 static short paramDebug;

@@ -25,7 +25,7 @@
  *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <linux/media/dvb/dvb_frontend.h>
+#include <linux/dvb/dvb_frontend.h>
 
 struct socket_s {
      char*  name;

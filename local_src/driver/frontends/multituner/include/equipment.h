@@ -1,9 +1,7 @@
 #ifndef equipment_123
 #define equipment_123
 
-//fixme: dont like this very much - think on int
-
-#include <linux/media/dvb/dvb_frontend.h>
+#include <linux/dvb/dvb_frontend.h>
 
 struct equipment_s
 {
