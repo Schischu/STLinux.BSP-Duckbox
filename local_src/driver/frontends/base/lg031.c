@@ -5,7 +5,7 @@
 #include <linux/slab.h>
 #include <linux/types.h>
 
-#include "dvb_frontend.h"
+#include <linux/dvb/dvb_frontend.h>
 #include "lg031.h"
 
 struct lg031_state {

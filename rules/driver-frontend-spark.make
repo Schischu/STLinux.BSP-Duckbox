@@ -52,6 +52,7 @@ $(STATEDIR)/driver-frontend-spark.compile:
 		$(MAKE) $(KERNEL_MAKEVARS) \
 		-C $(KERNEL_DIR) \
 		M=$(DRIVER_FRONTEND_SPARK_DIR) \
+		TREE_ROOT=$(DRIVER_FRONTEND_SPARK_DIR) \
 		$(DRIVER_FRONTEND_SPARK_EXTRAS) \
 		modules
 	

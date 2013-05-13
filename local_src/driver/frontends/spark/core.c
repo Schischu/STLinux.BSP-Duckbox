@@ -11,7 +11,7 @@
 #include <linux/stpio.h>
 #endif
 
-#include "pvr_config.h"
+#include <pvr_config.h>
 
 #include "vz7903.h"  //tuner 7903
 short paramDebug = 0;

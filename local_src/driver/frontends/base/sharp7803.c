@@ -22,7 +22,7 @@
 #include <linux/kernel.h>
 #include <linux/module.h>
 
-#include "dvb_frontend.h"
+#include <linux/dvb/dvb_frontend.h>
 #include "sharp7803.h"
 
 struct sharp7803_state {

@@ -20,7 +20,7 @@
 #include "stv0367ofdm_drv.h"
 #include "d0367_ter.h"
 
-#include "dvb_frontend.h"
+#include <linux/dvb/dvb_frontend.h>
 #include "D0367.h"
 
 struct dvb_d0367_fe_ofdm_state {
@@ -403,7 +403,7 @@ static int dvb_d0367_fe_ofdm_get_property(struct dvb_frontend *fe, struct dtv_pr
 static struct dvb_frontend_ops dvb_d0367_fe_ofdm_ops = {
 
 	.info = {
-		.name			= "Tuner3-T/C",
+		.name			= "Tuner3-T(T/C)",
 		.type			= FE_OFDM,
 		.frequency_min		= 0,
 		.frequency_max		= 863250000,

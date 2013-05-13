@@ -1,3 +1,16 @@
+ifdef SPARK7162
+CCFLAGSY += -I$(TREE_ROOT)/spark7162
+CCFLAGSY += -I$(TREE_ROOT)/spark7162/stv0367
+CCFLAGSY += -I$(TREE_ROOT)/spark7162/stv0367/stv0367qam
+CCFLAGSY += -I$(TREE_ROOT)/spark7162/stv0367/stv0367ter
+CCFLAGSY += -I$(TREE_ROOT)/spark7162/6158
+CCFLAGSY += -I$(TREE_ROOT)/spark7162/tuner
+CCFLAGSY += -I$(TREE_ROOT)/base
+CCFLAGSY += -I$(TREE_ROOT)/spark
+
+CCFLAGSY += -Wall -DCONFIG_DVB_DUMMY_FE #-Werror
+endif
+
 EXTRA_CFLAGS += $(CCFLAGSY) $(EXTRA_CFLAGSS)
 # >= 2.6.30
 ifdef HL101
@@ -47,6 +60,7 @@ spark7162-objs +=        spark7162/D3501.o
 
 spark7162-objs +=        spark/ix7306.o
 spark7162-objs +=        spark/vz7903.o
+spark7162-objs +=        spark/dvb_dummy_fe.o
 spark7162-objs +=        base/sharp7803.o
 spark7162-objs +=        base/sharp6465.o
 spark7162-objs +=        base/sharp5469c.o

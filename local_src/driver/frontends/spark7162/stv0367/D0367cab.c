@@ -20,7 +20,7 @@
 #include "stv0367qam_drv.h"
 #include "d0367_qam.h"
 
-#include "dvb_frontend.h"
+#include <linux/dvb/dvb_frontend.h>
 #include "D0367.h"
 
 struct dvb_d0367_fe_qam_state {
@@ -414,7 +414,7 @@ void D0367qam_TunerSetFreq(TUNER_IOREG_DeviceMap_t *DeviceMap,
 static struct dvb_frontend_ops dvb_d0367_fe_qam_ops = {
 
 	.info = {
-		.name			= "Tuner3-T/C",
+		.name			= "Tuner3-C(T/C)",
 		.type			= FE_QAM,
 		.frequency_stepsize	= 62500,
 		.frequency_min		= 51000000,

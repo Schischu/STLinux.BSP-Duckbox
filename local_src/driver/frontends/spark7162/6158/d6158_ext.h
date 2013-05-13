@@ -1,5 +1,5 @@
 #include <linux/dvb/frontend.h>
-#include "dvb_frontend.h"
+#include <linux/dvb/dvb_frontend.h>
 
 extern struct dvb_frontend* dvb_d6158_attach(struct i2c_adapter* i2c,UINT8 system);
 
