@@ -6,7 +6,7 @@ case $1 in
 start)
 	echo "starting vsftpd"
 
-	/usr/sbin/vsftpd -b -c $udhcp_rules
+	/usr/sbin/vsftpd $vsftpd_rules &
 
 	exit 0
 
