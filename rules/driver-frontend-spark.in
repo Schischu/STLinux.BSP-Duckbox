@@ -9,6 +9,6 @@ if DRIVER_FRONTEND_SPARK_INIT
 config DRIVER_FRONTEND_SPARK_BBINIT_LINK
 	string
 	prompt "frontend-spark"
-	default "S46frontend-spark"
+	default "S47frontend-spark"
 
 endif

@@ -105,7 +105,7 @@ $(STATEDIR)/driver-player2.targetinstall:
 
 PACKAGES-$(PTXCONF_DRIVER_PLAYER2_INIT) += driver-player2-init
 
-DRIVER_PLAYER2_INIT_VERSION	:= head12
+DRIVER_PLAYER2_INIT_VERSION	:= head13
 
 $(STATEDIR)/driver-player2-init.targetinstall:
 	@$(call targetinfo)
@@ -117,12 +117,19 @@ $(STATEDIR)/driver-player2-init.targetinstall:
 	@$(call install_fixup, driver-player2-init,DESCRIPTION,missing)
 	
 ifdef PTXCONF_INITMETHOD_BBINIT
+	@$(call install_alternative, driver-player2-init, 0, 0, 0755, /etc/init.d/player2pre)
 	@$(call install_alternative, driver-player2-init, 0, 0, 0755, /etc/init.d/player2)
 	
+ifneq ($(call remove_quotes,$(PTXCONF_DRIVER_PLAYER2PRE_BBINIT_LINK)),)
+	@$(call install_link, driver-player2-init, \
+		../init.d/player2pre, \
+		/etc/rc.d/$(PTXCONF_DRIVER_PLAYER2PRE_BBINIT_LINK))
+
 ifneq ($(call remove_quotes,$(PTXCONF_DRIVER_PLAYER2_BBINIT_LINK)),)
 	@$(call install_link, driver-player2-init, \
 		../init.d/player2, \
 		/etc/rc.d/$(PTXCONF_DRIVER_PLAYER2_BBINIT_LINK))
+endif
 endif
 endif
 	
