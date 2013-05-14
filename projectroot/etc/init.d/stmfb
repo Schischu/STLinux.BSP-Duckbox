@@ -3,7 +3,7 @@
 case $1 in
 start)
 	echo "starting stmfb"
-
+	if [ -e /lib/modules/stmcore-display-sti7105.ko ]; then
 	if [ -e /lib/modules/stmcore-display-sti7105.ko ] ;then
 		insmod /lib/modules/stmcore-display-sti7105.ko
 	else
@@ -11,6 +11,12 @@ start)
 	fi
 	insmod /lib/modules/stmfb.ko display0=1280x720-32@50:15m:pal:yuv:yuv;
 	insmod /lib/modules/stm_v4l2.ko
+	fi
+	if [ -e /lib/modules/stmcore-display-sti7111.ko ]; then
+	insmod /lib/modules/stmcore-display-sti7111.ko
+	insmod /lib/modules/stmfb.ko display0=1280x720-32@50:15m:pal:yuv:yuv;
+	insmod /lib/modules/stm_v4l2.ko
+	fi
 
 	exit 0
 
