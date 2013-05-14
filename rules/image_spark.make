@@ -48,7 +48,7 @@ $(IMAGEDIR)/uImage.bin: $(IMAGEDIR)/linuximage
 	@echo -n "Creating uImage.bin... "
 	@cd $(IMAGEDIR);						\
 	((echo "mv -f $(IMAGEDIR)/linuximage $(IMAGEDIR)/$(PTXCONF_PLATFORM)/uImage"; \
-	  echo "mv -f $(IMAGEDIR)/mtd_root.sum.bin $(IMAGEDIR)/$(PTXCONF_PLATFORM)/e2jffs2"; \
+	  echo "mv -f $(IMAGEDIR)/mtd_root.sum.bin $(IMAGEDIR)/$(PTXCONF_PLATFORM)/e2jffs2.img"; \
 	  ) | tee -a "$(PTX_LOGFILE)" ) | $(FAKEROOT) -i $(STATEDIR)/image_working_dir_prepared --
 	@echo "done."
 
