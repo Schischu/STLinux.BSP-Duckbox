@@ -34,7 +34,7 @@
 #include <asm/io.h> /* ctrl_xy */
 
 #include <linux/dvb/frontend.h>
-#include "dvb_frontend.h"
+#include<linux/dvb/dvb_frontend.h>
 
 #include "stv6110x.h" /* for demodulator internal modes */
 

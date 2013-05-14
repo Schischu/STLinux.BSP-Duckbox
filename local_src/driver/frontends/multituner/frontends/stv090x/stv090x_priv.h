@@ -22,7 +22,7 @@
 #ifndef __STV090x_PRIV_H
 #define __STV090x_PRIV_H
 
-#include "dvb_frontend.h"
+#include <linux/dvb/dvb_frontend.h>
 
 #include "equipment.h"
 
