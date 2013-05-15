@@ -1,0 +1,10 @@
+## SECTION=kernel_driver
+
+config DRIVER_FRONTEND_SPARK
+	tristate
+	select KERNEL
+	prompt "driver-frontend-spark"
+	depends on PLATFORM_SPARK || \
+	           PLATFORM_SPARK7162
+	help
+	  FIXME

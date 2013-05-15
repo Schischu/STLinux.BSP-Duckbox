@@ -63,16 +63,20 @@ ifdef PTXCONF_CPU_SUBTYPE_STX7100
 endif
 ifdef PTXCONF_CPU_SUBTYPE_STX7101
 	@$(call install_copy, stmfb-firmware, 0, 0, 644, -, /lib/firmware/component_7109c3.fw, 0)
+	@$(call install_link, stmfb-firmware, /lib/firmware/component_7109c3.fw, /lib/firmware/component.fw)
 endif
 ifdef PTXCONF_CPU_SUBTYPE_STX7109
 	@$(call install_copy, stmfb-firmware, 0, 0, 644, -, /lib/firmware/component_7109c3.fw, 0)
+	@$(call install_link, stmfb-firmware, /lib/firmware/component_7109c3.fw, /lib/firmware/component.fw)
 endif
 
 ifdef PTXCONF_CPU_SUBTYPE_STX7105
-	@$(call install_copy, stmfb-firmware, 0, 0, 644, -, /lib/firmware/component_7105.fw, 0)
+	@$(call install_copy, stmfb-firmware, 0, 0, 644, -, /lib/firmware/component_7105_hdk7105.fw, 0)
+	@$(call install_link, stmfb-firmware, /lib/firmware/component_7105_hdk7105.fw, /lib/firmware/component.fw)
 endif
 ifdef PTXCONF_CPU_SUBTYPE_STX7111
-	@$(call install_copy, stmfb-firmware, 0, 0, 644, -, /lib/firmware/component_7111.fw, 0)
+	@$(call install_copy, stmfb-firmware, 0, 0, 644, -, /lib/firmware/component_7111_mb618.fw, 0)
+	@$(call install_link, stmfb-firmware, /lib/firmware/component_7111_mb618.fw, /lib/firmware/component.fw)
 endif
 
 	@$(call install_finish, stmfb-firmware)

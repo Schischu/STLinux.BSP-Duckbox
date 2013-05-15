@@ -1573,18 +1573,3 @@ diff -crp linux-sh4-2.6.32.59_stm24_0211/include/linux/stm/stx7105.h linux-sh4-2
   int stx7105_configure_ssc_i2c(int ssc, struct stx7105_ssc_config *config);
 + int stx7105_unconfigure_ssc_i2c(int ssc, struct stx7105_ssc_config *config);
   int stx7105_configure_ssc_spi(int ssc, struct stx7105_ssc_config *config);
-
-
-diff -crp linux-sh4-2.6.32.59_stm24_0211/include/linux/dvb/frontend.h linux-sh4-2.6.32.59_stm24_0211/include/linux/dvb/frontend.h
-*** linux-sh4-2.6.32.59_stm24_0211/include/linux/dvb/frontend.h	2013-01-24 00:45:24.000000000 +0200
---- linux-sh4-2.6.32.59_stm24_0211/include/linux/dvb/frontend.h	2013-01-24 00:45:12.000000000 +0200
-*************** typedef enum fe_delivery_system {
-*** 336,341 ****
---- 336,342 ----
-  	SYS_DMBTH,
-  	SYS_CMMB,
-  	SYS_DAB,
-+ 	SYS_DVBT2,
-  } fe_delivery_system_t;
-  
-  struct dtv_cmds_h {

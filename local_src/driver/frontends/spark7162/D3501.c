@@ -168,9 +168,9 @@
 #  include <linux/stm/pio.h>
 #endif
 
-#include "dvbdev.h"
-#include "dmxdev.h"
-#include "dvb_frontend.h"
+#include <linux/dvb/dvbdev.h>
+#include <linux/dvb/dmxdev.h>
+#include <linux/dvb/dvb_frontend.h>
 
 #include "D3501_ext.h"
 #include "D3501.h"
@@ -5671,6 +5671,18 @@ struct dvb_frontend* dvb_d3501_fe_qpsk_attach(
             break;
     }
     #endif  /* 0 */
+
+	{
+		INT32 ret = ERR_FAILED;
+		ret = nim_s3501_hw_check(&state->spark_nimdev);
+		if (ret != SUCCESS)
+		{
+			d3501_term(&state->spark_nimdev);
+			kfree(state);
+
+			return NULL;
+		}
+	}
 
 	return &state->frontend;
 

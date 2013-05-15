@@ -1,0 +1,105 @@
+## SECTION=applications
+
+menuconfig LIRC
+	tristate
+	prompt "lirc                          "
+	select KERNEL
+	help
+	  LIRC is a package that supports receiving and sending IR
+	  signals of the most common IR remote controls. It contains a
+	  daemon that decodes and sends IR signals, a mouse daemon
+	  that translates IR signals to mouse movements and a couple
+	  of user programs that allow to control your computer with a
+	  remote control.
+
+if LIRC
+
+config LIRC_IRCAT
+	bool
+	prompt "ircat"
+	default n
+	help
+	  ircat - print strings when pressing buttons
+
+config LIRC_IREXEC
+	bool
+	prompt "irexec"
+	default y
+	help
+	  irexec - run programs with one button press
+
+config LIRC_IRPTY
+	bool
+	prompt "irpty"
+	default n
+	help
+	  irpty - pseudo tty driver
+
+config LIRC_IRRECORD
+	bool
+	prompt "irrecord"
+	default y
+	help
+	   irrecord - application for recording IR-codes for usage with LIRC
+
+config LIRC_IRSEND
+	bool
+	prompt "irsend"
+	default n
+	help
+	  irsend - basic LIRC program to send infra-red commands
+
+config LIRC_IRW
+	bool
+	prompt "irw"
+	default y
+	help
+	  irw - sends data from Unix domain socket to stdout
+
+config LIRC_LIRCRCD
+	bool
+	prompt "lircrcd"
+	default y
+	help
+	  lircrcd - daemon to handle consistent .lircrc state among client applications
+
+config LIRC_MODE2
+	bool
+	prompt "mode2"
+	default n
+	help
+	  mode2, smode2, xmode2 - shows the pulse/space length of infrared signals
+
+config LIRC_PRONTO2LIRC
+	bool
+	prompt "pronto2lirc"
+	default n
+
+config LIRC_LIRCMD
+	bool
+	prompt "lircmd"
+	default y
+	help
+	  lircmd - LIRC mouse daemon translates infrared signals into mouse events
+
+config LIRC_STARTSCRIPT
+	bool
+	prompt "install /etc/init.d/lirc"
+	default y
+
+config LIRC_ETC_LIRCD_CONF
+	bool
+	prompt "install /etc/lirc/lircd.conf"
+	default y
+
+config LIRC_ETC_HARDW_CONF
+	bool
+	prompt "install /etc/lirc/hardware.conf"
+	default y
+
+config LIRC_UDEV_RULE
+	bool
+	prompt "install /lib/udev/rules.d/10-irremote.rules"
+	default y
+
+endif

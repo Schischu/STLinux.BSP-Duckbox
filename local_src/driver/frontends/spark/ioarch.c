@@ -28,7 +28,7 @@
 
 #include "d6158.h"
 
-#include "dvb_frontend.h"
+#include <linux/dvb/dvb_frontend.h>
 
 #define tuner_i2c_addr 0x1c
 

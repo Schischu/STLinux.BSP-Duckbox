@@ -38,10 +38,10 @@
 #include "nim_dev.h"
 #include "d6158.h"
 
-#include "dvb_frontend.h"
+#include <linux/dvb/dvb_frontend.h>
 #include "stv0367ofdm_init.h"
 
-#include "../../base/mxl301.h"
+#include "mxl301.h"
 
 
 struct dvb_d6158_fe_ofdm_state {
@@ -772,7 +772,7 @@ static INT32 nim_panic6158_get_lock(struct nim_device *dev, UINT8 *lock)
 	else if (DEMO_BANK_T == priv->system)
 	{
 		nim_reg_read(dev, priv->system, DMD_SSEQRD_T, &data, 1);
-		//printf("[%s]%d,data =0x%x\n",__FUNCTION__,__LINE__,data);
+		//printk("T[%s]%d,data =0x%x\n",__FUNCTION__,__LINE__,data);
 		if (9 <= (0x0F & data))
 			*lock = 1;
 	}
@@ -1066,10 +1066,11 @@ static INT32 nim_panic6158_tune_action(struct nim_device *dev, UINT8 system, UIN
 
 	if (DEMO_BANK_T == system || DEMO_BANK_C == system)
 	{
-		NIM_PANIC6158_PRINTF("tune T\n");
+		NIM_PANIC6158_PRINTF("tune T or C\n");
         NIM_PANIC6158_PRINTF("[%s]%d,T frq =%d, bw= %d,system =%d\n",__FUNCTION__,__LINE__,frq, bw, system);
 		if (DEMO_BANK_C == system)
 		{
+			NIM_PANIC6158_PRINTF("tune C\n");
 			for (i = 0; i < ARRAY_SIZE(qam_array); i++)
 			{
 				if (qam_array[i] == qam)
@@ -1084,6 +1085,7 @@ static INT32 nim_panic6158_tune_action(struct nim_device *dev, UINT8 system, UIN
 		}
 		else if (DEMO_BANK_T == system)
 		{
+			NIM_PANIC6158_PRINTF("tune T\n");
 			nim_panic6158_set_info(dev, system, DMD_E_INFO_DVBT_MODE, DMD_E_DVBT_MODE_NOT_DEFINED);
 			nim_panic6158_set_info(dev, system, DMD_E_INFO_DVBT_GI, DMD_E_DVBT_GI_NOT_DEFINED);
 		}
@@ -1240,7 +1242,7 @@ static INT32 nim_panic6158_channel_change(struct nim_device *dev, struct NIM_Cha
 	frq = param->freq;//kHz
 	bw = param->bandwidth;//MHz
 	qam = param->modulation;//for DVBC
-	NIM_PANIC6158_PRINTF("frq:%dKHz, bw:%dMHz, system:%d\n", frq, bw, mode);
+	NIM_PANIC6158_PRINTF("frq:%dKHz, bw:%dMHz\n", frq, bw);
 
 	//param->priv_param;//DEMO_UNKNOWN/DEMO_DVBC/DEMO_DVBT/DEMO_DVBT2
 	if (DEMO_DVBC == param->priv_param)
@@ -1279,7 +1281,8 @@ static INT32 nim_panic6158_channel_change(struct nim_device *dev, struct NIM_Cha
 
 #endif
 
-	//printf("frq:%dKHz, bw:%dMHz, system mode:%d,qam=%d\n", frq, bw, mode[0],qam);
+	NIM_PANIC6158_PRINTF("frq:%dKHz, bw:%dMHz, system mode:%d,qam=%d\n", frq, bw, mode[0],qam);
+	NIM_PANIC6158_PRINTF("tune_num:%d\n", tune_num);
 
 	priv->scan_stop_flag = 0;
 
@@ -1451,7 +1454,7 @@ INT32 nim_panic6158_attach(UINT8 Handle, PCOFDM_TUNER_CONFIG_API pConfig,TUNER_O
 
 	//jhy add start
 	if(YWTUNER_DELIVER_TER == Inst->Device)
-    {
+    {
 	    dev->DemodIOHandle[0] = Inst->DriverParam.Ter.DemodIOHandle;
 	    dev->DemodIOHandle[1] = Inst->DriverParam.Ter.TunerIOHandle;
 	}
@@ -1817,9 +1820,10 @@ static YW_ErrorType_T demod_d6158_ScanFreq(struct dvb_frontend_parameters *p,
 	memset(&param, 0, sizeof(struct NIM_Channel_Change));
 
 	if(dev == NULL)
-	{
+	{
 		return YWHAL_ERROR_BAD_PARAMETER;
 	}
+	NIM_PANIC6158_PRINTF("demod_d6158_ScanFreq : System = %d", System);
 	if((DEMO_BANK_T2 == System) || (DEMO_BANK_T == System))
 	{
 
@@ -2001,10 +2005,10 @@ int d6158_set_frontend(struct dvb_frontend* fe,
 	UINT8 lock;
 	state->p = p;
 	printk("-----------------------d6158_set_frontend\n");
-	nim_panic6158_get_lock(dev,&lock);
-	if(lock != 1)
+	//nim_panic6158_get_lock(dev,&lock);
+	//if(lock != 1)
 	{
-		 demod_d6158_ScanFreq(p,&state->spark_nimdev,priv->system);
+		 demod_d6158_ScanFreq(p, &state->spark_nimdev, priv->system);
 	}
 	state->p = NULL;
 
@@ -2901,7 +2905,7 @@ exit:
  static struct dvb_frontend_ops dvb_d6158_fe_ofdm_ops = {
 
 	 .info = {
-		 .name			 = "Tuner3-T/T2/C",
+		 .name			 = "Tuner3-T/T2(T/T2/C)",
 		 .type			 = FE_OFDM,
 		 .frequency_min 	 = 0,
 		 .frequency_max 	 = 863250000,
@@ -2941,7 +2945,7 @@ exit:
 static struct dvb_frontend_ops dvb_d6158_fe_qam_ops = {
 
 	.info = {
-		.name			= "Tuner3-T/T2/C",
+		.name			= "Tuner3-C(T/T2/C)",
 		.type			= FE_QAM,
 		.frequency_stepsize	= 62500,
 		.frequency_min		= 51000000,

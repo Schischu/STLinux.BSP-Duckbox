@@ -6,6 +6,11 @@ config DRIVER_PLAYER2_INIT
 
 if DRIVER_PLAYER2_INIT
 
+config DRIVER_PLAYER2PRE_BBINIT_LINK
+	string
+	prompt "player2pre"
+	default "S46player2pre"
+
 config DRIVER_PLAYER2_BBINIT_LINK
 	string
 	prompt "player2"

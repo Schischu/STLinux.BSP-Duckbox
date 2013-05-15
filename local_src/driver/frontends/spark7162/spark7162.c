@@ -36,10 +36,12 @@
 
 #include "nim_dev.h"
 
-#include "dvbdev.h"
-#include "dmxdev.h"
-#include "dvb_frontend.h"
-#include "dvb_demux.h"
+#include <linux/dvb/dvbdev.h>
+#include <linux/dvb/dmxdev.h>
+#include <linux/dvb/dvb_frontend.h>
+#include <linux/dvb/dvb_demux.h>
+
+#include "dvb_dummy_fe.h"
 
 
 
@@ -53,10 +55,10 @@
 #include "ix7306.h"
 
 //#include "../base/ix7306.h"
-#include "../base/sharp6465.h"
-#include "../base/sharp5469c.h"
-#include "../base/sharp7803.h"
-#include "../base/mxl301.h"
+#include "sharp6465.h"
+#include "sharp5469c.h"
+#include "sharp7803.h"
+#include "mxl301.h"
 
 
 
@@ -311,8 +313,7 @@ int spark_dvb_register_s(struct dvb_adapter *dvb_adap,
 
 	if (spark_dvb_attach_s(dvb_adap, &d3501config, &pFrontend))
 	{
-		i2c_put_adapter(pI2c);
-		return -1;
+		pFrontend = dvb_dummy_fe_qpsk_attach();
 	}
 
 	pFrontend->id = tuner_resource;
@@ -414,8 +415,7 @@ int spark_dvb_register_t(struct dvb_adapter *dvb_adap,
 
 	if (spark_dvb_attach_t(dvb_adap, *ppI2c, &pFrontend))
 	{
-		i2c_put_adapter(*ppI2c);
-		return -1;
+		pFrontend = dvb_dummy_fe_ofdm_attach();
 	}
 
 	pFrontend->id = 3;
@@ -534,9 +534,10 @@ int spark_dvb_register_c(struct dvb_adapter *dvb_adap,
 
 	if (spark_dvb_attach_c(dvb_adap, pI2c, &pFrontend))
 	{
-		i2c_put_adapter(pI2c);
-		return -1;
+		pFrontend = dvb_dummy_fe_qam_attach();
 	}
+
+	pFrontend->id = 3;
 
 	if (dvb_register_frontend(dvb_adap, pFrontend))
 	{
@@ -569,6 +570,53 @@ static DemodIdentifyDbase_T  DemodIdentifyTable[MAX_TER_DEMOD_TYPES] =
 	},
 };
 
+int spark_dvb_register_dummy_t(struct dvb_adapter *dvb_adap,
+								struct dvb_frontend **ppFrontend,
+								struct i2c_adapter **ppI2c)
+{
+	struct dvb_frontend *pFrontend;
+
+
+	pFrontend = dvb_dummy_fe_ofdm_attach();
+
+	pFrontend->id = 3;
+
+	if (dvb_register_frontend(dvb_adap, pFrontend))
+	{
+		printk("dummy_fe t: Frontend registration failed!\n");
+		dvb_frontend_detach(pFrontend);
+		i2c_put_adapter(*ppI2c);
+		return -1;
+	}
+
+	(*ppFrontend) 	= pFrontend;
+
+	return 0;
+}
+
+int spark_dvb_register_dummy_c(struct dvb_adapter *dvb_adap,
+								struct dvb_frontend **ppFrontend,
+								struct i2c_adapter **ppI2c)
+{
+	struct dvb_frontend *pFrontend;
+
+
+	pFrontend = dvb_dummy_fe_qam_attach();
+
+	pFrontend->id = 3;
+
+	if (dvb_register_frontend(dvb_adap, pFrontend))
+	{
+		printk("dummy_fe c: Frontend registration failed!\n");
+		dvb_frontend_detach(pFrontend);
+		i2c_put_adapter(*ppI2c);
+		return -1;
+	}
+
+	(*ppFrontend) 	= pFrontend;
+
+	return 0;
+}
 
 int spark_dvb_AutoRegister_TER(struct dvb_adapter *dvb_adap,
 								struct dvb_frontend **ppFrontend,
@@ -583,13 +631,13 @@ int spark_dvb_AutoRegister_TER(struct dvb_adapter *dvb_adap,
 	{
 	    return -1;
 	}
-	for(i = 0;i<MAX_TER_DEMOD_TYPES;i++)
+	for(i=0;i<MAX_TER_DEMOD_TYPES;i++)
 	{
 		if(0 == (DemodIdentifyTable[i].Demod_identify)(pI2c,DemodIdentifyTable[i].DemodID))
 		{
 
 			*ppI2c = pI2c;
-			ret = DemodIdentifyTable[i].Demod_Register_T(dvb_adap,ppFrontend,ppI2c);
+			ret = DemodIdentifyTable[i].Demod_Register_T(dvb_adap, ppFrontend, ppI2c);
 			break;
 		}
 
@@ -598,7 +646,8 @@ int spark_dvb_AutoRegister_TER(struct dvb_adapter *dvb_adap,
 	if (MAX_TER_DEMOD_TYPES == i)
 	{
 		*ppI2c = pI2c;
-		ret =  DemodIdentifyTable[1].Demod_Register_T(dvb_adap,ppFrontend,ppI2c);
+
+		ret = spark_dvb_register_dummy_t(dvb_adap, ppFrontend, ppI2c);
 	}
 
 	return ret;
@@ -636,7 +685,8 @@ int spark_dvb_AutoRegister_Cab(struct dvb_adapter *dvb_adap,
 	if (MAX_TER_DEMOD_TYPES == i)
 	{
 		*ppI2c = pI2c;
-		ret =  DemodIdentifyTable[1].Demod_Register_C(dvb_adap,ppFrontend,ppI2c);
+
+		ret = spark_dvb_register_dummy_c(dvb_adap, ppFrontend, ppI2c);
 	}
 
 	return ret;
