@@ -4,13 +4,8 @@ case $1 in
 start)
 	echo "starting player2"
 
-	insmod /lib/modules/ksound.ko
-	insmod /lib/modules/p2div64.ko
-	insmod /lib/modules/pseudocard.ko
-	insmod /lib/modules/stm_monitor.ko
-	insmod /lib/modules/stmsysfs.ko
 	insmod /lib/modules/stmdvb.ko
-	insmod /lib/modules/player2.ko
+	insmod /lib/modules/player2.ko discardlateframe=0
 	insmod /lib/modules/sth264pp.ko
 	insmod /lib/modules/stmalloc.ko
 	insmod /lib/modules/platform.ko

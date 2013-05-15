@@ -4,7 +4,12 @@ case $1 in
 start)
 	echo "starting avs"
 
+	MODEL=`cat /proc/stb/info/model`
+	if [ $MODEL = spark ] || [ $MODEL = spark7162 ]; then
+	insmod /lib/modules/avs.ko type=avs_pio
+	else
 	insmod /lib/modules/avs.ko
+	fi
 
 	exit 0
 

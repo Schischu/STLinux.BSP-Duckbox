@@ -8,3 +8,4 @@ src/*
 modules.order
 .series
 *.old
+local_src/extra/av-firmware/*.elf

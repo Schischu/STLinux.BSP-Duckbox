@@ -11,7 +11,7 @@
 #include "mxl_common.h"
 #include "d6158.h"
 
-#include "dvb_frontend.h"
+#include <linux/dvb/dvb_frontend.h>
 
 #include "stv0367ofdm_init.h"
 

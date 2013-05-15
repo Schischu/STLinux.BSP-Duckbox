@@ -30,7 +30,7 @@
 
 #include "vz7903.h"
 
-#include "dvb_frontend.h"
+#include <linux/dvb/dvb_frontend.h>
 #include "stv090x_reg.h"
 #include "stv090x.h"
 #include "stv090x_priv.h"

@@ -1,0 +1,23 @@
+#!/bin/sh
+
+case $1 in
+start)
+	echo "starting player2"
+
+	insmod /lib/modules/ksound.ko
+	insmod /lib/modules/pseudocard.ko
+	insmod /lib/modules/p2div64.ko
+	insmod /lib/modules/stm_monitor.ko
+	insmod /lib/modules/stmsysfs.ko
+
+	exit 0
+
+	;;
+stop)
+	echo "stopping player2... error, player2 cannot be stopped, aborting"
+	;;
+*)
+	echo "usage: $0 [start|stop]"
+	;;
+esac
+

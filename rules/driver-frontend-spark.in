@@ -1,0 +1,14 @@
+## SECTION=initmethod_bbinit
+
+config DRIVER_FRONTEND_SPARK_INIT
+	tristate
+	default y
+
+if DRIVER_FRONTEND_SPARK_INIT
+
+config DRIVER_FRONTEND_SPARK_BBINIT_LINK
+	string
+	prompt "frontend-spark"
+	default "S47frontend-spark"
+
+endif

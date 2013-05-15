@@ -1,21 +1,22 @@
 #ifndef __CORE_DVB__
 #define __CORE_DVB__
 
-#include "dvb_frontend.h"
-#include "dvbdev.h"
-#include "demux.h"
-#include "dvb_demux.h"
-#include "dmxdev.h"
-#include "dvb_filter.h"
-#include "dvb_net.h"
-#include "dvb_ca_en50221.h"
-
 #include <linux/dvb/frontend.h>
-#include "dvb_frontend.h"
-
 #include <linux/module.h>
+#include <linux/dvb/version.h>
+#if DVB_API_VERSION < 5
 #include "compat.h"
+#endif
+
 #include <linux/mutex.h>
+#include <linux/dvb/dvbdev.h>
+#include <linux/dvb/demux.h>
+#include <linux/dvb/dvb_demux.h>
+#include <linux/dvb/dmxdev.h>
+#include <linux/dvb/dvb_filter.h>
+#include <linux/dvb/dvb_net.h>
+#include <linux/dvb/dvb_ca_en50221.h>
+#include <linux/dvb/dvb_frontend.h>
 #include "stv6110x.h"
 #include "ix7306.h"
 #include "stv090x.h"
@@ -24,6 +25,8 @@ enum tuner_type{
 	STB6100,
 	STV6110X,
 	SHARP7306,
+	VZ7903,
+	TunerUnknown,
 };
 
 struct core_config
@@ -35,18 +38,16 @@ struct core_config
 	u8			horizontal; /* i2c value */
 	struct stpio_pin*	tuner_enable_pin;
 	u8			tuner_enable_act; /* active state of the pin */
-
 };
 
-struct core_state {
+struct fe_core_state {
 	struct dvb_frontend_ops 		ops;
 	struct dvb_frontend 			frontend;
 
 	const struct core_config* 		config;
 
-	int					thread_id;
-
-	int				       	not_responding;
+	int		thread_id;
+	int		not_responding;
 
 };
 
@@ -98,6 +99,7 @@ struct core {
 	int fe_synced;
 
 	void *priv;
+	struct core_config*   pCfgCore;
 };
 extern void st90x_register_frontend(struct dvb_adapter *dvb_adap);
 #endif
