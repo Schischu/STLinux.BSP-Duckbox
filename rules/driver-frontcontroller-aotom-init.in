@@ -1,7 +1,7 @@
 ## SECTION=initmethod_bbinit
 
 config DRIVER_FRONTCONTROLLER_AOTOM_INIT
-	tristate
+	tristate "frontcontroller-aotom-init"
 	default y
 
 if DRIVER_FRONTCONTROLLER_AOTOM_INIT

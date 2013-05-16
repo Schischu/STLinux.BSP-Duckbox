@@ -1,7 +1,7 @@
 ## SECTION=initmethod_bbinit
 
 config DRIVER_FRONTEND_MULTITUNER_INIT
-	tristate
+	tristate "frontend-multituner-init"
 	default y
 
 if DRIVER_FRONTEND_MULTITUNER_INIT

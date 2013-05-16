@@ -1,7 +1,7 @@
 ## SECTION=initmethod_bbinit
 
 config DRIVER_FRONTCONTROLLER_MICOM_INIT
-	tristate
+	tristate "frontcontroller-micom-init"
 	default y
 
 if DRIVER_FRONTCONTROLLER_MICOM_INIT

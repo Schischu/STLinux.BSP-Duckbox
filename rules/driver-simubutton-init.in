@@ -1,7 +1,7 @@
 ## SECTION=initmethod_bbinit
 
 config DRIVER_SIMUBUTTON_INIT
-	tristate
+	tristate "simubutton-init"
 	default y
 
 if DRIVER_SIMUBUTTON_INIT

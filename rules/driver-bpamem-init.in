@@ -1,7 +1,7 @@
 ## SECTION=initmethod_bbinit
 
 config DRIVER_BPAMEM_INIT
-	tristate
+	tristate "bpamem-init"
 	default y
 
 if DRIVER_BPAMEM_INIT

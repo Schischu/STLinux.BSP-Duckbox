@@ -1,7 +1,7 @@
 ## SECTION=initmethod_bbinit
 
 config FPCONTROL_INIT
-	tristate
+	tristate "fpcontrol-init"
 	depends on FPCONTROL
 	default y
 

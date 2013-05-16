@@ -1,7 +1,7 @@
 ## SECTION=initmethod_bbinit
 
 config VSFTPD_INIT
-	tristate
+	tristate "vsftpd-init"
 	depends on VSFTPD
 	default y
 

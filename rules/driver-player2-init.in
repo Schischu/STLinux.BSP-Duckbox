@@ -1,7 +1,7 @@
 ## SECTION=initmethod_bbinit
 
 config DRIVER_PLAYER2_INIT
-	tristate
+	tristate "player2-init"
 	default y
 
 if DRIVER_PLAYER2_INIT

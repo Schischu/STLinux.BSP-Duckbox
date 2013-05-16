@@ -1,7 +1,7 @@
 ## SECTION=initmethod_bbinit
 
 config DRIVER_MULTICOM_INIT
-	tristate
+	tristate "multicom-init"
 	default y
 
 if DRIVER_MULTICOM_INIT

@@ -1,7 +1,7 @@
 ## SECTION=core
 
 config DVB_FIRMWARE
-	bool
+	bool "dvb-firmware"
 	default y
 
 if DVB_FIRMWARE

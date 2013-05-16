@@ -1,7 +1,7 @@
 ## SECTION=initmethod_bbinit
 
 config EVREMOTE2_INIT
-	tristate
+	tristate "evremote2-init"
 	depends on EVREMOTE2
 	default y
 

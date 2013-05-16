@@ -1,6 +1,0 @@
-## SECTION=core
-
-config AV_FIRMWARE
-	tristate
-	default y
-	select BASE

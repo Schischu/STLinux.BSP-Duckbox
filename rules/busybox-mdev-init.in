@@ -1,7 +1,7 @@
 ## SECTION=initmethod_bbinit
 
 config BUSYBOX_MDEV_INIT
-	tristate
+	tristate "mdev-init"
 	depends on BUSYBOX_MDEV
 	default y
 

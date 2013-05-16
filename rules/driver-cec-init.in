@@ -1,7 +1,7 @@
 ## SECTION=initmethod_bbinit
 
 config DRIVER_CEC_INIT
-	tristate
+	tristate "cec-init"
 	default y
 
 if DRIVER_CEC_INIT

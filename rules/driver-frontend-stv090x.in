@@ -1,7 +1,7 @@
 ## SECTION=initmethod_bbinit
 
 config DRIVER_FRONTEND_STV090X_INIT
-	tristate
+	tristate "frontend-stv090x-init"
 	default y
 
 if DRIVER_FRONTEND_STV090X_INIT

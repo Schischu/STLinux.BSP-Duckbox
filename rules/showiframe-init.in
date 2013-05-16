@@ -1,7 +1,7 @@
 ## SECTION=initmethod_bbinit
 
 config SHOWIFRAME_INIT
-	tristate
+	tristate "showiframe-init"
 	depends on SHOWIFRAME
 	default y
 

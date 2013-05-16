@@ -1,7 +1,7 @@
 ## SECTION=initmethod_bbinit
 
 config DRIVER_AVS_INIT
-	tristate
+	tristate "avs-init"
 	default y
 
 if DRIVER_AVS_INIT

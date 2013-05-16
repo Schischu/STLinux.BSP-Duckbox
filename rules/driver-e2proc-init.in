@@ -1,7 +1,7 @@
 ## SECTION=initmethod_bbinit
 
 config DRIVER_E2PROC_INIT
-	tristate
+	tristate "e2proc-init"
 	default y
 
 if DRIVER_E2PROC_INIT
