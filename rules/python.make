@@ -159,6 +159,11 @@ $(STATEDIR)/python.targetinstall:
 		$(call install_copy, python, 0, 0, 644, -, $${file##.}); \
 	done
 
+ifeq ($(PYTHON_MAJORMINOR),2.7)
+	@$(call install_copy, python, 0, 0, 644, -, /usr/lib/python$(PYTHON_MAJORMINOR)/config/Makefile)
+	@$(call install_copy, python, 0, 0, 755, -, /usr/include/python$(PYTHON_MAJORMINOR)/pyconfig.h)
+endif
+
 	@$(call install_copy, python, 0, 0, 755, -, /usr/bin/python$(PYTHON_MAJORMINOR))
 	@$(call install_lib, python, 0, 0, 644, libpython$(PYTHON_MAJORMINOR))
 
