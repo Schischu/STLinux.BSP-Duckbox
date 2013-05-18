@@ -10,6 +10,7 @@
 
 SEL_ROOTFS-$(PTXCONF_IMAGE_UFS912)	+= $(IMAGEDIR)/ufs912.software.V1.00.B00.data
 
+ifdef PTXCONF_IMAGE_UFS912
 
 $(STATEDIR)/image_working_dir_prepared:
 	@echo -n "Preparing... "
@@ -125,6 +126,7 @@ $(IMAGEDIR)/ufs912.software.V1.00.B00.data: $(STATEDIR)/image_working_dir \
 	@echo "updatescript.sh `basename $@` "
 	@echo "file to your usb drive in the subfolder /kathrein/ufs912/"
 
+endif
 
 # vim600:set foldmethod=marker:
 # vim600:set syntax=make:

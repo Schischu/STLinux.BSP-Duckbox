@@ -10,6 +10,7 @@
 
 SEL_ROOTFS-$(PTXCONF_IMAGE_SPARK)	+= $(IMAGEDIR)/$(PTXCONF_PLATFORM).software.V1.00.B00.data
 
+ifdef PTXCONF_IMAGE_SPARK
 
 $(STATEDIR)/image_working_dir_prepared:
 	@echo -n "Preparing... "
@@ -55,10 +56,9 @@ $(IMAGEDIR)/uImage.bin: $(IMAGEDIR)/linuximage
 
 #$(IMAGEDIR)
 $(IMAGEDIR)/$(PTXCONF_PLATFORM).software.V1.00.B00.data: $(STATEDIR)/image_working_dir \
-					   $(IMAGEDIR)/mtd_root.sum.bin  \
-					   $(IMAGEDIR)/mtd_root.bin \
-					   $(IMAGEDIR)/uImage.bin
-
+                                                         $(IMAGEDIR)/mtd_root.sum.bin  \
+                                                         $(IMAGEDIR)/mtd_root.bin \
+                                                         $(IMAGEDIR)/uImage.bin
 	@echo -n "Cleaning image work_dir and files... "
 	@cd $(IMAGEDIR);						\
 	((								\
@@ -76,6 +76,7 @@ $(IMAGEDIR)/$(PTXCONF_PLATFORM).software.V1.00.B00.data: $(STATEDIR)/image_worki
 	@echo "`basename $@` "
 	@echo "file to your usb drive in the subfolder /$(PTXCONF_PLATFORM)/"
 
+endif
 
 # vim600:set foldmethod=marker:
 # vim600:set syntax=make:
