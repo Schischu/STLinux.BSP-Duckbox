@@ -20,8 +20,9 @@ $(STATEDIR)/image_working_dir_prepared:
 		echo -n "         $(image/work_dir)/map/fw ";	\
 		echo -n "         $(image/work_dir)/map/root; ";	\
 		echo -n 'for dir in `ls $(image/work_dir)/`; do cp -a $$(dir) $(image/work_dir)/map/root/; done; '; \
-		echo -n "rm -rf $(image/work_dir)/map/root/boot/*.elf; ";	\
+		echo -n "rm -rf $(image/work_dir)/map/root/boot/*; ";	\
 		echo -n "cp -a $(image/work_dir)/boot/*.elf $(image/work_dir)/map/fw/; ";	\
+		echo -n "cp -a $(image/work_dir)/boot/*.mvi $(image/work_dir)/map/fw/; ";	\
 		echo -n "echo \"/dev/mtdblock3	/boot	jffs2	defaults	0	0\" >> $(image/work_dir)/map/root/etc/fstab" ) | tee -a "$(PTX_LOGFILE)"		\
 	) | $(FAKEROOT) -s $(STATEDIR)/image_working_dir_prepared --
 	
