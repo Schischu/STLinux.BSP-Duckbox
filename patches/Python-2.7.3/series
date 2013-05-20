@@ -14,3 +14,5 @@ python-2.7.3-assume-long-long-support.diff
 python-2.7.3-enable-sitecustomize.patch
 
 python-2.7.3-enable-optimzier.patch
+
+0030-.patch
