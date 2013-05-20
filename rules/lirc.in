@@ -89,7 +89,7 @@ config LIRC_STARTSCRIPT
 
 config LIRC_ETC_LIRCD_CONF
 	bool
-	prompt "install /etc/lirc/lircd.conf"
+	prompt "install /etc/lircd.conf"
 	default y
 
 config LIRC_ETC_HARDW_CONF

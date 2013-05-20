@@ -31,6 +31,7 @@ LIRC_LICENSE	:= GPLv2
 
 LIRC_ENV	:= \
 	$(CROSS_ENV) \
+	CFLAGS="-Os -D__KERNEL_STRICT_NAMES" \
 	ARCH=$(PTXCONF_KERNEL_ARCH_STRING) \
 	MAKEFLAGS=-j1
 
@@ -42,8 +43,12 @@ LIRC_CONF_OPT	:= \
 	--enable-shared \
 	--disable-static \
 	--without-x \
+	--with-devdir=/dev \
+	--with-moduledir=/lib/modules \
+	--with-major=61 \
 	--with-driver=userspace \
-	--with-driver=devinput \
+	--with-syslog=LOG_DAEMON \
+	--enable-debug \
 	--with-kerneldir=$(KERNEL_DIR)
 
 
@@ -124,7 +129,7 @@ ifdef PTXCONF_LIRC_LIRCMD
 	@$(call install_copy, lirc, 0, 0, 0755, -, /usr/sbin/lircmd)
 endif
 ifdef PTXCONF_LIRC_ETC_LIRCD_CONF
-	@$(call install_alternative, lirc, 0, 0, 0755, /etc/lirc/lircd.conf)
+	@$(call install_alternative, lirc, 0, 0, 0755, /etc/lircd.conf)
 endif
 ifdef PTXCONF_LIRC_ETC_HARDW_CONF
 	@$(call install_alternative, lirc, 0, 0, 0755, /etc/lirc/hardware.conf)
@@ -138,15 +143,10 @@ ifdef PTXCONF_INITMETHOD_BBINIT
 ifdef PTXCONF_LIRC_STARTSCRIPT
 	@$(call install_alternative, lirc, 0, 0, 0755, /etc/init.d/lirc)
 
-ifneq ($(call remove_quotes,$(PTXCONF_LIRC_BBINIT_STARTLINK)),)
+ifneq ($(call remove_quotes,$(PTXCONF_LIRC_BBINIT_LINK)),)
 	@$(call install_link, lirc, \
 		../init.d/lirc, \
-		/etc/rc.d/$(PTXCONF_LIRC_BBINIT_STARTLINK))
-endif
-ifneq ($(call remove_quotes,$(PTXCONF_LIRC_BBINIT_STOPLINK)),)
-	@$(call install_link, lirc, \
-		../init.d/lirc, \
-		/etc/rc.d/$(PTXCONF_LIRC_BBINIT_STOPLINK))
+		/etc/rc.d/$(PTXCONF_LIRC_BBINIT_LINK))
 endif
 endif
 endif

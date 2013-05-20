@@ -1,0 +1,30 @@
+#!/bin/sh
+
+lirc_conf="/etc/lirc.conf"
+
+case $1 in
+start)
+	echo "starting lirc"
+
+	[ -e /dev/lirc ] || ln -s lirc0 /dev/lirc
+	[ -d /var/run/lirc ] || mkdir -p /var/run/lirc
+	
+	if [ -e $lirc_conf ]; then
+		lircd `cat $lirc_conf` &
+	else
+		lircd &
+	fi
+
+	exit 0
+
+	;;
+stop)
+	echo "stopping lirc"
+	killall lircd
+	killall -9 lircd
+	;;
+*)
+	echo "usage: $0 [start|stop]"
+	;;
+esac
+
