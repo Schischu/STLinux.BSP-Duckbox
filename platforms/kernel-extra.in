@@ -1,0 +1,7 @@
+## SECTION=kernel
+
+config KERNEL_DEBUG
+	bool
+	select KERNEL
+	default n
+	prompt "enable kernel printk"
