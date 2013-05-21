@@ -5,7 +5,7 @@ config IMAGE_SPARK
 	select HOST_GENIMAGE
 	select HOST_MTD_UTILS
 	select KERNEL
-	depends on PLATFORM_SPARK
+	depends on PLATFORM_SPARK || PLATFORM_SPARK7162
 	prompt "Generate images/spark.data"
 	help
 	  FIXME
