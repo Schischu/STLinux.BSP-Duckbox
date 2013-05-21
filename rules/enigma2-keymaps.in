@@ -1,0 +1,59 @@
+## SECTION=multimedia_libs
+
+config ENIGMA2_KEYMAPS
+	bool "enigma2-keymaps"
+	default y
+
+if ENIGMA2_KEYMAPS
+
+config ENIGMA2_KEYMAP_ADB_BOX
+	tristate
+	prompt "enigma2-keymap-adb-box"
+	default m
+
+config ENIGMA2_KEYMAP_CUBE
+	tristate
+	prompt "enigma2-keymap-cube"
+	default m
+
+config ENIGMA2_KEYMAP_CUBE_SMALL
+	tristate
+	prompt "enigma2-keymap-cube-small"
+	default m
+
+config ENIGMA2_KEYMAP_HL101
+	tristate
+	prompt "enigma2-keymap-hl101"
+	default m
+
+config ENIGMA2_KEYMAP_IPBOX
+	tristate
+	prompt "enigma2-keymap-ipbox"
+	default m
+
+config ENIGMA2_KEYMAP_SPARK
+	tristate
+	prompt "enigma2-keymap-spark"
+	default m
+
+config ENIGMA2_KEYMAP_TF700HDPVR
+	tristate
+	prompt "enigma2-keymap-tf7700hdpvr"
+	default m
+
+config ENIGMA2_KEYMAP_UFS910
+	tristate
+	prompt "enigma2-keymap-ufs910"
+	default m
+
+config ENIGMA2_KEYMAP_UFS912
+	tristate
+	prompt "enigma2-keymap-ufs912"
+	default m
+
+config ENIGMA2_KEYMAP_VIP2
+	tristate
+	prompt "enigma2-keymap-vip2"
+	default m
+
+endif

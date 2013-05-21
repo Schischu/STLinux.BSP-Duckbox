@@ -129,7 +129,13 @@ endif
 
 	@$(call install_lib, enigma2-pli, 0, 0, 0644, libopen)
 
-	@$(call install_tree, enigma2-pli, 0, 0, -, /usr/local/share/)
+	#@$(call install_tree, enigma2-pli, 0, 0, -, /usr/local/share/)
+	@cd $(ENIGMA2_PLI_PKGDIR) && \
+		find ./usr/local/share \
+		! -type d -a ! \( -name "keymap.xml" \) | \
+		while read file; do \
+		$(call install_copy, enigma2-pli, 0, 0, 644, -, $${file##.}); \
+	done
 
 	@$(call install_alternative_tree, enigma2-pli, 0, 0, /etc/enigma2)
 	@$(call install_alternative_tree, enigma2-pli, 0, 0, /etc/tuxbox)
