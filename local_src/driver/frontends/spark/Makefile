@@ -5,18 +5,25 @@ CCFLAGSY += -I$(TREE_ROOT)/spark7162/stv0367/stv0367qam
 CCFLAGSY += -I$(TREE_ROOT)/spark7162/stv0367/stv0367ter
 CCFLAGSY += -I$(TREE_ROOT)/spark7162/6158
 CCFLAGSY += -I$(TREE_ROOT)/spark7162/tuner
+CCFLAGSY += -I$(TREE_ROOT)/spark
+CCFLAGSY += -I$(TREE_ROOT)/include
 CCFLAGSY += -I$(TREE_ROOT)/
-
-CCFLAGSY += -Wall -DCONFIG_DVB_DUMMY_FE #-Werror
 endif
 
+ifdef SPARK
+CCFLAGSY += -I$(TREE_ROOT)/spark
+CCFLAGSY += -I$(TREE_ROOT)/include
+CCFLAGSY += -I$(TREE_ROOT)/
+endif
+
+CCFLAGSY += -Wall -DCONFIG_DVB_DUMMY_FE #-Werror
 EXTRA_CFLAGS += $(CCFLAGSY) $(EXTRA_CFLAGSS)
 
 ifdef SPARK
-stv090x-objs +=	stv090x.o
-stv090x-objs +=	stv6110x.o
-stv090x-objs +=	ix7306.o
-stv090x-objs +=	core.o
+stv090x-objs +=	spark/stv090x.o
+stv090x-objs +=	spark/stv6110x.o
+stv090x-objs +=	spark/ix7306.o
+stv090x-objs +=	spark/core.o
 stv090x-objs += vz7903.o
 obj-m += stv090x.o
 endif
@@ -28,7 +35,7 @@ spark7162-objs +=        ioarch.o
 
 spark7162-objs +=        spark7162/D3501.o
 
-spark7162-objs +=        ix7306.o
+spark7162-objs +=        spark/ix7306.o
 spark7162-objs +=        vz7903.o
 spark7162-objs +=        dvb_dummy_fe.o
 spark7162-objs +=        spark7162/sharp7803.o
