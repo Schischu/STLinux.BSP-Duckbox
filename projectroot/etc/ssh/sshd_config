@@ -1,0 +1,3 @@
+PermitRootLogin yes
+PermitEmptyPasswords yes
+Subsystem       sftp    /usr/sbin/sftp-server
