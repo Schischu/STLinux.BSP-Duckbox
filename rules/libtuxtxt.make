@@ -31,22 +31,20 @@ $(STATEDIR)/libtuxtxt.prepare: $(STATEDIR)/driver-avs.install \
 $(STATEDIR)/libtuxtxt.get:
 	@$(call targetinfo)
 	
-	@$(call shell, ( \
 		if [ -d $(LIBTUXTXT_SOURCE_GIT) ]; then \
 			cd $(LIBTUXTXT_SOURCE_GIT); \
 			git pull -u origin master 2>&1 > /dev/null; \
-			git checkout HEAD 2>&1 > /dev/null; \
+			git checkout $(LIBTUXTXT_VERSION) 2>&1 > /dev/null; \
 			cd -; \
 		else \
-			git clone -b HEAD $(LIBTUXTXT_URL) $(LIBTUXTXT_SOURCE_GIT) 2>&1 > /dev/null; \
-		fi;) 2>&1 > /dev/null)
+			git clone $(LIBTUXTXT_URL) $(LIBTUXTXT_SOURCE_GIT) 2>&1 > /dev/null; \
+		fi; 2>&1 > /dev/null
 	
-	@$(call shell, ( \
 		if [ ! "$(LIBTUXTXT_VERSION)" == "HEAD" ]; then \
 			cd $(LIBTUXTXT_SOURCE_GIT); \
 			git checkout $(LIBTUXTXT_VERSION) 2>&1 > /dev/null; \
 			cd -; \
-		fi;) 2>&1 > /dev/null)
+		fi; 2>&1 > /dev/null
 	
 	@$(call touch)
 
@@ -54,9 +52,9 @@ $(STATEDIR)/libtuxtxt.get:
 $(STATEDIR)/libtuxtxt.extract:
 	@$(call targetinfo)
 	
-	@$(call shell, rm -rf $(BUILDDIR)/$(LIBTUXTXT);)
-	@$(call shell, cp -a $(LIBTUXTXT_SOURCE_GIT) $(BUILDDIR)/$(LIBTUXTXT);)
-	@$(call shell, rm -rf $(BUILDDIR)/$(LIBTUXTXT)/.git;)
+	rm -rf $(BUILDDIR)/$(LIBTUXTXT); \
+	cp -a $(LIBTUXTXT_SOURCE_GIT) $(BUILDDIR)/$(LIBTUXTXT); \
+	rm -rf $(BUILDDIR)/$(LIBTUXTXT)/.git;
 	
 	@$(call patchin, LIBTUXTXT)
 	

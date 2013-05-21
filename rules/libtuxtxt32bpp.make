@@ -28,22 +28,20 @@ LIBTUXTXT32BPP_LICENSE	:= libtuxtxt32bpp
 $(STATEDIR)/libtuxtxt32bpp.get:
 	@$(call targetinfo)
 	
-	@$(call shell, ( \
 		if [ -d $(LIBTUXTXT32BPP_SOURCE_GIT) ]; then \
 			cd $(LIBTUXTXT32BPP_SOURCE_GIT); \
 			git pull -u origin master 2>&1 > /dev/null; \
-			git checkout HEAD 2>&1 > /dev/null; \
+			git checkout $(LIBTUXTXT32BPP_VERSION) 2>&1 > /dev/null; \
 			cd -; \
 		else \
-			git clone -b HEAD $(LIBTUXTXT32BPP_URL) $(LIBTUXTXT32BPP_SOURCE_GIT) 2>&1 > /dev/null; \
-		fi;) 2>&1 > /dev/null)
+			git clone $(LIBTUXTXT32BPP_URL) $(LIBTUXTXT32BPP_SOURCE_GIT) 2>&1 > /dev/null; \
+		fi; 2>&1 > /dev/null
 	
-	@$(call shell, ( \
 		if [ ! "$(LIBTUXTXT32BPP_VERSION)" == "HEAD" ]; then \
 			cd $(LIBTUXTXT32BPP_SOURCE_GIT); \
 			git checkout $(LIBTUXTXT32BPP_VERSION) 2>&1 > /dev/null; \
 			cd -; \
-		fi;) 2>&1 > /dev/null)
+		fi; 2>&1 > /dev/null
 	
 	@$(call touch)
 
@@ -51,9 +49,9 @@ $(STATEDIR)/libtuxtxt32bpp.get:
 $(STATEDIR)/libtuxtxt32bpp.extract:
 	@$(call targetinfo)
 	
-	@$(call shell, rm -rf $(BUILDDIR)/$(LIBTUXTXT32BPP);)
-	@$(call shell, cp -a $(LIBTUXTXT32BPP_SOURCE_GIT) $(BUILDDIR)/$(LIBTUXTXT32BPP);)
-	@$(call shell, rm -rf $(BUILDDIR)/$(LIBTUXTXT32BPP)/.git;)
+	rm -rf $(BUILDDIR)/$(LIBTUXTXT32BPP); \
+	cp -a $(LIBTUXTXT32BPP_SOURCE_GIT) $(BUILDDIR)/$(LIBTUXTXT32BPP); \
+	rm -rf $(BUILDDIR)/$(LIBTUXTXT32BPP)/.git;
 	
 	@$(call patchin, LIBTUXTXT32BPP)
 	

@@ -1,0 +1,5 @@
+lirc-0.9.0-011-remove_asm_sytem_h.patch
+lirc-0.9.0-023-ati_remote.patch
+lirc-0.9.0-024-remove_smp_lock_h.patch
+lirc-0.9.0-025-bit_le_fix.patch
+

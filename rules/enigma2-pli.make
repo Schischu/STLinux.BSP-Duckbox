@@ -41,22 +41,20 @@ ENIGMA2_PLI_LICENSE	:= enigma2-pli
 $(STATEDIR)/enigma2-pli.get:
 	@$(call targetinfo)
 	
-	@$(call shell, ( \
 		if [ -d $(ENIGMA2_PLI_SOURCE_GIT) ]; then \
 			cd $(ENIGMA2_PLI_SOURCE_GIT); \
 			git pull -u origin master 2>&1 > /dev/null; \
-			git checkout HEAD 2>&1 > /dev/null; \
+			git checkout $(ENIGMA2_PLI_VERSION) 2>&1 > /dev/null; \
 			cd -; \
 		else \
-			git clone -b HEAD $(ENIGMA2_PLI_URL) $(ENIGMA2_PLI_SOURCE_GIT) 2>&1 > /dev/null; \
-		fi;) 2>&1 > /dev/null)
+			git clone  $(ENIGMA2_PLI_URL) $(ENIGMA2_PLI_SOURCE_GIT) 2>&1 > /dev/null; \
+		fi; 2>&1 > /dev/null
 	
-	@$(call shell, ( \
 		if [ ! "$(ENIGMA2_PLI_VERSION)" == "HEAD" ]; then \
 			cd $(ENIGMA2_PLI_SOURCE_GIT); \
 			git checkout $(ENIGMA2_PLI_VERSION) 2>&1 > /dev/null; \
 			cd -; \
-		fi;) 2>&1 > /dev/null)
+		fi; 2>&1 > /dev/null
 	
 	@$(call touch)
 
@@ -65,9 +63,9 @@ PATH_PATCHES = $(subst :, ,$(PTXDIST_PATH_PATCHES))
 $(STATEDIR)/enigma2-pli.extract:
 	@$(call targetinfo)
 	
-	@$(call shell, rm -rf $(ENIGMA2_PLI_DIR);)
-	@$(call shell, cp -a $(ENIGMA2_PLI_SOURCE_GIT) $(ENIGMA2_PLI_DIR);)
-	@$(call shell, rm -rf $(ENIGMA2_PLI_DIR)/.git;)
+	rm -rf $(ENIGMA2_PLI_DIR); \
+	cp -a $(ENIGMA2_PLI_SOURCE_GIT) $(ENIGMA2_PLI_DIR); \
+	rm -rf $(ENIGMA2_PLI_DIR)/.git;
 	
 	@$(call patchin, ENIGMA2_PLI)
 	

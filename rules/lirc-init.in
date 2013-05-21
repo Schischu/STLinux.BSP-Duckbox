@@ -1,0 +1,15 @@
+## SECTION=initmethod_bbinit
+
+config LIRC_INIT
+	tristate
+	depends on LIRC
+	default y
+
+if LIRC_INIT
+
+config LIRC_BBINIT_LINK
+	string
+	prompt "lirc"
+	default "S53lirc"
+
+endif
