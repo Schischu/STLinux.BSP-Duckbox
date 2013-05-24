@@ -1,27 +1,28 @@
 ## SECTION=multimedia_libs
 
 config ENIGMA2_PLI
-	tristate
-	select FREETYPE 
-	select EXPAT 
-	select FONTCONFIG 
-	select LIBFRIBIDI 
-	select LIBPNG 
-	select LIBJPEG 
-	select LIBGIF 
-	select LIBID3TAG 
-	select READLINE 
-	select LIBMAD 
-	select LIBXML2 
-	select LIBXSLT 
-	select SDPARM 
-	select PYTHON 
-	select PYTHON_ELEMENTTREE 
-	select PYTHON_ZOPE_INTERFACE 
-	select PYTHON_TWISTED 
-	select PYTHON_OPENSSL 
-	select PYTHON_WIFI 
-	select PYTHON_LXML 
+	tristate "enigma2-pli"
+	select FREETYPE
+	select EXPAT
+	select FONTCONFIG
+	select LIBFRIBIDI
+	select LIBPNG
+	select LIBJPEG
+	select LIBGIF
+	select LIBID3TAG
+	select READLINE
+	select LIBMAD
+	select LIBXML2
+	select LIBXSLT
+	select SDPARM
+	select PYTHON
+	select PYTHON_ELEMENTTREE
+	select PYTHON_ZOPE_INTERFACE
+	select PYTHON_TWISTED
+	select PYTHON_OPENSSL
+	select PYTHON_WIFI
+	select PYTHON_LXML
+	select PYTHON_ZLIB
 	select LIBXMLCCWRAP
 	select LIBSIGCPP
 	select LIBMMEIMAGE
@@ -29,7 +30,7 @@ config ENIGMA2_PLI
 	select LIBTUXTXT32BPP
 	select GST_PLUGINS_DVBMEDIASINK
 	select LIBDVBSIPP
-	prompt "enigma2-pli"
+	select LIBDREAMDVD
 	help
 	  FIXME
 
@@ -43,20 +44,16 @@ choice
 	default ENIGMA2_PLI_VERSION_201205181526
 
 	config ENIGMA2_PLI_VERSION_201203171951
-		bool
-		prompt "Sat, 17 Mar 2012 19:51"
+		bool "Sat, 17 Mar 2012 19:51"
 
 	config ENIGMA2_PLI_VERSION_201205181526
-		bool
-		prompt "Sat, 18 May 2012 15:26"
+		bool "Sat, 18 May 2012 15:26"
 
 	config ENIGMA2_PLI_VERSION_201301282130
-		bool
-		prompt "Mon, 28 Jan 2013 21:30"
+		bool "Mon, 28 Jan 2013 21:30"
 
 	config ENIGMA2_PLI_VERSION_201303022136
-		bool
-		prompt "Sat,  2 Mar 2013 21:36"
+		bool "Sat,  2 Mar 2013 21:36"
 endchoice
 
 endif

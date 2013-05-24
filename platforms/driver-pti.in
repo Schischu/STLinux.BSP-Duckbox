@@ -3,6 +3,15 @@
 config DRIVER_PTI
 	tristate
 	select KERNEL
+	select DRIVER_PLAYER2
 	prompt "driver-pti"
 	help
 	  FIXME
+
+if DRIVER_PTI
+
+config DRIVER_PTI_DEV
+	bool
+	default y
+
+endif

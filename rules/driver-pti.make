@@ -12,6 +12,7 @@
 # We provide this package
 #
 PACKAGES-$(PTXCONF_DRIVER_PTI) += driver-pti
+PACKAGES-$(PTXCONF_DRIVER_PTI_DEV) += driver-pti-dev
 
 #
 # Paths and names and versions
@@ -21,6 +22,12 @@ DRIVER_PTI		:= pti
 DRIVER_PTI_URL		:= lndir://$(PTXDIST_WORKSPACE)/local_src/driver/$(DRIVER_PTI)
 DRIVER_PTI_DIR		:= $(BUILDDIR)/$(DRIVER_PTI)
 DRIVER_PTI_LICENSE	:= unknown
+
+DRIVER_PTI_DEV_VERSION	:= $(DRIVER_PTI_VERSION)
+DRIVER_PTI_DEV			:= pti-dev
+DRIVER_PTI_DEV_URL		:= $(DRIVER_PTI_URL)
+DRIVER_PTI_DEV_DIR		:= $(DRIVER_PTI_DIR)
+DRIVER_PTI_DEV_LICENSE	:= unknown
 
 ifdef PTXCONF_DRIVER_PTI
 $(STATEDIR)/kernel.targetinstall.post: $(STATEDIR)/driver-pti.targetinstall
@@ -62,9 +69,6 @@ $(STATEDIR)/driver-pti.install:
 		INSTALL_MOD_PATH=$(DRIVER_PTI_PKGDIR) \
 		modules_install
 	
-	mkdir -p $(SYSROOT)/usr/include/linux
-	cp $(DRIVER_PTI_DIR)/pti_public.h $(SYSROOT)/usr/include/linux/
-	
 	@$(call touch)
 
 # ----------------------------------------------------------------------------
@@ -87,6 +91,24 @@ $(STATEDIR)/driver-pti.targetinstall:
 
 	@$(call install_finish, driver-pti)
 
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+# driver-pti-dev
+# ----------------------------------------------------------------------------
+$(STATEDIR)/driver-pti-dev.prepare:
+	@$(call touch)
+	
+$(STATEDIR)/driver-pti-dev.compile:
+	@$(call touch)
+
+$(STATEDIR)/driver-pti-dev.install:
+	@$(call targetinfo)
+	
+	mkdir -p $(SYSROOT)/usr/include/linux
+	cp $(DRIVER_PTI_DIR)/pti_public.h $(SYSROOT)/usr/include/linux/
+	cp $(DRIVER_PTI_DIR)/pti_hal_public.h $(SYSROOT)/usr/include/linux/
+	
 	@$(call touch)
 
 # ----------------------------------------------------------------------------

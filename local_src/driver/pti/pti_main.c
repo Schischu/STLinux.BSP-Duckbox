@@ -37,12 +37,6 @@
 struct DeviceContext_s;
 struct StreamContext_s;
 
-//#include "dvb_frontend.h"
-//#include "dmxdev.h"
-//#include "dvb_demux.h"
-//#include "dvb_net.h"
-#include <linux/dvb/dmx.h>
-
 #include <linux/dvb/frontend.h>
 #include <linux/dvb/dmx.h>
 

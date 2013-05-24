@@ -5,7 +5,7 @@ config DRIVER_PLAYER2
 	select KERNEL
 	select DRIVER_AVS
 	select DRIVER_STMFB
-	select DRIVER_PTI
+	select DRIVER_PTI_DEV
 	select DRIVER_PLAYER2_AUDIO_FW_DEV
 	select DRIVER_PLAYER2_VIDEO_FW_DEV
 	prompt "driver-player2"

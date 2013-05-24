@@ -25,7 +25,7 @@
 
 #include "dvb_module.h"
 #if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,17)
-#include "../../../../../../../pti/pti_hal.h"
+#include <linux/pti_hal_public.h>
 #include <linux/bpa2.h>
 #else
 #include <linux/bigphysarea.h>

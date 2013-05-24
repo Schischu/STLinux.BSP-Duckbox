@@ -31,7 +31,7 @@
 
 //__TDT__: many modifications in this file
 #if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,17)
-#include "../../../../../../../pti/pti_hal.h"
+#include <linux/pti_hal_public.h>
 #endif
 
 #ifndef TSM_NUM_PTI_ALT_OUT

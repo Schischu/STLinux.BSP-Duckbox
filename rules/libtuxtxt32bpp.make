@@ -31,7 +31,7 @@ $(STATEDIR)/libtuxtxt32bpp.get:
 		if [ -d $(LIBTUXTXT32BPP_SOURCE_GIT) ]; then \
 			cd $(LIBTUXTXT32BPP_SOURCE_GIT); \
 			git pull -u origin master 2>&1 > /dev/null; \
-			git checkout $(LIBTUXTXT32BPP_VERSION) 2>&1 > /dev/null; \
+			git checkout HEAD 2>&1 > /dev/null; \
 			cd -; \
 		else \
 			git clone $(LIBTUXTXT32BPP_URL) $(LIBTUXTXT32BPP_SOURCE_GIT) 2>&1 > /dev/null; \
