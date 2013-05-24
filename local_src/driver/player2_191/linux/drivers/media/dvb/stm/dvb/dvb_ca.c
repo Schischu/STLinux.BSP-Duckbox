@@ -41,7 +41,7 @@ Date        Modification                                    Name
 #ifdef __TDT__
 #include <linux/version.h>
 #if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,17)
-#include "../../../../../../../pti/pti_hal.h"
+#include <linux/pti_hal_public.h>
 #endif
 
 #include "st-common.h"
