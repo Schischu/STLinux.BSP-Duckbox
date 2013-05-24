@@ -44,7 +44,7 @@ $(STATEDIR)/enigma2-pli.get:
 		if [ -d $(ENIGMA2_PLI_SOURCE_GIT) ]; then \
 			cd $(ENIGMA2_PLI_SOURCE_GIT); \
 			git pull -u origin master 2>&1 > /dev/null; \
-			git checkout $(ENIGMA2_PLI_VERSION) 2>&1 > /dev/null; \
+			git checkout HEAD 2>&1 > /dev/null; \
 			cd -; \
 		else \
 			git clone  $(ENIGMA2_PLI_URL) $(ENIGMA2_PLI_SOURCE_GIT) 2>&1 > /dev/null; \

@@ -34,7 +34,7 @@ $(STATEDIR)/libtuxtxt.get:
 		if [ -d $(LIBTUXTXT_SOURCE_GIT) ]; then \
 			cd $(LIBTUXTXT_SOURCE_GIT); \
 			git pull -u origin master 2>&1 > /dev/null; \
-			git checkout $(LIBTUXTXT_VERSION) 2>&1 > /dev/null; \
+			git checkout HEAD 2>&1 > /dev/null; \
 			cd -; \
 		else \
 			git clone $(LIBTUXTXT_URL) $(LIBTUXTXT_SOURCE_GIT) 2>&1 > /dev/null; \
