@@ -70,25 +70,23 @@ enum {
 	};
 #endif
 
-#ifdef UFS922
+#if defined(FRONTEND_CX42116)
 extern void cx24116_register_frontend(struct dvb_adapter *dvb_adap);
+#endif
+#if defined(FRONTEND_AVL2108)
 extern void avl2108_register_frontend(struct dvb_adapter *dvb_adap);
-#elif defined(FORTIS_HDBOX) || defined(SPARK) || defined(HS7810A) || defined(HS7110) || defined(WHITEBOX)
+#endif
+#if defined(FRONTEND_STV090X)
 extern void stv090x_register_frontend(struct dvb_adapter *dvb_adap);
-#elif defined(HL101) || defined(VIP1_V2) || defined(VIP2_V1) || defined(IPBOX9900) || defined(IPBOX99) || defined(IPBOX55) || defined(ADB_BOX)
+#endif
+#if defined(FRONTEND_CORE)
 extern void fe_core_register_frontend(struct dvb_adapter *dvb_adap);
-#elif defined(CUBEREVO) || defined(CUBEREVO_MINI2) || defined(CUBEREVO_MINI) || defined(CUBEREVO_250HD) || defined(CUBEREVO_2000HD) || defined(CUBEREVO_9500HD) || defined(CUBEREVO_MINI_FTA)
-extern void socket_register_adapter(struct dvb_adapter *dvb_adap);
-#elif defined(OCTAGON1008)
-extern void avl2108_register_frontend(struct dvb_adapter *dvb_adap);
-#elif defined(ATEVIO7500)
-extern void socket_register_adapter(struct dvb_adapter *dvb_adap);
-#elif defined(SPARK7162)
+#endif
+#if defined(FRONTEND_SPARK7162)
 extern void spark7162_register_frontend(struct dvb_adapter *dvb_adap);
-#elif defined(UFS912) || defined(UFS913)
+#endif
+#if defined(FRONTEND_MULTITUNER)
 extern void socket_register_adapter(struct dvb_adapter *dvb_adap);
-#else
-extern void cx24116_register_frontend(struct dvb_adapter *dvb_adap);
 #endif
 
 extern void demultiplexDvbPackets(struct dvb_demux* demux, const u8 *buf, int count);
@@ -535,25 +533,23 @@ void ptiInit ( struct DeviceContext_s *pContext )
     pti_hal_init ( &pti, &pContext->DvbDemux, demultiplexDvbPackets, 1);
 #endif
 
-#if defined(FORTIS_HDBOX)|| defined(SPARK) || defined(HS7810A) || defined(HS7110) || defined(WHITEBOX)
+#if defined(FRONTEND_CX24116)
+    cx24116_register_frontend( &pContext->DvbContext->DvbAdapter);
+#endif
+#if defined(FRONTEND_AVL2108)
+    avl2108_register_frontend( &pContext->DvbContext->DvbAdapter);
+#endif
+#if defined(FRONTEND_STV090X)
     stv090x_register_frontend(&pContext->DvbContext->DvbAdapter);
-#elif defined(HL101) || defined(VIP1_V2) || defined(VIP2_V1) || defined(IPBOX9900) || defined(IPBOX99) || defined(IPBOX55) || defined(ADB_BOX)
+#endif
+#if defined(FRONTEND_CORE)
     fe_core_register_frontend( &pContext->DvbContext->DvbAdapter);
-#elif defined(CUBEREVO) || defined(CUBEREVO_MINI2) || defined(CUBEREVO_MINI) || defined(CUBEREVO_250HD) || defined(CUBEREVO_2000HD) || defined(CUBEREVO_9500HD) || defined(CUBEREVO_MINI_FTA)
-    socket_register_adapter(&pContext->DvbContext->DvbAdapter);
-#elif defined(OCTAGON1008)
-    avl2108_register_frontend( &pContext->DvbContext->DvbAdapter);
-#elif defined(ATEVIO7500)
-    socket_register_adapter(&pContext->DvbContext->DvbAdapter);
-#elif defined(SPARK7162)
+#endif
+#if defined(FRONTEND_SPARK7162)
     spark7162_register_frontend( &pContext->DvbContext->DvbAdapter);
-#elif defined(UFS922)
-    cx24116_register_frontend( &pContext->DvbContext->DvbAdapter);
-    avl2108_register_frontend( &pContext->DvbContext->DvbAdapter);
-#elif defined(UFS912) || defined(UFS913) 
+#endif
+#if defined(FRONTEND_MULTITUNER)
     socket_register_adapter(&pContext->DvbContext->DvbAdapter);
-#else
-    cx24116_register_frontend( &pContext->DvbContext->DvbAdapter);
 #endif
     ptiInitialized = 1;
   }

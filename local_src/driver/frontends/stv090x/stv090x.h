@@ -94,10 +94,10 @@ struct stv090x_config {
 	u8						tuner_bbgain; /* default: 10db */
 	enum stv090x_adc_range	adc1_range; /* default: 2Vpp */
 	enum stv090x_adc_range	adc2_range; /* default: 2Vpp */
-    bool 					diseqc_envelope_mode;
+	bool 					diseqc_envelope_mode;
 
 	int (*tuner_init) (struct dvb_frontend *fe);
-    int (*tuner_sleep) (struct dvb_frontend *fe);
+	int (*tuner_sleep) (struct dvb_frontend *fe);
 	int (*tuner_set_mode) (struct dvb_frontend *fe, enum tuner_mode mode);
 	int (*tuner_set_frequency) (struct dvb_frontend *fe, u32 frequency);
 	int (*tuner_get_frequency) (struct dvb_frontend *fe, u32 *frequency);
@@ -109,9 +109,9 @@ struct stv090x_config {
 	int (*tuner_get_status) (struct dvb_frontend *fe, u32 *status);
 };
 
-extern struct dvb_frontend *stv090x_attach(const struct stv090x_config *config,
-					   struct i2c_adapter *i2c,
-					   enum stv090x_demodulator demod,
-					   enum stv090x_tuner tuner);
+struct dvb_frontend *stv090x_attach(const struct stv090x_config *config,
+						struct i2c_adapter *i2c,
+						enum stv090x_demodulator demod,
+						enum stv090x_tuner tuner);
 
 #endif /* __STV090x_H */

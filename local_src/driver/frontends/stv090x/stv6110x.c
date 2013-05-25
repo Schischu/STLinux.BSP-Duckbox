@@ -54,6 +54,8 @@ extern short paramDebug;
 if ((paramDebug) && (paramDebug > level)) printk(TAGDEBUG x); \
 } while (0)
 
+#define write_at_once
+
 static int stv6110x_set_refclock(struct dvb_frontend *fe, u32 refclock);
 static int stv6110x_get_frequency(struct dvb_frontend *fe, u32 *frequency);
 static int stv6110x_set_bandwidth(struct dvb_frontend *fe, u32 bandwidth);
