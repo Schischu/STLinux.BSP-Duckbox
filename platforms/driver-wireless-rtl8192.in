@@ -1,0 +1,8 @@
+## SECTION=kernel_driver
+
+config DRIVER_WIRELESS_RTL8792
+	tristate
+	select KERNEL
+	prompt "driver-wireless-rtl8192"
+	help
+	  FIXME

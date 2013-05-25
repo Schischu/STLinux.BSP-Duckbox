@@ -1,8 +1,8 @@
 ## SECTION=kernel_driver
 
-config DRIVER_WIRELESS
+config DRIVER_WIRELESS_RT3070
 	tristate
 	select KERNEL
-	prompt "driver-wireless"
+	prompt "driver-wireless-rt3070"
 	help
 	  FIXME

@@ -1,0 +1,8 @@
+## SECTION=kernel_driver
+
+config DRIVER_WIRELESS_RTL871X
+	tristate
+	select KERNEL
+	prompt "driver-wireless-rtl871x"
+	help
+	  FIXME

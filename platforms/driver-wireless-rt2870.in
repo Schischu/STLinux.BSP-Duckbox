@@ -1,0 +1,8 @@
+## SECTION=kernel_driver
+
+config DRIVER_WIRELESS_RT2870
+	tristate
+	select KERNEL
+	prompt "driver-wireless-rt2870"
+	help
+	  FIXME
