@@ -6555,8 +6555,9 @@ struct dvb_frontend *stv090x_attach(struct stv090x_config *config,
     {
         struct stv6110x_config *tuner_cfg = kzalloc(sizeof (struct stv6110x_config), GFP_KERNEL);
         
-        tuner_cfg->addr   = config->tuner_address;
-        tuner_cfg->refclk = config->tuner_refclk;
+        tuner_cfg->addr         = config->tuner_address;
+        tuner_cfg->refclk       = config->tuner_refclk;
+        tuner_cfg->i2cWriteOnce = config->tuner_i2cWriteOnce;
 
         dprintk(50, "tuner_refclk %d\n", config->tuner_refclk);
 

@@ -54,6 +54,7 @@ struct stv090x_private_data_s stv090x_tuner_priv = {
     .adc2_range           = STV090x_ADC_2Vpp,
     .diseqc_envelope_mode = false,
     .tuner_refclk         = 16000000,
+    .tuner_i2cWriteOnce   = 1,
 };
 
 struct platform_frontend_config_s stv090x_frontend = {
@@ -69,7 +70,7 @@ struct tunersocket_s ufs912_socket = {
         [0] = {
             .name               = "socket-1",
             .tuner_enable       = {2, 4, 1},
-	    .lnb                = {0, 0x0a, 0x08, 0xd0, 0xd4, 0xdc},
+	    .lnb                = {1, 0x0a, 0x08, 0xd0, 0xd4, 0xdc},
             .i2c_bus            = 3,
         },
     },

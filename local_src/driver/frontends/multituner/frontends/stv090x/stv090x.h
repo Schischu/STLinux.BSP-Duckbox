@@ -58,6 +58,7 @@ struct stv090x_config {
 
     u8                       tuner_address;
     u32                      tuner_refclk;
+    u32                      tuner_i2cWriteOnce;
   
     struct stpio_pin*        tuner_enable_pin;
     u32                      tuner_active_lh;

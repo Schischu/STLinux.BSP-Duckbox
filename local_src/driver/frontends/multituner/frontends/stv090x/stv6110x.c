@@ -117,9 +117,10 @@ static int stv6110x_write_reg(struct stv6110x_state *stv6110x, u8 reg, u8 data)
 static int stv6110x_write_init(struct stv6110x_state *stv6110x)
 {
 	int ret;
+	u8 buf[9];
 	const struct stv6110x_config *config = stv6110x->config;
 
-    stv6110x->stv6110x_regs[0] = 0x07;
+	stv6110x->stv6110x_regs[0] = 0x07;
 	stv6110x->stv6110x_regs[1] = 0x11;
 	stv6110x->stv6110x_regs[2] = 0xdc;
 	stv6110x->stv6110x_regs[3] = 0x85;
@@ -128,51 +129,40 @@ static int stv6110x_write_init(struct stv6110x_state *stv6110x)
 	stv6110x->stv6110x_regs[6] = 0xe6;
 	stv6110x->stv6110x_regs[7] = 0x1e;
 
+	if (stv6110x->fe->ops.i2c_gate_ctrl)
+		stv6110x->fe->ops.i2c_gate_ctrl(stv6110x->fe, 1);
+
+	dprintk(10, "stv6110x_write_regN 0x%x, i2c-%d >\n", config->addr, stv6110x->i2c->nr);
+
 /* on cubes this does not work. maybe we should make this configurable to */ 
-#ifdef write_at_once
-    {
-	    static u8 init_data[] = {0x00, 0x07, 0x11, 0xdc, 0x85, 0x17, 0x01, 0xe6, 0x1e};
-	    struct i2c_msg msg = { .addr = config->addr, .flags = 0, . buf = init_data, .len = 9};
+	if (stv6110x->config->i2cWriteOnce) {
+		buf[0] = 0x00;
+		memcpy(buf + 1, stv6110x->stv6110x_regs, 8);
+		struct i2c_msg msg = { .addr = config->addr, .flags = 0, .buf = buf, .len = 9};
 
-	    dprintk(10, "stv6110x_write_regN >\n");
+		ret = i2c_transfer(stv6110x->i2c, &msg, 1);
+		if (ret != 1) {
+			printk("stv6110x_write_regN I/O Error %d, 0x%x, i2c-%d\n", ret, config->addr, stv6110x->i2c->nr);
+			return -EREMOTEIO;
+		}
+	}
+	else {
+		int i;
+		for (i = 0; i < 8; i++)
+		{
+			u8 buf[] = { i, stv6110x->stv6110x_regs[i] };
+			struct i2c_msg msg = { .addr = config->addr, .flags = 0, . buf = buf, .len = 2 };
 
-	    if (stv6110x->fe->ops.i2c_gate_ctrl)
-		    stv6110x->fe->ops.i2c_gate_ctrl(stv6110x->fe, 1);
+			ret = i2c_transfer(stv6110x->i2c, &msg, 1);
+			if (ret != 1) {
+				printk("stv6110x_write_regN I/O Error %d, 0x%x, i2c-%d\n", ret, config->addr, stv6110x->i2c->nr);
+				return -EREMOTEIO;
+			}
+		}
+	}
 
-	    ret = i2c_transfer(stv6110x->i2c, &msg, 1);
-	    if (ret != 1) {
-		    printk("stv6110x_write_regN I/O Error %d, 0x%x, i2c-%d\n", ret, config->addr, stv6110x->i2c->nr);
-		    return -EREMOTEIO;
-	    }
-
-	    if (stv6110x->fe->ops.i2c_gate_ctrl)
-		    stv6110x->fe->ops.i2c_gate_ctrl(stv6110x->fe, 0);
-     }
-#else
-     {
-        int i;
-
-	    dprintk(10, "stv6110x_write_regN 0x%x, i2c-%d >\n", config->addr, stv6110x->i2c->nr);
-
-	    if (stv6110x->fe->ops.i2c_gate_ctrl)
-		    stv6110x->fe->ops.i2c_gate_ctrl(stv6110x->fe, 1);
-
-        for (i = 0; i < 8; i++)
-        {
-	       u8 buf[] = { i, stv6110x->stv6110x_regs[i] };
-	       struct i2c_msg msg = { .addr = config->addr, .flags = 0, . buf = buf, .len = 2 };
-
-	       ret = i2c_transfer(stv6110x->i2c, &msg, 1);
-	       if (ret != 1) {
-		       printk("stv6110x_write_reg I/O Error %d, 0x%x\n", ret, config->addr);
-		       return -EREMOTEIO;
-	       }
-        }
-
-	    if (stv6110x->fe->ops.i2c_gate_ctrl)
-		    stv6110x->fe->ops.i2c_gate_ctrl(stv6110x->fe, 0);
-    }
-#endif
+	if (stv6110x->fe->ops.i2c_gate_ctrl)
+		stv6110x->fe->ops.i2c_gate_ctrl(stv6110x->fe, 0);
 
 	dprintk(10, "stv6110x_write_regN <\n");
 	return 0;

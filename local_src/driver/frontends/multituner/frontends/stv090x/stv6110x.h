@@ -28,6 +28,7 @@ struct stv6110x_config {
 	u32	refclk;
     
     u32 shouldSleep;
+    u32 i2cWriteOnce;
 };
 
 enum tuner_mode {

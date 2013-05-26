@@ -245,6 +245,7 @@ struct stv090x_state {
 	s32				            tuner_bw;
 
 	u32				            tuner_refclk;
+	u32				            tuner_i2cWriteOnce;
 
 	s32				            search_range;
 

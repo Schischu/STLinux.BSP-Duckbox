@@ -121,6 +121,7 @@ static void stv090x_register_frontend(struct dvb_adapter *dvb_adap, struct socke
     cfg->adc2_range            = priv->adc2_range;
     cfg->diseqc_envelope_mode  = priv->diseqc_envelope_mode;
     cfg->tuner_refclk          = priv->tuner_refclk;
+    cfg->tuner_i2cWriteOnce    = priv->tuner_i2cWriteOnce;
 
     memcpy(cfg->lnb, socket->lnb, sizeof(cfg->lnb));
 

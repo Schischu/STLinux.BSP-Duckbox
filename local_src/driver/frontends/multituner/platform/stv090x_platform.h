@@ -91,6 +91,7 @@ struct stv090x_private_data_s {
      * if we have separated demod's and tuner
      */
     u32                      tuner_refclk;
+    u32                      tuner_i2cWriteOnce;
 };
 
 #endif

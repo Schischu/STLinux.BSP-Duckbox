@@ -62,6 +62,7 @@ struct stv090x_private_data_s stv090x_tuner_priv = {
     .adc2_range           = -1,
     .diseqc_envelope_mode = false,
     .tuner_refclk         = 16000000,
+    .tuner_i2cWriteOnce   = 0,
 };
 
 struct platform_frontend_config_s cx24116_frontend = {
