@@ -5,6 +5,7 @@ linux-2.6.32.46_stm24_sh4_0209.patch
 
 # GCC4.7 fix
 linux-sh4-makefile_stm24.patch
+linux-sh4-permit_gcc_command_line_sections_stm24_0209.patch
 
 # Duckbox Common Patches
 linux-sh4-linuxdvb_stm24_0209.patch
