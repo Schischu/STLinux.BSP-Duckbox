@@ -1,0 +1,7 @@
+## SECTION=multimedia_tools
+
+config AIO_GRAB
+	tristate "aio-grab"
+	select ZLIB
+	select LIBPNG
+	select LIBJPEG
