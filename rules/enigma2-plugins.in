@@ -1,0 +1,351 @@
+## SECTION=multimedia_tools
+
+config ENIGMA2_PLUGINS
+	bool
+	default y
+	select ENIGMA2_PLI
+
+#for p in `ls .`; do echo -e "config ENIGMA2_EXTENSION_${p^^}\n\ttristate \"enigma2-plugin-extensions-${p,,}\"\n\tdepends on ENIGMA2_PLUGINS\n"; done
+
+config ENIGMA2_EXTENSION_AIHDCONTROLER
+	tristate "enigma2-plugin-extensions-aihdcontroler"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_ANTISCROLLBAR
+	tristate "enigma2-plugin-extensions-antiscrollbar"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_AUDIOSYNC
+	tristate "enigma2-plugin-extensions-audiosync"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_AUTOTIMER
+	tristate "enigma2-plugin-extensions-autotimer"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_BABELZAPPER
+	tristate "enigma2-plugin-extensions-babelzapper"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_BITRATEVIEWER
+	tristate "enigma2-plugin-extensions-bitrateviewer"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_BONJOUR
+	tristate "enigma2-plugin-extensions-bonjour"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_CDINFO
+	tristate "enigma2-plugin-extensions-cdinfo"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_DREAMIRC
+	tristate "enigma2-plugin-extensions-dreamirc"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_DREAMMEDIATHEK
+	tristate "enigma2-plugin-extensions-dreammediathek"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_DYNDNS
+	tristate "enigma2-plugin-extensions-dyndns"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_EASYINFO
+	tristate "enigma2-plugin-extensions-easyinfo"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_EASYMEDIA
+	tristate "enigma2-plugin-extensions-easymedia"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_ECASA
+	tristate "enigma2-plugin-extensions-ecasa"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_EIBOX
+	tristate "enigma2-plugin-extensions-eibox"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_ELEKTRO
+	tristate "enigma2-plugin-extensions-elektro"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_EMAILCLIENT
+	tristate "enigma2-plugin-extensions-emailclient"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_EPGREFRESH
+	tristate "enigma2-plugin-extensions-epgrefresh"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_EPGSEARCH
+	tristate "enigma2-plugin-extensions-epgsearch"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_FANCONTROL2
+	tristate "enigma2-plugin-extensions-fancontrol2"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_FILEBROWSER
+	tristate "enigma2-plugin-extensions-filebrowser"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_FRITZCALL
+	tristate "enigma2-plugin-extensions-fritzcall"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_FSTABEDITOR
+	tristate "enigma2-plugin-extensions-fstabeditor"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_FTPBROWSER
+	tristate "enigma2-plugin-extensions-ftpbrowser"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_GOOGLEMAPS
+	tristate "enigma2-plugin-extensions-googlemaps"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_GROWLEE
+	tristate "enigma2-plugin-extensions-growlee"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_HTTPPROXY
+	tristate "enigma2-plugin-extensions-httpproxy"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_IMDB
+	tristate "enigma2-plugin-extensions-imdb"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_KIDDYTIMER
+	tristate "enigma2-plugin-extensions-kiddytimer"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_LASTFM
+	tristate "enigma2-plugin-extensions-lastfm"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_LETTERBOX
+	tristate "enigma2-plugin-extensions-letterbox"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_LOGOMANAGER
+	tristate "enigma2-plugin-extensions-logomanager"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_MEDIADOWNLOADER
+	tristate "enigma2-plugin-extensions-mediadownloader"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_MERLINEPG
+	tristate "enigma2-plugin-extensions-merlinepg"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_MERLINEPGCENTER
+	tristate "enigma2-plugin-extensions-merlinepgcenter"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_MERLINMUSICPLAYER
+	tristate "enigma2-plugin-extensions-merlinmusicplayer"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_METEOITALIA
+	tristate "enigma2-plugin-extensions-meteoitalia"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_MOSAIC
+	tristate "enigma2-plugin-extensions-mosaic"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_MOVIECUT
+	tristate "enigma2-plugin-extensions-moviecut"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_MOVIERETITLE
+	tristate "enigma2-plugin-extensions-movieretitle"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_MOVIESEARCH
+	tristate "enigma2-plugin-extensions-moviesearch"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_MOVIETAGGER
+	tristate "enigma2-plugin-extensions-movietagger"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_MULTIRC
+	tristate "enigma2-plugin-extensions-multirc"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_NCIDCLIENT
+	tristate "enigma2-plugin-extensions-ncidclient"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_NETCASTER
+	tristate "enigma2-plugin-extensions-netcaster"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_OFDB
+	tristate "enigma2-plugin-extensions-ofdb"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_ORFAT
+	tristate "enigma2-plugin-extensions-orfat"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_ORFTELETEXT
+	tristate "enigma2-plugin-extensions-orfteletext"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_PARTNERBOX
+	tristate "enigma2-plugin-extensions-partnerbox"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_PERMANENTCLOCK
+	tristate "enigma2-plugin-extensions-permanentclock"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_PODCAST
+	tristate "enigma2-plugin-extensions-podcast"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_PORNCENTER
+	tristate "enigma2-plugin-extensions-porncenter"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_QUICKBUTTON
+	tristate "enigma2-plugin-extensions-quickbutton"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_RECONSTRUCTAPSC
+	tristate "enigma2-plugin-extensions-reconstructapsc"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_REMOTETIMER
+	tristate "enigma2-plugin-extensions-remotetimer"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_RSDOWNLOADER
+	tristate "enigma2-plugin-extensions-rsdownloader"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_SEEKBAR
+	tristate "enigma2-plugin-extensions-seekbar"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_SHOUTCAST
+	tristate "enigma2-plugin-extensions-shoutcast"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_SHOWCLOCK
+	tristate "enigma2-plugin-extensions-showclock"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_SIMPLERSS
+	tristate "enigma2-plugin-extensions-simplerss"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_STARTUPTOSTANDBY
+	tristate "enigma2-plugin-extensions-startuptostandby"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_SVDRP
+	tristate "enigma2-plugin-extensions-svdrp"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_TAGEDITOR
+	tristate "enigma2-plugin-extensions-tageditor"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_TRAFFICINFO
+	tristate "enigma2-plugin-extensions-trafficinfo"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_TVCHARTS
+	tristate "enigma2-plugin-extensions-tvcharts"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_UNWETTERINFO
+	tristate "enigma2-plugin-extensions-unwetterinfo"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_VALIXDCONTROL
+	tristate "enigma2-plugin-extensions-valixdcontrol"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_VIRTUALZAP
+	tristate "enigma2-plugin-extensions-virtualzap"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_VLCPLAYER
+	tristate "enigma2-plugin-extensions-vlcplayer"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_WEATHERPLUGIN
+	tristate "enigma2-plugin-extensions-weatherplugin"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_WEBBOUQUETEDITOR
+	tristate "enigma2-plugin-extensions-webbouqueteditor"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_WEBCAMVIEWER
+	tristate "enigma2-plugin-extensions-webcamviewer"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_WEBINTERFACE
+	tristate "enigma2-plugin-extensions-webinterface"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_WERBEZAPPER
+	tristate "enigma2-plugin-extensions-werbezapper"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_YOUTUBEPLAYER
+	tristate "enigma2-plugin-extensions-youtubeplayer"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_ZAPHISTORYBROWSER
+	tristate "enigma2-plugin-extensions-zaphistorybrowser"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_ZAPSTATISTIC
+	tristate "enigma2-plugin-extensions-zapstatistic"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_EXTENSION_ZDFMEDIATHEK
+	tristate "enigma2-plugin-extensions-zdfmediathek"
+	depends on ENIGMA2_PLUGINS
+
+
+#for p in `ls .`; do echo -e "config ENIGMA2_SYSTEMPLUGIN_${p^^}\n\ttristate \"enigma2-plugin-systemplugins-${p,,}\"\n\tdepends on ENIGMA2_PLUGINS\n"; done
+
+config ENIGMA2_SYSTEMPLUGIN_AUTOMATICCLEANUP
+	tristate "enigma2-plugin-systemplugins-automaticcleanup"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_SYSTEMPLUGIN_AUTOMATICVOLUMEADJUSTMENT
+	tristate "enigma2-plugin-systemplugins-automaticvolumeadjustment"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_SYSTEMPLUGIN_AUTORESOLUTION
+	tristate "enigma2-plugin-systemplugins-autoresolution"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_SYSTEMPLUGIN_MPHELP
+	tristate "enigma2-plugin-systemplugins-mphelp"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_SYSTEMPLUGIN_NETWORKBROWSER
+	tristate "enigma2-plugin-systemplugins-networkbrowser"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_SYSTEMPLUGIN_SETPASSWD
+	tristate "enigma2-plugin-systemplugins-setpasswd"
+	depends on ENIGMA2_PLUGINS
+
+config ENIGMA2_SYSTEMPLUGIN_VPS
+	tristate "enigma2-plugin-systemplugins-vps"
+	depends on ENIGMA2_PLUGINS

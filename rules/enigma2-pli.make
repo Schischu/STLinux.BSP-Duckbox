@@ -93,6 +93,13 @@ ENIGMA2_PLI_AUTOCONF := \
 		PKG_CONFIG=$(PTXDIST_SYSROOT_HOST)/bin/pkg-config \
 		PKG_CONFIG_PATH=$(SYSROOT)/usr/lib/pkgconfig
 
+$(STATEDIR)/enigma2-pli.install.post:
+	@$(call targetinfo)
+	#@$(call world/install.post, ENIGMA2_PLI))
+	sed -i "s/\/lib/\/local\/lib/g" $(SYSROOT)/usr/lib/pkgconfig/enigma2.pc
+	sed -i "s/\/include/\/local\/include/g" $(SYSROOT)/usr/lib/pkgconfig/enigma2.pc
+	@$(call touch)
+
 # ----------------------------------------------------------------------------
 # Target-Install
 # ----------------------------------------------------------------------------

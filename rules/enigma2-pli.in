@@ -1,4 +1,4 @@
-## SECTION=multimedia_libs
+## SECTION=multimedia_tools
 
 config ENIGMA2_PLI
 	tristate "enigma2-pli"
