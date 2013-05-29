@@ -31,14 +31,13 @@ config ENIGMA2_PLI
 	select GST_PLUGINS_DVBMEDIASINK
 	select LIBDVBSIPP
 	select LIBDREAMDVD
-	help
-	  FIXME
 
+config ENIGMA2_PLI_DEV
+	tristate "enigma2-pli-dev"
+	default n
+	depends on ENIGMA2_PLI
+	
 if ENIGMA2_PLI
-config ENIGMA2_PLI_INSTALL_PY
-	bool "Install .py files"
-	default false
-
 choice
 	prompt "enigma2-pli version   "
 	default ENIGMA2_PLI_VERSION_201205181526
@@ -55,5 +54,5 @@ choice
 	config ENIGMA2_PLI_VERSION_201303022136
 		bool "Sat,  2 Mar 2013 21:36"
 endchoice
-
 endif
+

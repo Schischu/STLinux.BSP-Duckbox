@@ -14,6 +14,7 @@
 # We provide this package
 #
 PACKAGES-$(PTXCONF_ENIGMA2_PLI) += enigma2-pli
+PACKAGES-$(PTXCONF_ENIGMA2_PLI_DEV) += enigma2-pli-dev
 
 #
 # Paths and names
@@ -37,6 +38,9 @@ ENIGMA2_PLI_URLOLD := git://openpli.git.sourceforge.net/gitroot/openpli/enigma2
 ENIGMA2_PLI_SOURCE_GIT	:= $(SRCDIR)/enigma2-pli.git
 ENIGMA2_PLI_DIR	:= $(BUILDDIR)/$(ENIGMA2_PLI)
 ENIGMA2_PLI_LICENSE	:= enigma2-pli
+
+ENIGMA2_PLI_DEV_VERSION	:= $(ENIGMA2_PLI_VERSION)
+ENIGMA2_PLI_DEV_PKGDIR	:= $(ENIGMA2_PLI_PKGDIR)
 
 $(STATEDIR)/enigma2-pli.get:
 	@$(call targetinfo)
@@ -106,34 +110,25 @@ $(STATEDIR)/enigma2-pli.install.post:
 
 $(STATEDIR)/enigma2-pli.targetinstall:
 	@$(call targetinfo)
-
-	@$(call install_init, enigma2-pli)
-	@$(call install_fixup, enigma2-pli,PRIORITY,optional)
-	@$(call install_fixup, enigma2-pli,SECTION,base)
-	@$(call install_fixup, enigma2-pli,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
-	@$(call install_fixup, enigma2-pli,DESCRIPTION,missing)
-
+	
+	@$(call install_init,  enigma2-pli)
+	@$(call install_fixup, enigma2-pli, PRIORITY,    optional)
+	@$(call install_fixup, enigma2-pli, SECTION,     base)
+	@$(call install_fixup, enigma2-pli, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup, enigma2-pli, DESCRIPTION, missing)
+	
 	@$(call install_copy, enigma2-pli, 0, 0, 755, -, /usr/local/bin/enigma2)
-
-ifdef PTXCONF_ENIGMA2_PLI_INSTALL_PY
-	@cd $(ENIGMA2_PLI_PKGDIR) && \
-		find ./usr/lib/enigma2 -name "*.py" | \
-		while read file; do \
-		$(call install_copy, enigma2-pli, 0, 0, 644, -, $${file##.}); \
-	done
-endif
-
-	$(call install_copy, enigma2-pli, 0, 0, 644, -, /usr/lib/enigma2/python/mytest.py);
-
+	@$(call install_copy, enigma2-pli, 0, 0, 644, -, /usr/lib/enigma2/python/mytest.py);
+	
 	@cd $(ENIGMA2_PLI_PKGDIR) && \
 		find ./usr/lib/enigma2 \
 		! -type d -a ! \( -name "*.py" -o -name "*.pyc" \) | \
 		while read file; do \
 		$(call install_copy, enigma2-pli, 0, 0, 644, -, $${file##.}); \
 	done
-
+	
 	@$(call install_lib, enigma2-pli, 0, 0, 0644, libopen)
-
+	
 	#@$(call install_tree, enigma2-pli, 0, 0, -, /usr/local/share/)
 	@cd $(ENIGMA2_PLI_PKGDIR) && \
 		find ./usr/local/share \
@@ -141,12 +136,32 @@ endif
 		while read file; do \
 		$(call install_copy, enigma2-pli, 0, 0, 644, -, $${file##.}); \
 	done
-
+	
 	@$(call install_alternative_tree, enigma2-pli, 0, 0, /etc/enigma2)
 	@$(call install_alternative_tree, enigma2-pli, 0, 0, /etc/tuxbox)
-
+	
 	@$(call install_finish, enigma2-pli)
+	
+	@$(call touch)
 
+
+$(STATEDIR)/enigma2-pli-dev.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init,  enigma2-pli-dev)
+	@$(call install_fixup, enigma2-pli-dev, PRIORITY,    optional)
+	@$(call install_fixup, enigma2-pli-dev, SECTION,     base)
+	@$(call install_fixup, enigma2-pli-dev, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup, enigma2-pli-dev, DESCRIPTION, missing)
+	
+	@cd $(ENIGMA2_PLI_DEV_PKGDIR) && \
+		find ./usr/lib/enigma2 -name "*.py" -a ! -name "mytest.py" | \
+		while read file; do \
+		$(call install_copy, enigma2-pli-dev, 0, 0, 644, -, $${file##.}); \
+	done
+	
+	@$(call install_finish, enigma2-pli-dev)
+	
 	@$(call touch)
 
 # ----------------------------------------------------------------------------
