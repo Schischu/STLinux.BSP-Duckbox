@@ -1,5 +1,5 @@
---- enigma2-plugin-networkbrowser-HEAD/m4/ax_python_devel.m4.org	2013-05-26 19:46:12.000000000 
-+++ enigma2-plugin-networkbrowser-HEAD/m4/ax_python_devel.m4	2013-05-26 15:26:56.000000000 
+--- enigma2-plugins-HEAD/m4/ax_python_devel.m4.org	2013-05-26 19:46:12.000000000 
++++ enigma2-plugins-HEAD/m4/ax_python_devel.m4	2013-05-26 15:26:56.000000000 
 @@ -151,13 +151,13 @@
  	#
  	AC_MSG_CHECKING([for Python include path])
