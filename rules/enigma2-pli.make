@@ -99,7 +99,7 @@ ENIGMA2_PLI_AUTOCONF := \
 
 $(STATEDIR)/enigma2-pli.install.post:
 	@$(call targetinfo)
-	#@$(call world/install.post, ENIGMA2_PLI))
+	@$(call world/install.post, ENIGMA2_PLI)
 	sed -i "s/\/lib/\/local\/lib/g" $(SYSROOT)/usr/lib/pkgconfig/enigma2.pc
 	sed -i "s/\/include/\/local\/include/g" $(SYSROOT)/usr/lib/pkgconfig/enigma2.pc
 	@$(call touch)
