@@ -78,7 +78,7 @@ $(STATEDIR)/driver-bpamem.targetinstall:
 	@$(call install_fixup, driver-bpamem, PRIORITY,optional)
 	@$(call install_fixup, driver-bpamem, SECTION,base)
 	@$(call install_fixup, driver-bpamem, AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
-	@$(call install_fixup, driver-bpamem, DESCRIBPAMEMON,missing)
+	@$(call install_fixup, driver-bpamem, DESCRIPTION,missing)
 
 	@cd $(DRIVER_BPAMEM_PKGDIR) && \
 		find lib -type f -name "*.ko" | while read file; do \

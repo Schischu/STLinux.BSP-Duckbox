@@ -85,7 +85,7 @@ $(STATEDIR)/driver-frontend-spark.targetinstall:
 	@$(call install_fixup, driver-frontend-spark, PRIORITY,optional)
 	@$(call install_fixup, driver-frontend-spark, SECTION,base)
 	@$(call install_fixup, driver-frontend-spark, AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
-	@$(call install_fixup, driver-frontend-spark, DESCRIFRONTEND_SPARKON,missing)
+	@$(call install_fixup, driver-frontend-spark, DESCRIPTION,missing)
 
 	@cd $(DRIVER_FRONTEND_SPARK_PKGDIR) && \
 		find lib -type f -name "*.ko" | while read file; do \

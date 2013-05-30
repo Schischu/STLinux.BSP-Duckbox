@@ -79,7 +79,7 @@ $(STATEDIR)/driver-simubutton.targetinstall:
 	@$(call install_fixup, driver-simubutton, PRIORITY,optional)
 	@$(call install_fixup, driver-simubutton, SECTION,base)
 	@$(call install_fixup, driver-simubutton, AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
-	@$(call install_fixup, driver-simubutton, DESCRISIMUBUTTONON,missing)
+	@$(call install_fixup, driver-simubutton, DESCRIPTION,missing)
 
 	@cd $(DRIVER_SIMUBUTTON_PKGDIR) && \
 		find lib -type f -name "*.ko" | while read file; do \

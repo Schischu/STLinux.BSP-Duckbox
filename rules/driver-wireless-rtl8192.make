@@ -77,7 +77,7 @@ $(STATEDIR)/driver-wireless-rtl8192.targetinstall:
 	@$(call install_fixup, driver-wireless-rtl8192, PRIORITY,optional)
 	@$(call install_fixup, driver-wireless-rtl8192, SECTION,base)
 	@$(call install_fixup, driver-wireless-rtl8192, AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
-	@$(call install_fixup, driver-wireless-rtl8192, DESCRIWIRELESSON,missing)
+	@$(call install_fixup, driver-wireless-rtl8192, DESCRIPTION,missing)
 
 	@cd $(DRIVER_WIRELESS_RTL8192_PKGDIR) && \
 		find lib -type f -name "*.ko" | while read file; do \
