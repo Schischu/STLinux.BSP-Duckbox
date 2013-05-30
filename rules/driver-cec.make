@@ -78,7 +78,7 @@ $(STATEDIR)/driver-cec.targetinstall:
 	@$(call install_fixup, driver-cec, PRIORITY,optional)
 	@$(call install_fixup, driver-cec, SECTION,base)
 	@$(call install_fixup, driver-cec, AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
-	@$(call install_fixup, driver-cec, DESCRICECON,missing)
+	@$(call install_fixup, driver-cec, DESCRIPTION,missing)
 
 	@cd $(DRIVER_CEC_PKGDIR) && \
 		find lib -type f -name "*.ko" | while read file; do \

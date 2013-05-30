@@ -80,7 +80,7 @@ $(STATEDIR)/driver-frontcontroller-aotom.targetinstall:
 	@$(call install_fixup, driver-frontcontroller-aotom, PRIORITY,optional)
 	@$(call install_fixup, driver-frontcontroller-aotom, SECTION,base)
 	@$(call install_fixup, driver-frontcontroller-aotom, AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
-	@$(call install_fixup, driver-frontcontroller-aotom, DESCRIFRONTCONTROLLER_AOTOMON,missing)
+	@$(call install_fixup, driver-frontcontroller-aotom, DESCRIPTION,missing)
 
 	@cd $(DRIVER_FRONTCONTROLLER_AOTOM_PKGDIR) && \
 		find lib -type f -name "*.ko" | while read file; do \

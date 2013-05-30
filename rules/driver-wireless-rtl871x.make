@@ -77,7 +77,7 @@ $(STATEDIR)/driver-wireless-rtl871x.targetinstall:
 	@$(call install_fixup, driver-wireless-rtl871x, PRIORITY,optional)
 	@$(call install_fixup, driver-wireless-rtl871x, SECTION,base)
 	@$(call install_fixup, driver-wireless-rtl871x, AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
-	@$(call install_fixup, driver-wireless-rtl871x, DESCRIWIRELESSON,missing)
+	@$(call install_fixup, driver-wireless-rtl871x, DESCRIPTION,missing)
 
 	@cd $(DRIVER_WIRELESS_RTL871X_PKGDIR) && \
 		find lib -type f -name "*.ko" | while read file; do \

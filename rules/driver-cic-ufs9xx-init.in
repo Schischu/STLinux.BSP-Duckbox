@@ -9,6 +9,6 @@ if DRIVER_CIC_UFS9XX_INIT
 config DRIVER_CIC_UFS9XX_BBINIT_LINK
 	string
 	prompt "cic-ufs9xx"
-	default "S47ci-cufs9xx"
+	default "S47cic-ufs9xx"
 
 endif

@@ -79,7 +79,7 @@ $(STATEDIR)/driver-cpufrequ.targetinstall:
 	@$(call install_fixup, driver-cpufrequ, PRIORITY,optional)
 	@$(call install_fixup, driver-cpufrequ, SECTION,base)
 	@$(call install_fixup, driver-cpufrequ, AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
-	@$(call install_fixup, driver-cpufrequ, DESCRICPUFREQUON,missing)
+	@$(call install_fixup, driver-cpufrequ, DESCRIPTION,missing)
 
 	@cd $(DRIVER_CPUFREQU_PKGDIR) && \
 		find lib -type f -name "*.ko" | while read file; do \

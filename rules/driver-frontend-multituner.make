@@ -112,7 +112,7 @@ $(STATEDIR)/driver-frontend-multituner.targetinstall:
 	@$(call install_fixup, driver-frontend-multituner, PRIORITY,optional)
 	@$(call install_fixup, driver-frontend-multituner, SECTION,base)
 	@$(call install_fixup, driver-frontend-multituner, AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
-	@$(call install_fixup, driver-frontend-multituner, DESCRIFRONTEND_MULTITUNERON,missing)
+	@$(call install_fixup, driver-frontend-multituner, DESCRIPTION,missing)
 
 	@cd $(DRIVER_FRONTEND_MULTITUNER_PKGDIR) && \
 		find lib -type f -name "*.ko" | while read file; do \
