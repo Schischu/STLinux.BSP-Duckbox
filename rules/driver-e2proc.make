@@ -79,7 +79,7 @@ $(STATEDIR)/driver-e2proc.targetinstall:
 	@$(call install_fixup, driver-e2proc, PRIORITY,optional)
 	@$(call install_fixup, driver-e2proc, SECTION,base)
 	@$(call install_fixup, driver-e2proc, AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
-	@$(call install_fixup, driver-e2proc, DESCRIE2PROCON,missing)
+	@$(call install_fixup, driver-e2proc, DESCRIPTION,missing)
 
 	@cd $(DRIVER_E2PROC_PKGDIR) && \
 		find lib -type f -name "*.ko" | while read file; do \

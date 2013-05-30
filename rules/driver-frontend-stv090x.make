@@ -109,7 +109,7 @@ $(STATEDIR)/driver-frontend-stv090x.targetinstall:
 	@$(call install_fixup, driver-frontend-stv090x, PRIORITY,optional)
 	@$(call install_fixup, driver-frontend-stv090x, SECTION,base)
 	@$(call install_fixup, driver-frontend-stv090x, AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
-	@$(call install_fixup, driver-frontend-stv090x, DESCRIFRONTEND_STV090XON,missing)
+	@$(call install_fixup, driver-frontend-stv090x, DESCRIPTION,missing)
 
 	@cd $(DRIVER_FRONTEND_STV090X_PKGDIR) && \
 		find lib -type f -name "*.ko" | while read file; do \
