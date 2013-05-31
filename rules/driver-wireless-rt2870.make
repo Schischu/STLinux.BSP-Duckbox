@@ -77,7 +77,7 @@ $(STATEDIR)/driver-wireless-rt2870.targetinstall:
 	@$(call install_fixup, driver-wireless-rt2870, PRIORITY,optional)
 	@$(call install_fixup, driver-wireless-rt2870, SECTION,base)
 	@$(call install_fixup, driver-wireless-rt2870, AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
-	@$(call install_fixup, driver-wireless-rt2870, DESCRIWIRELESSON,missing)
+	@$(call install_fixup, driver-wireless-rt2870, DESCRIPTION,missing)
 
 	@cd $(DRIVER_WIRELESS_RT2870_PKGDIR) && \
 		find lib -type f -name "*.ko" | while read file; do \

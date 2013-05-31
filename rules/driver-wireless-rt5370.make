@@ -77,7 +77,7 @@ $(STATEDIR)/driver-wireless-rt5370.targetinstall:
 	@$(call install_fixup, driver-wireless-rt5370, PRIORITY,optional)
 	@$(call install_fixup, driver-wireless-rt5370, SECTION,base)
 	@$(call install_fixup, driver-wireless-rt5370, AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
-	@$(call install_fixup, driver-wireless-rt5370, DESCRIWIRELESSON,missing)
+	@$(call install_fixup, driver-wireless-rt5370, DESCRIPTION,missing)
 
 	@cd $(DRIVER_WIRELESS_RT5370_PKGDIR) && \
 		find lib -type f -name "*.ko" | while read file; do \

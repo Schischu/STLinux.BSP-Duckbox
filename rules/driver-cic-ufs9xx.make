@@ -90,7 +90,7 @@ $(STATEDIR)/driver-cic-ufs9xx.targetinstall:
 	@$(call install_fixup, driver-cic-ufs9xx, PRIORITY,optional)
 	@$(call install_fixup, driver-cic-ufs9xx, SECTION,base)
 	@$(call install_fixup, driver-cic-ufs9xx, AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
-	@$(call install_fixup, driver-cic-ufs9xx, DESCRICIC_UFS9XXON,missing)
+	@$(call install_fixup, driver-cic-ufs9xx, DESCRIPTION,missing)
 
 	@cd $(DRIVER_CIC_UFS9XX_PKGDIR) && \
 		find lib -type f -name "*.ko" | while read file; do \

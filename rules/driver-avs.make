@@ -78,7 +78,7 @@ $(STATEDIR)/driver-avs.targetinstall:
 	@$(call install_fixup, driver-avs, PRIORITY,optional)
 	@$(call install_fixup, driver-avs, SECTION,base)
 	@$(call install_fixup, driver-avs, AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
-	@$(call install_fixup, driver-avs, DESCRIAVSON,missing)
+	@$(call install_fixup, driver-avs, DESCRIPTION,missing)
 	
 	@cd $(DRIVER_AVS_PKGDIR) && \
 		find lib -type f -name "*.ko" | while read file; do \

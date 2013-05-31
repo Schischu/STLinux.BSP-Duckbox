@@ -90,7 +90,7 @@ $(STATEDIR)/driver-frontcontroller-micom.targetinstall:
 	@$(call install_fixup, driver-frontcontroller-micom, PRIORITY,optional)
 	@$(call install_fixup, driver-frontcontroller-micom, SECTION,base)
 	@$(call install_fixup, driver-frontcontroller-micom, AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
-	@$(call install_fixup, driver-frontcontroller-micom, DESCRIFRONTCONTROLLER_MICOMON,missing)
+	@$(call install_fixup, driver-frontcontroller-micom, DESCRIPTION,missing)
 
 	@cd $(DRIVER_FRONTCONTROLLER_MICOM_PKGDIR) && \
 		find lib -type f -name "*.ko" | while read file; do \
