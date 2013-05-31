@@ -1,0 +1,7 @@
+## SECTION=multimedia_tools
+
+config BPA2DUMP
+	tristate "bpa2dump"
+	default m
+#	select DRIVER_BPAMEM
+
