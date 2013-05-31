@@ -1,0 +1,31 @@
+## SECTION=system_libraries
+
+menuconfig LINUX_FIRMWARE
+	tristate
+	prompt "linux-firmware                "
+	select WPA_SUPPLICANT_DRIVER_WEXT	if WPA_SUPPLICANT && LINUX_FIRMWARE_RALINK
+	help
+	  This package provides firmware used by Linux kernel drivers.
+	  Comes from kernel.org, linux-firmware.git
+
+if LINUX_FIRMWARE
+
+	config LINUX_FIRMWARE_RALINK
+	prompt "ralink firmware files         "
+	bool
+	default n
+	help
+	  Install linux firmware files for Ralink devices RT2XXX, RT3XXX ...
+
+	config LINUX_FIRMWARE_DVB_USB_DIB0700
+	prompt "dvb-usb-dib0700-1.20.fw       "
+	bool
+	default n
+	help
+	  Install linux firmware file for dib700 devices like PCTV 73e,
+	  PCTV NanoStick 73e SE (solo) ...
+
+	comment "FIXME: add more firmware desc."
+
+endif
+
