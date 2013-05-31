@@ -1,6 +1,6 @@
 --- aio-grab-47983a78821c0fdbef3aab36113d5c6fc34bb11b/main.c.org	2013-05-26 13:32:36.000000000 +0200
-+++ aio-grab-47983a78821c0fdbef3aab36113d5c6fc34bb11b/main.c	2013-05-31 11:26:31.199745006 +0200
-@@ -37,9 +37,93 @@
++++ aio-grab-47983a78821c0fdbef3aab36113d5c6fc34bb11b/main.c	2013-05-31 15:48:54.781599528 +0200
+@@ -37,9 +37,139 @@
  #include <sys/mman.h>
  #include <linux/types.h>
  #include <linux/fb.h>
@@ -22,79 +22,125 @@
 +	OUT4(x + 0x04); \
 +	OUT4(x + 0x00);
 +
-+#define OUT16A(x) \
++#define OUT_LU_16A(x) \
 +	OUT8(x); \
 +	OUT8(x + 0x40);
 +
-+#define OUT16A_C(x) \
++#define OUT_CH_16A(x) \
 +	OUT4(x); \
 +	OUT4(x + 0x20); \
 +	OUT4(x + 0x80); \
 +	OUT4(x + 0xA0);
 +
++#define OUT_CH_8A(x) \
++	OUT4(x); \
++	OUT4(x + 0x20);
++
++//pppppppppppppppp
 +//x: macroblock address
 +//l: line 0-15
-+#define OUT16(x,l) \
-+	OUT16A(x + (l/4) * 0x10 + (l%2) * 0x80 + ((l/2)%2?0x00:0x08));
++#define OUT_LU_16(x,l) \
++	OUT_LU_16A(x + (l/4) * 0x10 + (l%2) * 0x80 + ((l/2)%2?0x00:0x08));
 +
++//pppppppppppppppp
 +//x: macroblock address
 +//l: line 0-7
 +//b: 0=cr 1=cb
-+#define OUT16_C(x,l,b) \
-+	OUT16A_C(x + (l/4) * 0x10 + (l%2) * 0x40 + ((l/2)%2?0x00:0x08) + (b?0x04:0x00));
++#define OUT_CH_16(x,l,b) \
++	OUT_CH_16A(x + (l/4) * 0x10 + (l%2) * 0x40 + ((l/2)%2?0x00:0x08) + (b?0x04:0x00));
 +
++//pppppppp
++//x: macroblock address
++//l: line 0-7
++//b: 0=cr 1=cb
++#define OUT_CH_8(x,l,b) \
++	OUT_CH_8A(x + (l/4) * 0x10 + (l%2) * 0x40 + ((l/2)%2?0x00:0x08) + (b?0x04:0x00));
++
++//----
++
++//pppppppppppppppp pppp...
 +//x: first macroblock address
 +//l: line 0-15 of macroblock line
 +//s: stride by factor 16, e.g. 1280=80
-+#define OUTL(x,l,s) \
++#define OUT_LU_16L(x,l,s) \
 +	{ \
 +		int iMacro; \
 +		for(iMacro = 0; iMacro < s; iMacro++) \
 +		{ \
-+			OUT16(x + iMacro*0x200, l); \
++			OUT_LU_16(x + iMacro*0x200, l); \
 +		} \
 +	}
 +
++//pppppppppppppppp pppp...
 +//x: first macroblock address
 +//l: line 0-7
 +//s: stride by factor 16, e.g. 1280=80
 +//b: 0=cr 1=cb
-+#define OUTL_C(x,l,s, b) \
++#define OUT_CH_16L(x,l,s, b) \
 +	{ \
 +		int iMacro; \
 +		for(iMacro = 0; iMacro < s; iMacro++) \
 +		{ \
-+			OUT16_C(x + iMacro*0x200, l, b); \
++			OUT_CH_16(x + iMacro*0x200, l, b); \
 +		} \
 +	}
 +
++//pppppppp pppp...
++//x: first macroblock address
++//l: line 0-7
++//s: stride by factor 8, e.g. 360=45
++//b: 0=cr 1=cb
++#define OUT_CH_8L(x,l,s, b) \
++	{ \
++		int iMacro; \
++		for(iMacro = 0; iMacro < s; iMacro++) \
++		{ \
++			OUT_CH_8(x + (iMacro/2)*0x200 + (iMacro%2?0x80:0x00), l, b); \
++		} \
++	}
++
++//----
++
 +//x: first macroblock address
 +//s: stride by factor 16, e.g. 1280=80
-+#define OUTL_16(x,s) \
++#define OUT_LU_16L_16(x,s) \
 +	{ \
 +		int l; \
 +		for(l = 0; l < 16; l++) \
 +		{ \
-+			OUTL(x, l, s); \
++			OUT_LU_16L(x, l, s); \
 +		} \
 +	}
 +
 +//x: first macroblock address
 +//s: stride by factor 16, e.g. 1280=80
 +//b: 0=cr 1=cb
-+#define OUTL_16_C(x,s,b) \
++#define OUT_CH_16L_8(x,s,b) \
 +	{ \
 +		int l; \
 +		for(l = 0; l < 8; l++) \
 +		{ \
-+			OUTL_C(x, l, s, b); \
++			OUT_CH_16L(x, l, s, b); \
++		} \
++	}
++
++//x: first macroblock address
++//s: stride by factor 8, e.g. 360=45
++//b: 0=cr 1=cb
++#define OUT_CH_8L_8(x,s,b) \
++	{ \
++		int l; \
++		fprintf(stderr, "MB: 0x%08x\n", x); \
++		for(l = 0; l < 8; l++) \
++		{ \
++			OUT_CH_8L(x, l, s, b); \
 +		} \
 +	}
 +
  #define CLAMP(x)    ((x < 0) ? 0 : ((x > 255) ? 255 : x))
  #define SWAP(x,y)	{ x ^= y; y ^= x; x ^= y; }
  
-@@ -82,8 +166,8 @@
+@@ -82,8 +212,8 @@
  void (*resize)(const unsigned char *source, unsigned char *dest, int xsource, int ysource, int xdest, int ydest, int colors);
  void combine(unsigned char *output, const unsigned char *video, const unsigned char *osd, int vleft, int vtop, int vwidth, int vheight, int xres, int yres);
  
@@ -105,7 +151,7 @@
  int stb_type=UNKNOWN;
  
  // main program
-@@ -124,6 +208,7 @@
+@@ -124,6 +254,7 @@
  		if (strcasestr(buf,"PALLAS")) stb_type=PALLAS;
  		if (strcasestr(buf,"XILLEON")) stb_type=XILLEON;
  		if (strcasestr(buf,"BCM7401") || strcasestr(buf,"BCMFB")) stb_type=BRCM7401;
@@ -113,7 +159,7 @@
  	}
  	pclose(pipe);
  
-@@ -645,7 +730,156 @@
+@@ -645,7 +776,176 @@
  	char buf[256];
  	FILE *pipe;
  
@@ -148,11 +194,13 @@
 +		}
 +
 +		//if stride and res is zero than this is most probably a stillpicture
-+		if(stride == 0) stride = 1280;
-+		if(res == 0) res = 720;
++		if(stride == 0) stride = 720;
++		if(res == 0) res = 576;
 +
 +		luma   = (unsigned char *)malloc(stride * res);
 +		chroma = (unsigned char *)malloc(stride * res / 2);
++
++		memset(chroma, 0x80, stride * res / 2);
 +
 +		fd_bpa = open("/dev/bpamem0", O_RDWR);
 +	
@@ -163,19 +211,28 @@
 +		}
 +	
 +		bpa_data.bpa_part  = "LMI_VID";
-+
++		bpa_data.phys_addr = 0x00000000;
++		bpa_data.mem_size = 0;
 +
 +		pipe = fopen("/proc/bpa2","r");
 +		if (pipe)
 +		{
 +			unsigned char found_part = 0;
++			unsigned long mem_size = 0;
++			unsigned long phys_addr = 0;
 +			while (fgets(buf,sizeof(buf),pipe))
 +			{
 +				if(found_part || strstr(buf, bpa_data.bpa_part) != NULL)
 +				{
 +					found_part = 1;
-+					if (sscanf(buf, "- %lu B at %lx", &bpa_data.mem_size, &bpa_data.phys_addr) == 2)
-+						break;;
++					if (sscanf(buf, "- %lu B at %lx", &mem_size, &phys_addr) == 2)
++					{
++						if(mem_size > bpa_data.mem_size)
++						{
++							bpa_data.mem_size  = mem_size;
++							bpa_data.phys_addr = phys_addr;
++						}
++					}
 +				}
 +			}
 +			fclose(pipe);
@@ -216,8 +273,9 @@
 +
 +		//luma
 +		offset = 0;
-+		yblock = res/16;  //45
++		yblock = res/16; //45
 +		xblock = stride/16; //80
++		printf("yblock: %u xblock:%u\n", yblock, xblock);
 +		yblockoffset = stride*32; //0xA000
 +		outiter = 0;
 +		outoffset = 0;
@@ -226,14 +284,17 @@
 +		
 +		for (iyblock = 0; iyblock < yblock; iyblock++)
 +		{
-+			OUTL_16(((iyblock/2) * yblockoffset) + (iyblock%2?0x0100:0x0000) + offset, xblock);
++			OUT_LU_16L_16(((iyblock/2) * yblockoffset) + (iyblock%2?0x0100:0x0000) + offset, xblock);
 +		}
++		printf("Itr: %lu\n", outiter);
 +		
 +		//chroma
 +		offset = ((stride*res + yblockoffset/2 /*round up*/) / yblockoffset) * yblockoffset;
++#if 1
 +		//cb
 +		yblock = res/16; //45
-+		xblock = (stride/2)/16; //40
++		xblock = (stride/2)/8; //40
++		printf("yblock: %u xblock:%u\n", yblock, xblock);
 +		yblockoffset = (stride/2)*8/*h in block*/*2/*y blocks*/*2/*cr cb*/; //16pixel per x block and 2 y blocks//0x5000
 +		outiter = 0;
 +		outinc = 2;
@@ -241,22 +302,27 @@
 +		
 +		for (iyblock = 0; iyblock < yblock; iyblock++)
 +		{
-+			OUTL_16_C(((iyblock/2) * yblockoffset) + (iyblock%2?0x0100:0x0000) + offset, xblock, 1);
++			OUT_CH_8L_8(((iyblock/2) * yblockoffset) + (iyblock%2?0x0100:0x0000 /*0-1:0, 2-3:1*/) + offset, xblock, 1);
 +		}
-+
++		printf("Itr: %lu\n", outiter);
++#endif
++#if 1
 +		//cr
 +		yblock = res/16; //45
-+		xblock = (stride/2)/16; //40
++		xblock = (stride/2)/8; //40
++		printf("yblock: %u xblock:%u\n", yblock, xblock);
 +		yblockoffset = (stride/2)*8/*h in block*/*2/*y blocks*/*2/*cr cb*/; //16pixel per x block and 2 y blocks//0x5000
++		printf("total: %lu (0x%lx)\n", yblock * yblockoffset / 2, yblockoffset);
 +		outiter = 1;
 +		outinc = 2;
 +		out = chroma;
 +		
 +		for (iyblock = 0; iyblock < yblock; iyblock++)
 +		{
-+			OUTL_16_C(((iyblock/2) * yblockoffset) + (iyblock%2?0x0100:0x0000) + offset, xblock, 0);
++			OUT_CH_8L_8(((iyblock/2) * yblockoffset) + (iyblock%2?0x0100:0x0000) + offset, xblock, 0);
 +		}
-+		
++		printf("Itr: %lu\n", outiter);
++#endif
 +		ioctlres = ioctl(fd_bpa, BPAMEMIO_UNMAPMEM); // request memory from bpamem
 +		if(ioctlres)
 +		{
@@ -271,7 +337,7 @@
  	{
  		// grab brcm7401 pic from decoder memory
  		const unsigned char* data = (unsigned char*)mmap(0, 100, PROT_READ, MAP_SHARED, mem_fd, (stb_type == BRCM7358) ? 0x10600000 : 0x10100000);
-@@ -1059,12 +1293,14 @@
+@@ -1059,12 +1359,14 @@
  			// now we do 4 pixels on each iteration this is more code but much faster
  			int Y=yuv2rgbtable_y[luma[pos]];
  
@@ -286,7 +352,7 @@
  			video[out1+rgbstride]=CLAMP((Y + RU)>>16);
  			video[out1+1+rgbstride]=CLAMP((Y - GV - GU)>>16);
  			video[out1+2+rgbstride]=CLAMP((Y + BV)>>16);
-@@ -1074,12 +1310,14 @@
+@@ -1074,12 +1376,14 @@
  
  			Y=yuv2rgbtable_y[luma[pos]];
  
