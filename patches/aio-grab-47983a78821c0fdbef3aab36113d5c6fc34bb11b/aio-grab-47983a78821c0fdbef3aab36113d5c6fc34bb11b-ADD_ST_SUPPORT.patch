@@ -1,5 +1,5 @@
 --- aio-grab-47983a78821c0fdbef3aab36113d5c6fc34bb11b/main.c.org	2013-05-26 13:32:36.000000000 +0200
-+++ aio-grab-47983a78821c0fdbef3aab36113d5c6fc34bb11b/main.c	2013-06-02 12:31:40.450417839 +0200
++++ aio-grab-47983a78821c0fdbef3aab36113d5c6fc34bb11b/main.c	2013-06-02 13:00:02.290292491 +0200
 @@ -37,9 +37,47 @@
  #include <sys/mman.h>
  #include <linux/types.h>
@@ -104,8 +104,8 @@
 +		}
 +
 +		//if stride and res is zero than this is most probably a stillpicture
-+		if(stride == 0) stride = 720;
-+		if(res == 0) res = 576;
++		if(stride == 0) stride = 1280;
++		if(res == 0) res = 720;
 +
 +		stride_half = stride / 2;
 +
