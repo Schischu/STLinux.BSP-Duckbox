@@ -2,7 +2,7 @@
 
 config DRIVER_FRONTEND_MULTITUNER_INIT
 	tristate "frontend-multituner-init"
-	default y
+	default n
 
 if DRIVER_FRONTEND_MULTITUNER_INIT
 

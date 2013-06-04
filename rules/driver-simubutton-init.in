@@ -2,7 +2,7 @@
 
 config DRIVER_SIMUBUTTON_INIT
 	tristate "simubutton-init"
-	default y
+	default n
 
 if DRIVER_SIMUBUTTON_INIT
 
