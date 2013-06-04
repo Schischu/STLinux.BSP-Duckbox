@@ -29,8 +29,8 @@ ifdef PTXCONF_CPU_SUBTYPE_STX7100
 endif
 
 ifdef PTXCONF_CPU_SUBTYPE_STX7101
-	VIDEO_ELF := video_7101
-	AUDIO_ELF := audio_7101
+	VIDEO_ELF := video_7109
+	AUDIO_ELF := audio_7109
 endif
 
 ifdef PTXCONF_CPU_SUBTYPE_STX7109
@@ -44,8 +44,8 @@ ifdef PTXCONF_CPU_SUBTYPE_STX7105
 endif
 
 ifdef PTXCONF_CPU_SUBTYPE_STX7111
-	VIDEO_ELF := video_7111
-	AUDIO_ELF := audio_7111
+	VIDEO_ELF := video_7105
+	AUDIO_ELF := audio_7105
 endif
 
 $(STATEDIR)/av-firmware.compile:

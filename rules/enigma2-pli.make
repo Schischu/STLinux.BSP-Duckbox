@@ -90,7 +90,7 @@ ENIGMA2_PLI_ENV 	:= $(CROSS_ENV)
 
 ENIGMA2_PLI_AUTOCONF := \
 	$(CROSS_AUTOCONF_USR) \
-		--prefix=/usr/local \
+		--prefix=/usr \
 		--without-libsdl \
 		PYTHON=$(PTXDIST_SYSROOT_HOST)/bin/python2.7 \
 		PY_PATH=$(SYSROOT)/usr \
@@ -100,8 +100,8 @@ ENIGMA2_PLI_AUTOCONF := \
 $(STATEDIR)/enigma2-pli.install.post:
 	@$(call targetinfo)
 	@$(call world/install.post, ENIGMA2_PLI)
-	sed -i "s/\/lib/\/local\/lib/g" $(SYSROOT)/usr/lib/pkgconfig/enigma2.pc
-	sed -i "s/\/include/\/local\/include/g" $(SYSROOT)/usr/lib/pkgconfig/enigma2.pc
+	#sed -i "s/\/lib/\/local\/lib/g" $(SYSROOT)/usr/lib/pkgconfig/enigma2.pc
+	#sed -i "s/\/include/\/local\/include/g" $(SYSROOT)/usr/lib/pkgconfig/enigma2.pc
 	@$(call touch)
 
 # ----------------------------------------------------------------------------
@@ -117,7 +117,7 @@ $(STATEDIR)/enigma2-pli.targetinstall:
 	@$(call install_fixup, enigma2-pli, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, enigma2-pli, DESCRIPTION, missing)
 	
-	@$(call install_copy, enigma2-pli, 0, 0, 755, -, /usr/local/bin/enigma2)
+	@$(call install_copy, enigma2-pli, 0, 0, 755, -, /usr/bin/enigma2)
 	@$(call install_copy, enigma2-pli, 0, 0, 644, -, /usr/lib/enigma2/python/mytest.py);
 	
 	@cd $(ENIGMA2_PLI_PKGDIR) && \
@@ -131,7 +131,7 @@ $(STATEDIR)/enigma2-pli.targetinstall:
 	
 	#@$(call install_tree, enigma2-pli, 0, 0, -, /usr/local/share/)
 	@cd $(ENIGMA2_PLI_PKGDIR) && \
-		find ./usr/local/share \
+		find ./usr/share \
 		! -type d -a ! \( -name "keymap.xml" \) | \
 		while read file; do \
 		$(call install_copy, enigma2-pli, 0, 0, 644, -, $${file##.}); \

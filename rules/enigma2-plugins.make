@@ -75,7 +75,7 @@ ENIGMA2_PLUGINS_ENV 	:= $(CROSS_ENV)
 #ENIGMA2_PLUGINS_CONF_TOOL	:= autoconf
 ENIGMA2_PLUGINS_AUTOCONF := \
 	$(CROSS_AUTOCONF_USR) \
-	--prefix=/usr/local \
+	--prefix=/usr \
 	PYTHON=$(PTXDIST_SYSROOT_HOST)/bin/python2.7 \
 	PY_PATH=$(SYSROOT)/usr \
 	PKG_CONFIG=$(PTXDIST_SYSROOT_HOST)/bin/pkg-config \

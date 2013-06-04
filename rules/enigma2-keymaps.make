@@ -51,7 +51,7 @@ $(STATEDIR)/enigma2-keymap-adb-box.targetinstall:
 	@$(call install_fixup, enigma2-keymap-adb-box,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, enigma2-keymap-adb-box,DESCRIPTION,missing)
 
-	@$(call install_copy, enigma2-keymap-adb-box, 0, 0, 644, $(PTXDIST_WORKSPACE)/local_src/extra/enigma2/keymap_adb_box.xml, /usr/local/share/enigma2/keymap.xml, 0)
+	@$(call install_copy, enigma2-keymap-adb-box, 0, 0, 644, $(PTXDIST_WORKSPACE)/local_src/extra/enigma2/keymap_adb_box.xml, /usr/share/enigma2/keymap.xml, 0)
 
 	@$(call install_finish, enigma2-keymap-adb-box)
 
@@ -68,7 +68,7 @@ $(STATEDIR)/enigma2-keymap-cube.targetinstall:
 	@$(call install_fixup, enigma2-keymap-cube,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, enigma2-keymap-cube,DESCRIPTION,missing)
 
-	@$(call install_copy, enigma2-keymap-cube, 0, 0, 644, $(PTXDIST_WORKSPACE)/local_src/extra/enigma2/keymap_cube.xml, /usr/local/share/enigma2/keymap.xml, 0)
+	@$(call install_copy, enigma2-keymap-cube, 0, 0, 644, $(PTXDIST_WORKSPACE)/local_src/extra/enigma2/keymap_cube.xml, /usr/share/enigma2/keymap.xml, 0)
 
 	@$(call install_finish, enigma2-keymap-cube)
 
@@ -84,7 +84,7 @@ $(STATEDIR)/enigma2-keymap-cube-small.targetinstall:
 	@$(call install_fixup, enigma2-keymap-cube-small,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, enigma2-keymap-cube-small,DESCRIPTION,missing)
 
-	@$(call install_copy, enigma2-keymap-cube-small, 0, 0, 644, $(PTXDIST_WORKSPACE)/local_src/extra/enigma2/keymap_cube_small.xml, /usr/local/share/enigma2/keymap.xml, 0)
+	@$(call install_copy, enigma2-keymap-cube-small, 0, 0, 644, $(PTXDIST_WORKSPACE)/local_src/extra/enigma2/keymap_cube_small.xml, /usr/share/enigma2/keymap.xml, 0)
 
 	@$(call install_finish, enigma2-keymap-cube-small)
 
@@ -100,7 +100,7 @@ $(STATEDIR)/enigma2-keymap-hl101.targetinstall:
 	@$(call install_fixup, enigma2-keymap-hl101,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, enigma2-keymap-hl101,DESCRIPTION,missing)
 
-	@$(call install_copy, enigma2-keymap-hl101, 0, 0, 644, $(PTXDIST_WORKSPACE)/local_src/extra/enigma2/keymap_hl101.xml, /usr/local/share/enigma2/keymap.xml, 0)
+	@$(call install_copy, enigma2-keymap-hl101, 0, 0, 644, $(PTXDIST_WORKSPACE)/local_src/extra/enigma2/keymap_hl101.xml, /usr/share/enigma2/keymap.xml, 0)
 
 	@$(call install_finish, enigma2-keymap-hl101)
 
@@ -116,7 +116,7 @@ $(STATEDIR)/enigma2-keymap-ipbox.targetinstall:
 	@$(call install_fixup, enigma2-keymap-ipbox,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, enigma2-keymap-ipbox,DESCRIPTION,missing)
 
-	@$(call install_copy, enigma2-keymap-ipbox, 0, 0, 644, $(PTXDIST_WORKSPACE)/local_src/extra/enigma2/keymap_ipbox.xml, /usr/local/share/enigma2/keymap.xml, 0)
+	@$(call install_copy, enigma2-keymap-ipbox, 0, 0, 644, $(PTXDIST_WORKSPACE)/local_src/extra/enigma2/keymap_ipbox.xml, /usr/share/enigma2/keymap.xml, 0)
 
 	@$(call install_finish, enigma2-keymap-ipbox)
 
@@ -132,7 +132,7 @@ $(STATEDIR)/enigma2-keymap-spark.targetinstall:
 	@$(call install_fixup, enigma2-keymap-spark,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, enigma2-keymap-spark,DESCRIPTION,missing)
 
-	@$(call install_copy, enigma2-keymap-spark, 0, 0, 644, $(PTXDIST_WORKSPACE)/local_src/extra/enigma2/keymap_spark.xml, /usr/local/share/enigma2/keymap.xml, 0)
+	@$(call install_copy, enigma2-keymap-spark, 0, 0, 644, $(PTXDIST_WORKSPACE)/local_src/extra/enigma2/keymap_spark.xml, /usr/share/enigma2/keymap.xml, 0)
 
 	@$(call install_finish, enigma2-keymap-spark)
 
@@ -148,7 +148,7 @@ $(STATEDIR)/enigma2-keymap-tf7700hdpvr.targetinstall:
 	@$(call install_fixup, enigma2-keymap-tf7700hdpvr,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, enigma2-keymap-tf7700hdpvr,DESCRIPTION,missing)
 
-	@$(call install_copy, enigma2-keymap-tf7700hdpvr, 0, 0, 644, $(PTXDIST_WORKSPACE)/local_src/extra/enigma2/keymap_tf7700.xml, /usr/local/share/enigma2/keymap.xml, 0)
+	@$(call install_copy, enigma2-keymap-tf7700hdpvr, 0, 0, 644, $(PTXDIST_WORKSPACE)/local_src/extra/enigma2/keymap_tf7700.xml, /usr/share/enigma2/keymap.xml, 0)
 
 	@$(call install_finish, enigma2-keymap-tf7700hdpvr)
 
@@ -164,7 +164,7 @@ $(STATEDIR)/enigma2-keymap-ufs910.targetinstall:
 	@$(call install_fixup, enigma2-keymap-ufs910,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, enigma2-keymap-ufs910,DESCRIPTION,missing)
 
-	@$(call install_copy, enigma2-keymap-ufs910, 0, 0, 644, $(PTXDIST_WORKSPACE)/local_src/extra/enigma2/keymap_ufs910.xml, /usr/local/share/enigma2/keymap.xml, 0)
+	@$(call install_copy, enigma2-keymap-ufs910, 0, 0, 644, $(PTXDIST_WORKSPACE)/local_src/extra/enigma2/keymap_ufs910.xml, /usr/share/enigma2/keymap.xml, 0)
 
 	@$(call install_finish, enigma2-keymap-ufs910)
 
@@ -180,7 +180,7 @@ $(STATEDIR)/enigma2-keymap-ufs912.targetinstall:
 	@$(call install_fixup, enigma2-keymap-ufs912,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, enigma2-keymap-ufs912,DESCRIPTION,missing)
 
-	@$(call install_copy, enigma2-keymap-ufs912, 0, 0, 644, $(PTXDIST_WORKSPACE)/local_src/extra/enigma2/keymap_ufs912.xml, /usr/local/share/enigma2/keymap.xml, 0)
+	@$(call install_copy, enigma2-keymap-ufs912, 0, 0, 644, $(PTXDIST_WORKSPACE)/local_src/extra/enigma2/keymap_ufs912.xml, /usr/share/enigma2/keymap.xml, 0)
 
 	@$(call install_finish, enigma2-keymap-ufs912)
 
@@ -196,7 +196,7 @@ $(STATEDIR)/enigma2-keymap-vip2.targetinstall:
 	@$(call install_fixup, enigma2-keymap-vip2,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, enigma2-keymap-vip2,DESCRIPTION,missing)
 
-	@$(call install_copy, enigma2-keymap-vip2, 0, 0, 644, $(PTXDIST_WORKSPACE)/local_src/extra/enigma2/keymap_vip2.xml, /usr/local/share/enigma2/keymap.xml, 0)
+	@$(call install_copy, enigma2-keymap-vip2, 0, 0, 644, $(PTXDIST_WORKSPACE)/local_src/extra/enigma2/keymap_vip2.xml, /usr/share/enigma2/keymap.xml, 0)
 
 	@$(call install_finish, enigma2-keymap-vip2)
 

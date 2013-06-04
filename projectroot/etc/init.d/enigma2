@@ -5,7 +5,7 @@ start)
 	echo "starting enigma2"
 
 	(
-		/usr/local/bin/enigma2
+		/usr/bin/enigma2
 		rtv=$?
 		echo "enigma2 ended <- RTV: " $rtv
 		case "$rtv" in

@@ -73,8 +73,8 @@ LIBTUXTXT32BPP_AUTOCONF := \
 	$(CROSS_AUTOCONF_USR) \
 	--with-boxtype=generic \
 	--with-configdir=/usr \
-	--with-datadir=/usr/local/share/tuxtxt \
-	--with-fontdir=/usr/local/share/fonts
+	--with-datadir=/usr/share/tuxtxt \
+	--with-fontdir=/usr/share/fonts
 
 # ----------------------------------------------------------------------------
 # Target-Install
@@ -91,7 +91,7 @@ $(STATEDIR)/libtuxtxt32bpp.targetinstall:
 	
 	@$(call install_lib, libtuxtxt32bpp, 0, 0, 0644, libtuxtxt32bpp)
 	
-	@$(call install_tree, libtuxtxt32bpp, 0, 0, -, /usr/local/share/)
+	@$(call install_tree, libtuxtxt32bpp, 0, 0, -, /usr/share/)
 	
 	@$(call install_finish, libtuxtxt32bpp)
 	
