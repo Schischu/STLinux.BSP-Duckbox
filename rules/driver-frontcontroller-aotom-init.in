@@ -2,7 +2,7 @@
 
 config DRIVER_FRONTCONTROLLER_AOTOM_INIT
 	tristate "frontcontroller-aotom-init"
-	default y
+	default n
 
 if DRIVER_FRONTCONTROLLER_AOTOM_INIT
 
