@@ -140,6 +140,10 @@ ifdef PTXCONF_DRIVER_MULTICOM_V4
 	cp $(DRIVER_MULTICOM_DIR)/linux/source/include/mme.h $(DRIVER_MULTICOM_PKGDIR)/usr/include/
 	cp -r $(DRIVER_MULTICOM_DIR)/linux/source/include/mme $(DRIVER_MULTICOM_PKGDIR)/usr/include/
 	
+	mkdir -p $(DRIVER_MULTICOM_PKGDIR)/usr/include/linux
+	cp $(DRIVER_MULTICOM_DIR)/linux/source/include/ics.h $(DRIVER_MULTICOM_PKGDIR)/usr/include/linux/
+	cp -r $(DRIVER_MULTICOM_DIR)/linux/source/include/ics $(DRIVER_MULTICOM_PKGDIR)/usr/include/linux/
+	
 	cp -r $(DRIVER_MULTICOM_PKGDIR)/* $(SYSROOT)
 endif
 	
