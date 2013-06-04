@@ -1,0 +1,6 @@
+## SECTION=multimedia_libs
+
+config ENIGMA2_SKIN_MAGIC
+	tristate "enigma2-skin-magic"
+	default m
+	select ENIGMA2_PLI
