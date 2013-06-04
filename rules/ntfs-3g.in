@@ -1,0 +1,14 @@
+## SECTION=disk_and_file
+
+config NTFS_3G
+	tristate
+	prompt "ntfs-3g"
+	select FUSE
+	select FUSE__LIB
+	select GNUTLS
+	select LIBGCRYPT
+	help
+	  The NTFS-3G_ntfsprogs driver is an open source, freely
+	  available NTFS driver for Linux with read and write support.
+	  It provides safe and fast handling of the Windows XP,
+	  Windows Server 2003, Windows 2000 and Windows Vista file systems.

@@ -2,7 +2,7 @@
 
 config DRIVER_AVS_INIT
 	tristate "avs-init"
-	default y
+	default n
 
 if DRIVER_AVS_INIT
 
