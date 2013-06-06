@@ -68,6 +68,7 @@ PYTHON_AUTOCONF := \
 
 PYTHON_MAKEVARS := \
 	PGEN_FOR_BUILD=$(PTXCONF_SYSROOT_HOST)/bin/pgen \
+	EXTRA_CFLAGS=-I$(SYSROOT)/usr/include/ \
 	
 
 # ----------------------------------------------------------------------------

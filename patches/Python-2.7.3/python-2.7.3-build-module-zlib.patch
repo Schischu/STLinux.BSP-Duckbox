@@ -1,0 +1,11 @@
+--- Python-2.7.3/setup.py.org	2013-06-04 21:30:33.000000000 +0200
++++ Python-2.7.3/setup.py	2013-06-06 20:21:29.287377677 +0200
+@@ -471,7 +471,7 @@
+         if platform in ['osf1', 'unixware7', 'openunix8']:
+             lib_dirs += ['/usr/ccs/lib']
+ 
+-        if platform == 'darwin':
++        if True: #platform == 'darwin':
+             # This should work on any unixy platform ;-)
+             # If the user has bothered specifying additional -I and -L flags
+             # in OPT and LDFLAGS we might as well use them here.

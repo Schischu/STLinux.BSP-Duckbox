@@ -16,3 +16,4 @@ python-2.7.3-enable-sitecustomize.patch
 python-2.7.3-enable-optimzier.patch
 
 0030-Remove_HOST_LIBDIR.patch
+python-2.7.3-build-module-zlib.patch
