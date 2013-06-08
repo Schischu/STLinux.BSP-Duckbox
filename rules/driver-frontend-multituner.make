@@ -129,11 +129,7 @@ $(STATEDIR)/driver-frontend-multituner.targetinstall:
 
 PACKAGES-$(PTXCONF_DRIVER_FRONTEND_MULTITUNER_INIT) += driver-frontend-multituner-init
 
-<<<<<<< HEAD
-DRIVER_FRONTEND_MULTITUNER_INIT_VERSION := head10
-=======
 DRIVER_FRONTEND_MULTITUNER_INIT_VERSION	:= head
->>>>>>> schischu/master
 
 $(STATEDIR)/driver-frontend-multituner-init.targetinstall:
 	@$(call targetinfo)
