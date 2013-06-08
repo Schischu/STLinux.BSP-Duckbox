@@ -80,6 +80,9 @@
 #include <linux/time.h>
 #include <linux/poll.h>
 
+#include <linux/device.h> /* class_creatre */
+#include <linux/cdev.h> /* cdev_init */
+
 #include "nuvoton.h"
 #include "nuvoton_asc.h"
 
@@ -591,9 +594,16 @@ int nuvotonTask(void * dummy)
 
 //----------------------------------------------
 
+#define DEVICE_NAME "vfd"
+
+static        dev_t  vfd_dev_num;
+static struct cdev   vfd_cdev;
+static struct class *vfd_class = 0;
+//extern struct file_operations vfd_fops;
 static int __init nuvoton_init_module(void)
 {
     int i = 0;
+    int result;
 
     // Address for Interrupt enable/disable
     unsigned int         *ASC_X_INT_EN     = (unsigned int*)(ASCXBaseAddress + ASC_INT_EN);
@@ -632,12 +642,36 @@ static int __init nuvoton_init_module(void)
     msleep(1000);
     nuvoton_init_func();
 
-    if (register_chrdev(VFD_MAJOR, "VFD", &vfd_fops))
-        printk("unable to get major %d for VFD/NUVOTON\n",VFD_MAJOR);
+    //if (register_chrdev(VFD_MAJOR, "VFD", &vfd_fops))
+    //    printk("unable to get major %d for VFD/NUVOTON\n",VFD_MAJOR);
+    vfd_dev_num = MKDEV(VFD_MAJOR, 0);
+    result = register_chrdev_region(vfd_dev_num, LASTMINOR, DEVICE_NAME);
+    if (result < 0) {
+      printk( KERN_ALERT "VFD cannot register device (%d)\n", result);
+      return result;
+    }
+    
+    cdev_init(&vfd_cdev, &vfd_fops);
+    vfd_cdev.owner = THIS_MODULE;
+    vfd_cdev.ops   = &vfd_fops;
+    if (cdev_add(&vfd_cdev, vfd_dev_num, LASTMINOR) < 0)
+    {
+      printk("VFD couldn't register '%s' driver\n", DEVICE_NAME);
+      return -1;
+    }
+    
+    vfd_class = class_create(THIS_MODULE, DEVICE_NAME);
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,30)
+    device_create(vfd_class, NULL, MKDEV(VFD_MAJOR, 0), NULL, "vfd", 0);
+    device_create(vfd_class, NULL, MKDEV(VFD_MAJOR, 1), NULL, "rc", 1);
+#else
+    class_device_create(vfd_class, NULL, MKDEV(VFD_MAJOR, 0), NULL, "vfd", 0);
+    class_device_create(vfd_class, NULL, MKDEV(VFD_MAJOR, 1), NULL, "rc", 1);
+#endif
 
-    dprintk(10, "%s <\n", __func__);
+    dprintk(10, "%s < %d\n", __func__, result);
 
-    return 0;
+    return result;
 }
 
 
@@ -645,7 +679,16 @@ static void __exit nuvoton_cleanup_module(void)
 {
     printk("NUVOTON frontcontroller module unloading\n");
 
-    unregister_chrdev(VFD_MAJOR,"VFD");
+    cdev_del(&vfd_cdev);
+    unregister_chrdev_region(vfd_dev_num, LASTMINOR);
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,30)
+    device_destroy(vfd_class, MKDEV(VFD_MAJOR, 0));
+    device_destroy(vfd_class, MKDEV(VFD_MAJOR, 1));
+#else
+    class_device_destroy(vfd_class, MKDEV(VFD_MAJOR, 0));
+    class_device_destroy(vfd_class, MKDEV(VFD_MAJOR, 1));
+#endif
+    class_destroy(vfd_class);
 
     free_irq(InterruptLine, NULL);
 }
