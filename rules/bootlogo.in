@@ -1,26 +1,27 @@
 ## SECTION=core
 
-config BOOTLOGO
-	bool "bootlogo"
-	default y
-	select BASE
-
-if BOOTLOGO
+choice
+	prompt "bootlogo"
+	default BOOTLOGO_NONE
 
 config BOOTLOGO_ENIGMA2
-	tristate "bootlogo-enigma2"
-	default m
+	tristate
+	prompt "enigma2"
 
 config BOOTLOGO_NEUTRINO
-	tristate "bootlogo-neutrino"
-	default m
+	tristate
+	prompt "neutrino"
 
 config BOOTLOGO_VDR
-	tristate "bootlogo-vdr"
-	default m
+	tristate
+	prompt "vdr"
 
 config BOOTLOGO_XBMC
-	tristate "bootlogo-xbmc"
-	default m
+	tristate
+	prompt "xbmc"
 
-endif
+config BOOTLOGO_NONE
+	tristate
+	prompt "none"
+
+endchoice
