@@ -35,12 +35,6 @@ config PROJECT_VERSION
 
 endmenu
 
-menu "Project Specific Configuration   "
-
-source "generated/project_specific.in"
-
-endmenu
-
 menu "PTXdist Base Configuration       "
 
 source "rules/Kconfig"

@@ -102,7 +102,7 @@ $(STATEDIR)/driver-frontend-spark.targetinstall:
 
 PACKAGES-$(PTXCONF_DRIVER_FRONTEND_SPARK_INIT) += driver-frontend-spark-init
 
-DRIVER_FRONTEND_SPARK_INIT_VERSION	:= head10
+DRIVER_FRONTEND_SPARK_INIT_VERSION	:= head
 
 $(STATEDIR)/driver-frontend-spark-init.targetinstall:
 	@$(call targetinfo)
