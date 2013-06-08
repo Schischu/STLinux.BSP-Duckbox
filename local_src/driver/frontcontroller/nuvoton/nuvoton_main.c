@@ -80,6 +80,9 @@
 #include <linux/time.h>
 #include <linux/poll.h>
 
+#include <linux/device.h> /* class_creatre */
+#include <linux/cdev.h> /* cdev_init */
+
 #include "nuvoton.h"
 #include "nuvoton_asc.h"
 
