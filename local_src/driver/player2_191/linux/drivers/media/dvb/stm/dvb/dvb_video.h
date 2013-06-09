@@ -31,7 +31,7 @@ Date        Modification                                    Name
 #ifndef H_DVB_VIDEO
 #define H_DVB_VIDEO
 
-#include "dvbdev.h"
+#include <linux/dvb/dvbdev.h>
 
 #define MAX_VIDEO_EVENT         8
 struct VideoEvent_s

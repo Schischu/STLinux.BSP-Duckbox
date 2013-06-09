@@ -22,6 +22,7 @@ linux-tune_stm24.patch
 linux-sh4-mmap_stm24.patch
 linux-sh4-remove_pcm_reader_stm24.patch
 linux-sh4-directfb_stm24_0211.patch
+linux-sh4-permit_gcc_command_line_sections_stm24_0209.patch
 
 # Duckbox Box Specific Patches
 # Are located in configs/duckbox-<boxid>-master
