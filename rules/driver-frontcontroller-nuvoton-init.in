@@ -2,7 +2,7 @@
 
 config DRIVER_FRONTCONTROLLER_NUVOTON_INIT
 	tristate "frontcontroller-nuvoton-init"
-	default y
+	default n
 
 if DRIVER_FRONTCONTROLLER_NUVOTON_INIT
 
