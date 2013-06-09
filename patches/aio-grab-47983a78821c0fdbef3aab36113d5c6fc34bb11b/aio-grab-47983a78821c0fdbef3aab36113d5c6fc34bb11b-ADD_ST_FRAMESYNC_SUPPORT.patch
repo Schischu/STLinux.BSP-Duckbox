@@ -1,0 +1,103 @@
+--- aio-grab-47983a78821c0fdbef3aab36113d5c6fc34bb11b/main.c.org	2013-06-04 21:57:14.000000000 +0200
++++ aio-grab-47983a78821c0fdbef3aab36113d5c6fc34bb11b/main.c	2013-06-09 11:22:16.823333877 +0200
+@@ -695,7 +695,8 @@
+ 		BPAMemMapMemData bpa_data;
+ 		char bpa_mem_device[30];
+ 		char *decode_surface;
+-	
++		int delay;
++
+ 		pipe = fopen("/proc/stb/vmpeg/0/xres","r");
+ 		if (pipe)
+ 		{
+@@ -805,17 +806,31 @@
+ 		//thereby yblockoffset does also not to be rounded up
+ 		yblockoffset = xblock * 256/*16x16px*/ * 2/*2 block rows*/; //0xA000 for 1280
+ 		
+-		printf("yblock: %u xblock:%u yblockoffset:0x%x\n", yblock, xblock, yblockoffset);
++		//printf("yblock: %u xblock:%u yblockoffset:0x%x\n", yblock, xblock, yblockoffset);
+ 		
+ 		OUTITER       = 0;
+ 		OUTITERoffset = 0;
+ 		OUTINC        = 1; /*no spaces between pixel*/
+ 		out           = luma;
+ 		
++		//wait_for_frame_sync
++		{
++			unsigned char old_frame[0x400]; /*first 2 luma blocks, 0:0 - 32:32*/
++			memcpy(old_frame, decode_surface, 0x400);
++			for(delay = 0; delay < 500/*ms*/; delay++)
++			{
++				if (memcmp(decode_surface, old_frame, 0x400) != 0)
++					break;
++				usleep(1000);
++			}
++		}
++		//printf("framesync after %dms\n", delay);
++		
++		//now we have 16,6ms(60hz) to 50ms(20hz) to get the whole picture
+ 		for(even = 0; even < 2; even++)
+ 		{
+-			offset        = layer_offset + even * 0x100;
+-			OUTITERoffset = even * xblock * 256/*16x16px*/;
++			offset        = layer_offset + (even  << 8 /* * 0x100*/);
++			OUTITERoffset = even * xblock << 8 /* * 256=16x16px*/;
+ 			
+ 			for (iyblock = even; iyblock < yblock; iyblock+=2)
+ 			{
+@@ -834,23 +849,23 @@
+ 					offset += 0x200;
+ 					OUTITERoffset += 16;
+ 				}
+-				OUTITERoffset += stride * 31;
++				OUTITERoffset += (stride << 5) - stride /* * 31*/;
+ 			}
+ 		}
+ 		
+ 		//chroma
+-		layer_offset = ((stride*res + yblockoffset/2 /*round up*/) / yblockoffset) * yblockoffset;
++		layer_offset = ((stride*res + (yblockoffset >> 1 /* /2*/ /*round up*/)) / yblockoffset) * yblockoffset;
+ 
+ 		//cb
+ 		//we do not have to round that every chroma y res will be a multiple of 16 
+ 		//and every chroma x res /2 will be a multiple of 8
+-		yblock = res/16; //45
+-		xblock = (stride_half)/8; //no roundin
++		yblock = res >> 4 /* /16*/; //45
++		xblock = stride_half >> 3 /* /8*/; //no roundin
+ 		
+ 		//if xblock is not even than we will have to move to the next even value an 
+-		yblockoffset = (((xblock + 1) / 2) * 2) * 64/*8x8px*/ * 2/*2 block rows*/ * 2/*cr cb*/; 
++		yblockoffset = (((xblock + 1) >> 1 /* / 2*/) << 1 /* * 2*/ ) << 8 /* * 64=8x8px * 2=2 block rows * 2=cr cb*/; 
+ 		
+-		printf("yblock: %u xblock:%u yblockoffset:0x%x\n", yblock, xblock, yblockoffset);
++		//printf("yblock: %u xblock:%u yblockoffset:0x%x\n", yblock, xblock, yblockoffset);
+ 		
+ 		OUTITER       = 0;
+ 		OUTITERoffset = 0;
+@@ -861,8 +876,8 @@
+ 		{
+ 			for(even = 0; even < 2; even++)
+ 			{
+-				offset        = layer_offset + even * 0x100;
+-				OUTITERoffset = even * xblock * 128/*8x8px * 2*/ + cr;
++				offset        = layer_offset + (even  << 8 /* * 0x100*/);
++				OUTITERoffset = even * (xblock << 7 /* * 128=8x8px * 2*/) + cr;
+ 			
+ 				for (iyblock = even; iyblock < yblock; iyblock+=2)
+ 				{
+@@ -881,11 +896,13 @@
+ 						offset += (offset%0x100?0x180/*80->200*/:0x80/*0->80*/);
+ 						OUTITERoffset += 16/*OUTINC*8=16*/;
+ 					}
+-					OUTITERoffset += stride * 15;
++					OUTITERoffset += (stride << 4) - stride /* * 15*/;
+ 				}
+ 			}
+ 		}
+ 
++		printf("framesync after %dms\n", delay);
++
+ 		munmap(decode_surface, bpa_data.mem_size);
+ 
+ 		ioctlres = ioctl(fd_bpa, BPAMEMIO_UNMAPMEM); // request memory from bpamem
