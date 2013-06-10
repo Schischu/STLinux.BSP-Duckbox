@@ -253,42 +253,17 @@ $(STATEDIR)/ffmpeg.targetinstall:
 	@$(call install_fixup, ffmpeg,AUTHOR,"Erwin Rol <ero@pengutronix.de>")
 	@$(call install_fixup, ffmpeg,DESCRIPTION,missing)
 
-	@$(call install_copy, ffmpeg, 0, 0, 0644, -, \
-		/usr/lib/libavcodec.so, n)
-	@$(call install_link, ffmpeg, \
-		libavcodec.so, \
-		/usr/lib/libavcodec.so.51)
-	@$(call install_link, ffmpeg, \
-		libavcodec.so, \
-		/usr/lib/libavcodec.so.51.7.0)
-
-	@$(call install_copy, ffmpeg, 0, 0, 0644, -, \
-		/usr/lib/libavformat.so, n)
-	@$(call install_link, ffmpeg, \
-		libavformat.so, \
-		/usr/lib/libavformat.so.50)
-	@$(call install_link, ffmpeg, \
-		libavformat.so, \
-		/usr/lib/libavformat.so.50.3.0)
-
-	@$(call install_copy, ffmpeg, 0, 0, 0644, -, \
-		/usr/lib/libavutil.so, n)
-	@$(call install_link, ffmpeg, \
-		libavutil.so, \
-		/usr/lib/libavutil.so.49)
-	@$(call install_link, ffmpeg, \
-		libavcodec.so, \
-		/usr/lib/libavutil.so.49.0.0)
+	@$(call install_lib, ffmpeg, 0, 0, 0644, libavcodec)
+	@$(call install_lib, ffmpeg, 0, 0, 0644, libavdevice)
+	@$(call install_lib, ffmpeg, 0, 0, 0644, libavfilter)
+	@$(call install_lib, ffmpeg, 0, 0, 0644, libavformat)
+	@$(call install_lib, ffmpeg, 0, 0, 0644, libavresample)
+	@$(call install_lib, ffmpeg, 0, 0, 0644, libavutil)
+	@$(call install_lib, ffmpeg, 0, 0, 0644, libswresample)
+	@$(call install_lib, ffmpeg, 0, 0, 0644, libswscale)
 
 ifdef PTXCONF_FFMPEG_PP
-	@$(call install_copy, ffmpeg, 0, 0, 0644, -, \
-		/usr/lib/libpostproc.so, n)
-	@$(call install_link, ffmpeg, \
-		libpostproc.so, \
-		/usr/lib/libpostproc.so.51)
-	@$(call install_link, ffmpeg, \
-		libpostproc.so, \
-		/usr/lib/libpostproc.so.51.0.0)
+	@$(call install_lib, ffmpeg, 0, 0, 0644, libpostproc)
 endif
 
 	@$(call install_finish, ffmpeg)
