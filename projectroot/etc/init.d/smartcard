@@ -1,0 +1,19 @@
+#!/bin/sh
+
+case $1 in
+start)
+	echo "starting smartcard"
+
+	insmod /lib/modules/smartcard.ko
+
+	exit 0
+
+	;;
+stop)
+	echo "stopping smartcard... error, smartcard cannot be stopped, aborting"
+	;;
+*)
+	echo "usage: $0 [start|stop]"
+	;;
+esac
+
