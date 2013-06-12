@@ -82,7 +82,7 @@ $(STATEDIR)/libeplayer3.targetinstall:
 	@$(call install_fixup, libeplayer3,AUTHOR,"Erwin Rol <erwin@erwinrol.com>")
 	@$(call install_fixup, libeplayer3,DESCRIPTION,missing)
 
-	$(call install_copy, libeplayer3, 0, 0, 0644, -, /usr/lib/libeplayer3.so)
+	$(call install_lib,  libeplayer3, 0, 0, 0644, libeplayer3)
 	$(call install_copy, libeplayer3, 0, 0, 0755, -, /bin/eplayer3)
 	$(call install_copy, libeplayer3, 0, 0, 0755, -, /bin/meta)
 	@$(call install_finish, libeplayer3)
