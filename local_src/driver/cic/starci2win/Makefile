@@ -1,2 +1,2 @@
-obj-m    += starci.o
-cec-objs += starci2win/starci2win.o
+obj-m       += starci.o
+starci-objs += starci2win.o
