@@ -88,8 +88,6 @@ $(STATEDIR)/libdvdread.install:
 		sed -i "s,-L/usr/lib,-L\$${SYSROOT}/usr/lib,g" $(LIBDVDREAD_PKGDIR)/usr/bin/dvdread-config; \
 	) 2>&1 > /dev/null
 	
-	cat $(PTXDIST_SYSROOT_CROSS)/bin/dvdread-config
-	
 	@$(call touch)
 
 # ----------------------------------------------------------------------------
