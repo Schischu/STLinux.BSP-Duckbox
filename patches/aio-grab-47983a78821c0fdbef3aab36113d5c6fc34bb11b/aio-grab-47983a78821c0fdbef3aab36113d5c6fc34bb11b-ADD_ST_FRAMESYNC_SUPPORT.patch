@@ -24,13 +24,13 @@
  		
 +		//wait_for_frame_sync
 +		{
-+			unsigned char old_frame[0x400]; /*first 2 luma blocks, 0:0 - 32:32*/
-+			memcpy(old_frame, decode_surface, 0x400);
++			unsigned char old_frame[0x800]; /*first 2 luma blocks, 0:0 - 32:64*/
++			memcpy(old_frame, decode_surface, 0x800);
 +			for(delay = 0; delay < 500/*ms*/; delay++)
 +			{
-+				if (memcmp(decode_surface, old_frame, 0x400) != 0)
++				if (memcmp(decode_surface, old_frame, 0x800) != 0)
 +					break;
-+				usleep(1000);
++				usleep(100);
 +			}
 +		}
 +		//printf("framesync after %dms\n", delay);
