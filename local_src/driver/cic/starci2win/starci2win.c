@@ -34,12 +34,8 @@
 #else
 #include <linux/stpio.h>
 #endif
-
 #include <asm/system.h>
 #include <asm/io.h>
-
-#include "dvb_ca_en50221.h"
-
 #include "dvb_ca_core.h"
 
 static int debug;
