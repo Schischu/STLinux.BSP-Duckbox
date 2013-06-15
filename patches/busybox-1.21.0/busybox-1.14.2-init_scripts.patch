@@ -1,0 +1,140 @@
+From 0e043472e3ff057c7b2b7c311353c86689277e52 Mon Sep 17 00:00:00 2001
+From: Carmelo Amoroso <carmelo.amoroso@st.com>
+Date: Mon, 20 Jul 2009 09:57:31 +0200
+Subject: [PATCH] init: Add init scripts and inittab for busybox system
+
+The busysbox init applet will use the /etc/inittabBB file.
+If this file is not available, then it falls back to the standard
+/etc/inittab.
+If both files are not available, then the init will add some
+default actions as below:
+
+* Reboot on Ctrl-Alt-Del
+* Umount all filesystems on halt/reboot
+* Swapoff on halt/reboot
+* Start a pairs of "askfirst" shells
+* Run the init script (/etc/init.d/rcSBB)
+
+Signed-off-by: Carmelo Amoroso <carmelo.amoroso@st.com>
+---
+ examples/inittabBB |    8 +++++++
+ examples/rcSBB     |   14 +++++++++++++
+ init/init.c        |   53 +++++++++++++++++++++++++++++----------------------
+ 3 files changed, 52 insertions(+), 23 deletions(-)
+ create mode 100644 examples/inittabBB
+ create mode 100644 examples/rcSBB
+
+diff --git a/examples/inittabBB b/examples/inittabBB
+new file mode 100644
+index 0000000..4d70a9c
+--- /dev/null
++++ b/examples/inittabBB
+@@ -0,0 +1,7 @@
++# Example Busybox inittab
++::sysinit:/etc/init.d/rcSBB
++ttyAS0::askfirst:/bin/sh
++::ctrlaltdel:/sbin/reboot
++::shutdown:/sbin/swapoff -a
++::shutdown:/bin/umount -a -r
++::restart:/sbin/init
+diff --git a/examples/rcSBB b/examples/rcSBB
+new file mode 100644
+index 0000000..ce61d4e
+--- /dev/null
++++ b/examples/rcSBB
+@@ -0,0 +1,17 @@
++#!/bin/sh
++# example rcS script
++echo "Welcome to STLinux (busybox)!"
++# mount proc filesystem
++mount -t proc proc /proc
++#/sbin/ifconfig eth0 192.168.1.1
++# remount root filesystem in rw mode
++mount -n -o remount,rw /
++# mount devpts to allow logging in
++mount -t devpts none /dev/pts -ogid=5,mode=620
++# mount sysfs
++mount -t sysfs sysfs /sys
++# use mdev
++echo /sbin/hotplugin > /proc/sys/kernel/hotplug
++mdev -s
++# start the telnet daemon to allow remote login
++busybox telnetd -l /bin/sh
+diff --git a/init/init.c b/init/init.c
+index ce26428..6f2eafc 100644
+--- a/init/init.c
++++ b/init/init.c
+@@ -26,9 +26,12 @@
+ 
+ /* Default sysinit script. */
+ #ifndef INIT_SCRIPT
+-#define INIT_SCRIPT  "/etc/init.d/rcS"
++#define INIT_SCRIPT  "/etc/init.d/rcSBB"
+ #endif
+ 
++#define INITTAB			"/etc/inittabBB"
++#define INITTAB_FALLBACK	"/etc/inittab"
++
+ /* Each type of actions can appear many times. They will be
+  * handled in order. RESTART is an exception, only 1st is used.
+  */
+@@ -513,30 +516,34 @@ static void parse_inittab(void)
+ {
+ #if ENABLE_FEATURE_USE_INITTAB
+ 	char *token[4];
+-	parser_t *parser = config_open2("/etc/inittab", fopen_for_read);
++	parser_t *parser = config_open2(INITTAB, fopen_for_read);
+ 
+-	if (parser == NULL)
++	if (parser == NULL) {
++		/* Try using the fallback inittab */
++		parser = config_open2(INITTAB_FALLBACK, fopen_for_read);
++		if (parser == NULL)
+ #endif
+-	{
+-		/* No inittab file - set up some default behavior */
+-		/* Reboot on Ctrl-Alt-Del */
+-		new_init_action(CTRLALTDEL, "reboot", "");
+-		/* Umount all filesystems on halt/reboot */
+-		new_init_action(SHUTDOWN, "umount -a -r", "");
+-		/* Swapoff on halt/reboot */
+-		if (ENABLE_SWAPONOFF)
+-			new_init_action(SHUTDOWN, "swapoff -a", "");
+-		/* Prepare to restart init when a QUIT is received */
+-		new_init_action(RESTART, "init", "");
+-		/* Askfirst shell on tty1-4 */
+-		new_init_action(ASKFIRST, bb_default_login_shell, "");
+-//TODO: VC_1 instead of ""? "" is console -> ctty problems -> angry users
+-		new_init_action(ASKFIRST, bb_default_login_shell, VC_2);
+-		new_init_action(ASKFIRST, bb_default_login_shell, VC_3);
+-		new_init_action(ASKFIRST, bb_default_login_shell, VC_4);
+-		/* sysinit */
+-		new_init_action(SYSINIT, INIT_SCRIPT, "");
+-		return;
++		{
++			/* No inittab file - set up some default behavior */
++			/* Reboot on Ctrl-Alt-Del */
++			new_init_action(CTRLALTDEL, "reboot", "");
++			/* Umount all filesystems on halt/reboot */
++			new_init_action(SHUTDOWN, "umount -a -r", "");
++			/* Swapoff on halt/reboot */
++			if (ENABLE_SWAPONOFF)
++				new_init_action(SHUTDOWN, "swapoff -a", "");
++			/* Prepare to restart init when a QUIT is received */
++			new_init_action(RESTART, "init", "");
++			/* Askfirst shell on tty1-4 */
++			new_init_action(ASKFIRST, bb_default_login_shell, "");
++			//TODO: VC_1 instead of ""? "" is console -> ctty problems -> angry users
++			new_init_action(ASKFIRST, bb_default_login_shell, VC_2);
++			new_init_action(ASKFIRST, bb_default_login_shell, VC_3);
++			new_init_action(ASKFIRST, bb_default_login_shell, VC_4);
++			/* sysinit */
++			new_init_action(SYSINIT, INIT_SCRIPT, "");
++			return;
++		}
+ 	}
+ 
+ #if ENABLE_FEATURE_USE_INITTAB
+-- 
+1.6.0.6
+
