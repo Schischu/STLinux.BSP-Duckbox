@@ -1,0 +1,9 @@
+## SECTION=kernel_driver
+
+config DRIVER_PTI_NP
+	tristate
+	select KERNEL
+	select DRIVER_PLAYER2
+	prompt "driver-pti-np"
+	help
+	  FIXME
