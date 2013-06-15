@@ -11,6 +11,11 @@ config ENIGMA2_KEYMAP_ADB_BOX
 	prompt "enigma2-keymap-adb-box"
 	default m
 
+config ENIGMA2_KEYMAP_ATEVIO7500
+	tristate
+	prompt "enigma2-keymap-atevio7500"
+	default m
+
 config ENIGMA2_KEYMAP_CUBE
 	tristate
 	prompt "enigma2-keymap-cube"

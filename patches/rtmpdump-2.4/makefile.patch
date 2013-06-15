@@ -1,0 +1,42 @@
+Index: rtmpdump-2.4/Makefile
+===================================================================
+--- rtmpdump-2.4.orig/Makefile	2011-07-12 02:24:33.000000000 +0200
++++ rtmpdump-2.4/Makefile	2012-07-07 17:30:29.000000000 +0200
+@@ -1,6 +1,6 @@
+ VERSION=v2.4
+ 
+-prefix=/usr/local
++prefix=$(PREFIX)
+ 
+ CC=$(CROSS_COMPILE)gcc
+ LD=$(CROSS_COMPILE)ld
+@@ -22,7 +22,7 @@
+ DEF=-DRTMPDUMP_VERSION=\"$(VERSION)\" $(CRYPTO_DEF) $(XDEF)
+ OPT=-O2
+ CFLAGS=-Wall $(XCFLAGS) $(INC) $(DEF) $(OPT)
+-LDFLAGS=-Wall $(XLDFLAGS)
++LDFLAGS+=-Wall
+ 
+ bindir=$(prefix)/bin
+ sbindir=$(prefix)/sbin
+Index: rtmpdump-2.4/librtmp/Makefile
+===================================================================
+--- rtmpdump-2.4.orig/librtmp/Makefile	2011-07-12 02:24:33.000000000 +0200
++++ rtmpdump-2.4/librtmp/Makefile	2012-07-07 17:30:16.000000000 +0200
+@@ -1,6 +1,6 @@
+ VERSION=v2.4
+ 
+-prefix=/usr/local
++prefix=$(PREFIX)
+ 
+ incdir=$(prefix)/include/librtmp
+ bindir=$(prefix)/bin
+@@ -68,7 +68,7 @@
+ DEF=-DRTMPDUMP_VERSION=\"$(VERSION)\" $(CRYPTO_DEF) $(XDEF)
+ OPT=-O2
+ CFLAGS=-Wall $(XCFLAGS) $(INC) $(DEF) $(OPT) $(SO_DEF)
+-LDFLAGS=$(XLDFLAGS)
++#LDFLAGS=$(XLDFLAGS)
+ 
+ 
+ OBJS=rtmp.o log.o amf.o hashswf.o parseurl.o

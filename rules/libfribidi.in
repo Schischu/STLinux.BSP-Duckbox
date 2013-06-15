@@ -3,3 +3,4 @@
 config LIBFRIBIDI
 	tristate
 	prompt "libfribidi"
+	select GLIB

@@ -15,6 +15,7 @@
 
 ifdef PTXCONF_ENIGMA2_KEYMAPS
 PACKAGES-$(PTXCONF_ENIGMA2_KEYMAP_ADB_BOX)     += enigma2-keymap-adb-box
+PACKAGES-$(PTXCONF_ENIGMA2_KEYMAP_ATEVIO7500)  += enigma2-keymap-atevio7500
 PACKAGES-$(PTXCONF_ENIGMA2_KEYMAP_CUBE)        += enigma2-keymap-cube
 PACKAGES-$(PTXCONF_ENIGMA2_KEYMAP_CUBE_SMALL)  += enigma2-keymap-cube-small
 PACKAGES-$(PTXCONF_ENIGMA2_KEYMAP_HL101)       += enigma2-keymap-hl101
@@ -26,16 +27,17 @@ PACKAGES-$(PTXCONF_ENIGMA2_KEYMAP_UFS912)      += enigma2-keymap-ufs912
 PACKAGES-$(PTXCONF_ENIGMA2_KEYMAP_VIP2)        += enigma2-keymap-vip2
 endif
 
-ENIGMA2_KEYMAP_ADB_BOX_VERSION   := head
-ENIGMA2_KEYMAP_CUBE_VERSION := head
-ENIGMA2_KEYMAP_CUBE_SMALL_VERSION := head
-ENIGMA2_KEYMAP_HL101_VERSION := head
-ENIGMA2_KEYMAP_IPBOX_VERSION := head
-ENIGMA2_KEYMAP_SPARK_VERSION := head
+ENIGMA2_KEYMAP_ADB_BOX_VERSION     := head
+ENIGMA2_KEYMAP_ATEVIO7500_VERSION  := head
+ENIGMA2_KEYMAP_CUBE_VERSION        := head
+ENIGMA2_KEYMAP_CUBE_SMALL_VERSION  := head
+ENIGMA2_KEYMAP_HL101_VERSION       := head
+ENIGMA2_KEYMAP_IPBOX_VERSION       := head
+ENIGMA2_KEYMAP_SPARK_VERSION       := head
 ENIGMA2_KEYMAP_TF7700HDPVR_VERSION := head
-ENIGMA2_KEYMAP_UFS910_VERSION := head
-ENIGMA2_KEYMAP_UFS912_VERSION := head
-ENIGMA2_KEYMAP_VIP2_VERSION := head
+ENIGMA2_KEYMAP_UFS910_VERSION      := head
+ENIGMA2_KEYMAP_UFS912_VERSION      := head
+ENIGMA2_KEYMAP_VIP2_VERSION        := head
 
 # ----------------------------------------------------------------------------
 # Target-Install
@@ -57,6 +59,21 @@ $(STATEDIR)/enigma2-keymap-adb-box.targetinstall:
 
 	@$(call touch)
 
+$(STATEDIR)/enigma2-keymap-atevio7500.targetinstall:
+	@$(call targetinfo)
+
+	@$(call install_init,  enigma2-keymap-atevio7500)
+	@$(call install_fixup, enigma2-keymap-atevio7500,ARCH,noarch)
+	@$(call install_fixup, enigma2-keymap-atevio7500,PRIORITY,optional)
+	@$(call install_fixup, enigma2-keymap-atevio7500,SECTION,base)
+	@$(call install_fixup, enigma2-keymap-atevio7500,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup, enigma2-keymap-atevio7500,DESCRIPTION,missing)
+
+	@$(call install_copy, enigma2-keymap-atevio7500, 0, 0, 644, $(PTXDIST_WORKSPACE)/local_src/extra/enigma2/keymap_atevio7500.xml, /usr/share/enigma2/keymap.xml, 0)
+
+	@$(call install_finish, enigma2-keymap-atevio7500)
+
+	@$(call touch)
 
 $(STATEDIR)/enigma2-keymap-cube.targetinstall:
 	@$(call targetinfo)

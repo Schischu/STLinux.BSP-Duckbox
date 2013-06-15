@@ -1,0 +1,9 @@
+## SECTION=kernel_driver
+
+config DRIVER_FRONTCONTROLLER_NUVOTON
+	tristate
+	select KERNEL
+	prompt "driver-frontcontroller-nuvoton"
+	depends on PLATFORM_ATEVIO7500 || PLATFORM_FORTIS_HDBOX || PLATFORM_FORTIS_HS7810A || PLATFORM_FORTIS_HS7110 || PLATFORM_OCTAGON_1008
+	help
+	  FIXME

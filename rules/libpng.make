@@ -18,11 +18,11 @@ PACKAGES-$(PTXCONF_LIBPNG) += libpng
 #
 # Paths and names
 #
-LIBPNG_VERSION	:= 1.2.50
-LIBPNG_MD5	:= a3e00fccbfe356174ab515b5c00641c7
+LIBPNG_VERSION	:= 1.5.16
+LIBPNG_MD5	:= fd85af68f84cbdf549147811006488c1
 LIBPNG		:= libpng-$(LIBPNG_VERSION)
 LIBPNG_SUFFIX	:= tar.xz
-LIBPNG_URL	:= http://downloads.sourceforge.net/project/libpng/libpng12/$(LIBPNG_VERSION)/$(LIBPNG).$(LIBPNG_SUFFIX)
+LIBPNG_URL	:= http://downloads.sourceforge.net/project/libpng/libpng15/$(LIBPNG_VERSION)/$(LIBPNG).$(LIBPNG_SUFFIX)
 #$(call ptx/mirror, SF, libpng/$(LIBPNG).$(LIBPNG_SUFFIX))
 LIBPNG_SOURCE	:= $(SRCDIR)/$(LIBPNG).$(LIBPNG_SUFFIX)
 LIBPNG_DIR	:= $(BUILDDIR)/$(LIBPNG)
@@ -33,8 +33,8 @@ LIBPNG_LICENSE	:= libpng
 # ----------------------------------------------------------------------------
 
 LIBPNG_AUTOCONF := \
-	$(CROSS_AUTOCONF_USR) \
-	--without-libpng-compat
+	$(CROSS_AUTOCONF_USR)
+
 
 # ----------------------------------------------------------------------------
 # Target-Install
@@ -49,7 +49,7 @@ $(STATEDIR)/libpng.targetinstall:
 	@$(call install_fixup, libpng,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, libpng,DESCRIPTION,missing)
 
-	@$(call install_lib, libpng, 0, 0, 0644, libpng12)
+	@$(call install_lib, libpng, 0, 0, 0644, libpng15)
 
 	@$(call install_finish, libpng)
 
