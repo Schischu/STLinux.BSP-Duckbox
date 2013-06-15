@@ -1,0 +1,14 @@
+## SECTION=initmethod_bbinit
+
+config NETWORK_IFLOOP_INIT
+	tristate "network-ifloop-init"
+	default n
+
+if NETWORK_IFLOOP_INIT
+
+config NETWORK_IFLOOP_BBINIT_LINK
+	string
+	prompt "network-ifloop"
+	default "S27ifloop"
+
+endif
