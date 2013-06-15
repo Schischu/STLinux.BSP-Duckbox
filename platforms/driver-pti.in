@@ -8,7 +8,7 @@ config DRIVER_PTI
 	help
 	  FIXME
 
-if DRIVER_PTI
+if DRIVER_PTI || DRIVER_PTI_NP
 
 config DRIVER_PTI_DEV
 	bool

@@ -1,0 +1,70 @@
+--- busybox-1.20.2/util-linux/mdev.c.org	2012-07-02 16:08:25.000000000 +0200
++++ busybox-1.20.2/util-linux/mdev.c	2013-06-08 16:13:13.655993945 +0200
+@@ -94,6 +94,9 @@
+ //usage:       "\n"
+ //usage:       "If /dev/mdev.log file exists, debug log will be appended to it."
+ 
++#include <sys/socket.h>
++#include <netinet/in.h>
++#include <sys/un.h>
+ #include "libbb.h"
+ #include "xregex.h"
+ 
+@@ -822,6 +822,41 @@
+ 	}
+ }
+ 
++void hotplug_e2_helper(char* action, char* devpath, char* physdevpath)
++{
++	int sd = -1;
++	struct sockaddr_un serv_addr_un;
++
++	memset(&serv_addr_un, 0, sizeof(serv_addr_un));
++	serv_addr_un.sun_family = AF_LOCAL;
++	strcpy(serv_addr_un.sun_path, "/tmp/hotplug.socket");
++	sd = socket(AF_LOCAL, SOCK_STREAM, 0);
++	if (sd >= 0)
++	{
++		if (connect(sd, (const struct sockaddr*)&serv_addr_un, sizeof(serv_addr_un)) >= 0)
++		{
++			char data[1024];
++
++			if (!action) action = "-";
++			snprintf(data, sizeof(data) - 1, "ACTION=%s", action);
++			data[sizeof(data) - 1] = 0;
++			send(sd, data, strlen(data) + 1, 0);
++
++			if (!devpath) devpath = "-";
++			snprintf(data, sizeof(data) - 1, "DEVPATH=%s", devpath);
++			data[sizeof(data) - 1] = 0;
++			send(sd, data, strlen(data) + 1, 0);
++
++			if (!physdevpath) physdevpath = "-";
++			snprintf(data, sizeof(data) - 1, "PHYSDEVPATH=%s", physdevpath);
++			data[sizeof(data) - 1] = 0;
++
++			send(sd, data, strlen(data) + 1, 0);
++		}
++		close(sd);
++	}
++}
++
+ int mdev_main(int argc, char **argv) MAIN_EXTERNALLY_VISIBLE;
+ int mdev_main(int argc UNUSED_PARAM, char **argv)
+ {
+@@ -970,11 +970,14 @@
+ 			/* Ignoring "remove firmware". It was reported
+ 			 * to happen and to cause erroneous deletion
+ 			 * of device nodes. */
+-			if (!fw)
++			if (!fw) {
+ 				make_device(env_devname, temp, op);
++				hotplug_e2_helper(action, env_devpath, NULL);
++			}
+ 		}
+ 		else if (op == OP_add) {
+ 			make_device(env_devname, temp, op);
++			hotplug_e2_helper(action, env_devpath, NULL);
+ 			if (ENABLE_FEATURE_MDEV_LOAD_FIRMWARE) {
+ 				if (fw)
+					 load_firmware(fw, temp);

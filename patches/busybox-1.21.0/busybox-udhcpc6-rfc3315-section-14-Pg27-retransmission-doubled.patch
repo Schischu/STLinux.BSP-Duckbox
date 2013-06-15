@@ -1,0 +1,21 @@
+diff -Naupr busybox-orig/networking/udhcp/d6_dhcpc.c busybox-new/networking/udhcp/d6_dhcpc.c
+--- busybox-orig/networking/udhcp/d6_dhcpc.c	2012-08-16 22:52:27.000000000 +0800
++++ busybox-new/networking/udhcp/d6_dhcpc.c	2012-08-23 14:58:29.894235000 +0800
+@@ -1116,7 +1116,7 @@ int udhcpc6_main(int argc UNUSED_PARAM, 
+ 						xid = random_xid();
+ 					/* multicast */
+ 					send_d6_discover(xid, requested_ipv6);
+-					timeout = discover_timeout;
++					timeout = discover_timeout << packet_num;
+ 					packet_num++;
+ 					continue;
+ 				}
+@@ -1143,7 +1143,7 @@ int udhcpc6_main(int argc UNUSED_PARAM, 
+ 				if (!discover_retries || packet_num < discover_retries) {
+ 					/* send multicast select packet */
+ 					send_d6_select(xid);
+-					timeout = discover_timeout;
++					timeout = discover_timeout << packet_num;
+ 					packet_num++;
+ 					continue;
+ 				}
