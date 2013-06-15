@@ -1,0 +1,106 @@
+--- a/libavformat/aviobuf.c	2013-01-22 17:17:42.000000000 +0100
++++ b/libavformat/aviobuf.c.patched	2013-01-22 17:16:26.000000000 +0100
+@@ -32,7 +32,7 @@
+ #include "url.h"
+ #include <stdarg.h>
+ 
+-#define IO_BUFFER_SIZE 32768
++#define IO_BUFFER_SIZE (1024*1024)
+ 
+ /**
+  * Do seeks within this distance ahead of the current buffer by skipping
+@@ -701,6 +701,9 @@
+     } else {
+         buffer_size = IO_BUFFER_SIZE;
+     }
++
++    av_log(NULL, AV_LOG_DEBUG, "[libavformat/aviobuf.c] ffio_fdopen: buffer_size=%d\n", buffer_size);
++
+     buffer = av_malloc(buffer_size);
+     if (!buffer)
+         return AVERROR(ENOMEM);
+
+--- a/libavformat/utils.c	2013-05-10 02:16:07.000000000 +0200
++++ b/libavformat/utils.c.pached	2013-05-12 02:27:55.026366221 +0200
+@@ -2001,6 +2001,8 @@
+             if ((ret = avio_seek(s->pb, s->data_offset, SEEK_SET)) < 0)
+                 return ret;
+         }
++        
++        int count = 0;
+         for (;;) {
+             int read_status;
+             do{
+@@ -2008,6 +2010,17 @@
+             } while (read_status == AVERROR(EAGAIN));
+             if (read_status < 0)
+                 break;
++ 
++            if(read_status == 0)
++            {
++                usleep(10000);
++                count--;
++                if(count < 0) break;
++
++            }
++            else
++                count = 500;
++ 
+             av_free_packet(&pkt);
+             if(stream_index == pkt.stream_index && pkt.dts > timestamp){
+                 if(pkt.flags & AV_PKT_FLAG_KEY)
+--- a/cmdutils.c.orig	2013-05-10 02:16:03.000000000 +0200
++++ b/cmdutils.c	2013-05-12 02:18:55.870388894 +0200
+@@ -1008,8 +1008,7 @@
+         av_log(NULL, level, " Copyright (c) %d-%d the FFmpeg developers",
+                program_birth_year, this_year);
+     av_log(NULL, level, "\n");
+-    av_log(NULL, level, "%sbuilt on %s %s with %s\n",
+-           indent, __DATE__, __TIME__, CC_IDENT);
++    av_log(NULL, level, "%sbuilt with %s\n", indent, CC_IDENT);
+ 
+     av_log(NULL, level, "%sconfiguration: " FFMPEG_CONFIGURATION "\n", indent);
+ }
+--- a/ffprobe.c-orig	2013-02-25 20:27:01.214681641 +0100
++++ b/ffprobe.c	2013-02-25 20:27:21.414681657 +0100
+@@ -1925,8 +1925,6 @@
+     print_str("version", FFMPEG_VERSION);
+     print_fmt("copyright", "Copyright (c) %d-%d the FFmpeg developers",
+               program_birth_year, this_year);
+-    print_str("build_date", __DATE__);
+-    print_str("build_time", __TIME__);
+     print_str("compiler_ident", CC_IDENT);
+     print_str("configuration", FFMPEG_CONFIGURATION);
+     writer_print_section_footer(w);
+--- a/libavformat/mpegts.c	2013-05-10 02:16:06.000000000 +0200
++++ b/libavformat/mpegts.c	2013-05-12 02:18:55.870388894 +0200
+@@ -1362,11 +1362,24 @@
+         }
+         break;
+     case 0x56: /* DVB teletext descriptor */
+-        language[0] = get8(pp, desc_end);
+-        language[1] = get8(pp, desc_end);
+-        language[2] = get8(pp, desc_end);
+-        language[3] = 0;
+-        av_dict_set(&st->metadata, "language", language, 0);
++	{
++		int ttx_count = desc_len / 5;
++		for (i = 0; i < ttx_count; i++) {
++			char tmp_key[20];
++			char tmp_val[40];
++			language[0] = get8(pp, desc_end);
++			language[1] = get8(pp, desc_end);
++			language[2] = get8(pp, desc_end);
++			language[3] = 0;
++			av_dict_set(&st->metadata, "language", language, 0);
++			AVDictionaryEntry *t = NULL;
++			unsigned char b3 = get8(pp, desc_end);
++			unsigned char b4 = get8(pp, desc_end);
++			snprintf(tmp_key, sizeof(tmp_key), "teletext_%d", i);
++			snprintf(tmp_val, sizeof(tmp_val), "%d %s %u %u %u", pid, language, b3 >> 3, b3 & 0x7, b4); // pid lang type mag page
++			av_dict_set(&st->metadata, tmp_key, tmp_val, 0);
++		}
++	}
+         break;
+     case 0x59: /* subtitling descriptor */
+         language[0] = get8(pp, desc_end);

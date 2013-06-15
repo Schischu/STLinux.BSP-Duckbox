@@ -11,3 +11,13 @@ config DRIVER_PLAYER2
 	prompt "driver-player2"
 	help
 	  FIXME
+
+if DRIVER_PLAYER2
+
+config DRIVER_PLAYER2_VERSION
+	prompt "driver-player2 version"
+	string
+	default "191"
+
+endif
+

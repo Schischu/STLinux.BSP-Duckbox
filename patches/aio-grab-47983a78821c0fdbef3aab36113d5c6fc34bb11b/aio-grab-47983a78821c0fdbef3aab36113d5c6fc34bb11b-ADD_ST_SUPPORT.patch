@@ -63,7 +63,7 @@
  		if (strcasestr(buf,"PALLAS")) stb_type=PALLAS;
  		if (strcasestr(buf,"XILLEON")) stb_type=XILLEON;
  		if (strcasestr(buf,"BCM7401") || strcasestr(buf,"BCMFB")) stb_type=BRCM7401;
-+		if (strcasestr(buf,"STi")) stb_type=ST;
++		if (strcasestr(buf,"STi") || strcasestr(buf,"STx")) stb_type=ST;
  	}
  	pclose(pipe);
  

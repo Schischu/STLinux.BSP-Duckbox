@@ -1,0 +1,13 @@
+## SECTION=multimedia_libs
+
+config LIBASS
+	tristate
+	prompt "libass"
+	select FREETYPE
+	select LIBFRIBIDI
+	select FONTCONFIG
+	help
+	  libass is a portable subtitle renderer for the ASS/SSA
+	  (Advanced Substation Alpha/Substation Alpha)  subtitle 
+	  format.   It   is   mostly  compatible  with  VSFilter.
+	  See mplayer, vlc, xbmc...

@@ -33,7 +33,7 @@
 
 #include <linux/mutex.h>
 
-#include "dvb_frontend.h"
+#include <linux/dvb/dvb_frontend.h>
 
 #include "avl2108_platform.h"
 

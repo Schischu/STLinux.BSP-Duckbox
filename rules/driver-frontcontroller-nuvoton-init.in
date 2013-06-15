@@ -1,0 +1,14 @@
+## SECTION=initmethod_bbinit
+
+config DRIVER_FRONTCONTROLLER_NUVOTON_INIT
+	tristate "frontcontroller-nuvoton-init"
+	default n
+
+if DRIVER_FRONTCONTROLLER_NUVOTON_INIT
+
+config DRIVER_FRONTCONTROLLER_NUVOTON_BBINIT_LINK
+	string
+	prompt "frontcontroller-nuvoton"
+	default "S42frontcontroller-nuvoton"
+
+endif

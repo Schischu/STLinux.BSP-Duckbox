@@ -17,11 +17,11 @@ PACKAGES-$(PTXCONF_LIBFRIBIDI) += libfribidi
 #
 # Paths and names
 #
-LIBFRIBIDI_VERSION	:=0.10.4
-LIBFRIBIDI_MD5		:= 4efd9240584a4f43aeba26c88f03bba5
+LIBFRIBIDI_VERSION	:=0.19.5
+LIBFRIBIDI_MD5		:= 925bafb97afee8a2fc2d0470c072a155
 LIBFRIBIDI		:= fribidi-$(LIBFRIBIDI_VERSION)
-LIBFRIBIDI_SUFFIX		:= tar.gz
-LIBFRIBIDI_SOURCE		:= $(SRCDIR)/$(LIBFRIBIDI).$(LIBFRIBIDI_SUFFIX)
+LIBFRIBIDI_SUFFIX	:= tar.bz2
+LIBFRIBIDI_SOURCE	:= $(SRCDIR)/$(LIBFRIBIDI).$(LIBFRIBIDI_SUFFIX)
 LIBFRIBIDI_DIR		:= $(BUILDDIR)/$(LIBFRIBIDI)
 LIBFRIBIDI_LICENSE	:= BSD,GPLv2+
 
@@ -38,9 +38,7 @@ LIBFRIBIDI_ENV 	:= $(CROSS_ENV)
 #
 # autoconf
 #
-LIBFRIBIDI_AUTOCONF := $(CROSS_AUTOCONF_USR) \
-	--enable-memopt
-
+LIBFRIBIDI_AUTOCONF := $(CROSS_AUTOCONF_USR)
 # ----------------------------------------------------------------------------
 # Target-Install
 # ----------------------------------------------------------------------------
