@@ -1,0 +1,19 @@
+#!/bin/sh
+
+case $1 in
+start)
+	echo "starting frontcontroller-nuvoton"
+
+	insmod /lib/modules/nuvoton.ko
+
+	exit 0
+
+	;;
+stop)
+	echo "stopping frontcontroller-nuvoton... error, frontcontroller-nuvoton cannot be stopped, aborting"
+	;;
+*)
+	echo "usage: $0 [start|stop]"
+	;;
+esac
+

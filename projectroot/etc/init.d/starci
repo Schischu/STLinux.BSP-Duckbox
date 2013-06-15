@@ -1,0 +1,19 @@
+#!/bin/sh
+
+case $1 in
+start)
+	echo "starting starci"
+
+	insmod /lib/modules/starci.ko
+
+	exit 0
+
+	;;
+stop)
+	echo "stopping starci... error, starci cannot be stopped, aborting"
+	;;
+*)
+	echo "usage: $0 [start|stop]"
+	;;
+esac
+

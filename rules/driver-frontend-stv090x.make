@@ -17,10 +17,10 @@ PACKAGES-$(PTXCONF_DRIVER_FRONTEND_STV090X) += driver-frontend-stv090x
 # Paths and names and versions
 #
 DRIVER_FRONTEND_STV090X_VERSION		:= 1.0
-DRIVER_FRONTEND_STV090X		:= frontend-stv090x
+DRIVER_FRONTEND_STV090X			:= frontend-stv090x
 DRIVER_FRONTEND_STV090X_URL		:= lndir://$(PTXDIST_WORKSPACE)/local_src/driver/frontends/stv090x
 DRIVER_FRONTEND_STV090X_DIR		:= $(BUILDDIR)/$(DRIVER_FRONTEND_STV090X)
-DRIVER_FRONTEND_STV090X_LICENSE	:= unknown
+DRIVER_FRONTEND_STV090X_LICENSE		:= unknown
 
 ifdef PTXCONF_DRIVER_FRONTEND_STV090X
 $(STATEDIR)/kernel.targetinstall.post: $(STATEDIR)/driver-frontend-stv090x.targetinstall
@@ -30,8 +30,8 @@ endif
 # Prepare
 # ----------------------------------------------------------------------------
 
-#ifdef PTXCONF_PLATFORM_AT7500
-#DRIVER_FRONTEND_STV090X_EXTRAS := AT7500=y EXTRA_CFLAGSS=-DAT7500
+#ifdef PTXCONF_PLATFORM_ATEVIO7500
+#DRIVER_FRONTEND_STV090X_EXTRAS := ATEVIO7500=y EXTRA_CFLAGSS=-DATEVIO7500
 #endif
 #ifdef PTXCONF_PLATFORM_UFS913
 #DRIVER_FRONTEND_STV090X_EXTRAS := UFS913=y EXTRA_CFLAGSS=-DUFS913
@@ -126,7 +126,7 @@ $(STATEDIR)/driver-frontend-stv090x.targetinstall:
 
 PACKAGES-$(PTXCONF_DRIVER_FRONTEND_STV090X_INIT) += driver-frontend-stv090x-init
 
-DRIVER_FRONTEND_STV090X_INIT_VERSION	:= head10
+DRIVER_FRONTEND_STV090X_INIT_VERSION := head10
 
 $(STATEDIR)/driver-frontend-stv090x-init.targetinstall:
 	@$(call targetinfo)
