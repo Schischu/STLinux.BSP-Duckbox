@@ -37,6 +37,7 @@ $(STATEDIR)/enigma2-skins-sh4.get:
 			cd -; \
 		else \
 			git clone $(ENIGMA2_SKINS_SH4_URL) $(ENIGMA2_SKINS_SH4_SOURCE_GIT) 2>&1 > /dev/null; \
+			cd $(ENIGMA2_SKINS_SH4_SOURCE_GIT); \
 			git checkout master 2>&1 > /dev/null; \
 		fi; \
 	) 2>&1 > /dev/null

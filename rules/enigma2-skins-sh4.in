@@ -5,8 +5,6 @@ config ENIGMA2_SKINS_SH4
 	default y
 	select ENIGMA2_PLI
 
-if ENIGMA2_SKINS_SH4
-
 #for p in `ls .`; do echo -e "config ENIGMA2_SKIN_`echo ${p^^} | sed -e 's/[^a-zA-Z0-9]/_/g'`\n\ttristate \"enigma2-skin-`echo ${p,,} | sed -e 's/[^a-zA-Z0-9\-]/-/g'`\"\n\tdepends on ENIGMA2_SKINS_SH4\n"; done
 
 config ENIGMA2_SKIN_BASIC_HD
@@ -165,4 +163,3 @@ config ENIGMA2_SKIN_YADS_HD
 	tristate "enigma2-skin-yads-hd"
 	depends on ENIGMA2_SKINS_SH4
 
-endif
