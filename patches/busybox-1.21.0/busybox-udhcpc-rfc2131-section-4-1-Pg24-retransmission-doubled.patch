@@ -1,0 +1,21 @@
+diff -Naupr busybox-orig/networking/udhcp/dhcpc.c busybox-new/networking/udhcp/dhcpc.c
+--- busybox-orig/networking/udhcp/dhcpc.c	2012-08-16 22:52:27.000000000 +0800
++++ busybox-new/networking/udhcp/dhcpc.c	2012-08-22 19:06:03.533954000 +0800
+@@ -1447,7 +1447,7 @@ int udhcpc_main(int argc UNUSED_PARAM, c
+ 						xid = random_xid();
+ 					/* broadcast */
+ 					send_discover(xid, requested_ip);
+-					timeout = discover_timeout;
++					timeout = discover_timeout << packet_num;
+ 					packet_num++;
+ 					continue;
+ 				}
+@@ -1474,7 +1474,7 @@ int udhcpc_main(int argc UNUSED_PARAM, c
+ 				if (!discover_retries || packet_num < discover_retries) {
+ 					/* send broadcast select packet */
+ 					send_select(xid, server_addr, requested_ip);
+-					timeout = discover_timeout;
++					timeout = discover_timeout << packet_num;
+ 					packet_num++;
+ 					continue;
+ 				}
