@@ -1,0 +1,29 @@
+#!/bin/sh
+
+case $1 in
+start)
+ # Start ifloop
+ echo -n "starting ifloop..."
+ ifconfig lo up
+ if [ "$?" = "0" ]; then
+ echo "done"
+ else
+ echo "failed"
+ fi
+
+ exit 0
+
+ ;;
+stop)
+ echo "stopping ifloop..."
+ ifconfig lo down
+ if [ "$?" = "0" ]; then
+ echo "done"
+ else
+ echo "failed"
+ fi
+ ;;
+*)
+ echo "usage: $0 [start|stop]"
+ ;;
+esac
