@@ -21,11 +21,7 @@
 #include <linux/delay.h>
 #include <linux/time.h>
 #include <linux/errno.h>
-#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,30)
-#include <asm/semaphore.h>
-#else
 #include <linux/semaphore.h>
-#endif
 #include <linux/platform_device.h>
 #include <linux/mutex.h>
 
@@ -41,15 +37,6 @@ struct StreamContext_s;
 #include <linux/dvb/dmx.h>
 
 #include "pti.h"
-
-#if defined(PLAYER_179) || defined(PLAYER_191)
-#if (defined(HL101) || defined(VIP1_V2) || defined(VIP2_V1) || defined(SPARK) || defined(SPARK7162))
-static int waitMS=20;
-static int videoMem=4096;
-#endif
-#elif defined(PLAYER_131)
-#else
-#endif
 
 int debug ;
 #define dprintk(x...) do { if (debug) printk(KERN_WARNING x); } while (0)
@@ -75,10 +62,8 @@ struct tSlot
 
 struct pti_internal {
   struct  dvb_demux* demux[TAG_COUNT];
-  #if defined(SPARK7162)
-  int		demux_tag[TAG_COUNT];
-  #endif
-  int	  err_count;
+  int                demux_tag[TAG_COUNT];
+  int                err_count;
 
   wait_queue_head_t queue;
 
@@ -201,9 +186,9 @@ static void stpti_setup_dma(struct pti_internal *pti)
   writel( virt_to_phys(pti->back_buffer), pti->pti_io + PTI_DMA_0_READ );
   writel( virt_to_phys(pti->back_buffer + PTI_BUFFER_SIZE - 1), pti->pti_io + PTI_DMA_0_TOP );
 #ifdef __TDT__
-	dma_0_buffer_base = virt_to_phys(pti->back_buffer);
-	dma_0_buffer_top = virt_to_phys(pti->back_buffer) + PTI_BUFFER_SIZE;
-	dma_0_buffer_rp = dma_0_buffer_base;
+  dma_0_buffer_base = virt_to_phys(pti->back_buffer);
+  dma_0_buffer_top = virt_to_phys(pti->back_buffer) + PTI_BUFFER_SIZE;
+  dma_0_buffer_rp = dma_0_buffer_base;
 #endif
 
   writel( 0x8, pti->pti_io + PTI_DMA_0_SETUP ); /* 8 word burst */
@@ -348,13 +333,8 @@ static int stream_injector(void *user_data)
 	//printk(".");
 
 	/* invalidate the cache */
-#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,30)
-	dma_cache_inv((void*)&internal->back_buffer[offset],
-			count * PACKET_SIZE);
-#else
 	invalidate_ioremap_region(0, internal->back_buffer,
 			offset, count * PACKET_SIZE);
-#endif
 
 #ifdef STREAMCHECK
 	/* The first bytes of the packet after the header should
@@ -392,13 +372,8 @@ static int stream_injector(void *user_data)
 				 11 - SWTS0 */
 	    int tag = (pFrom[0] >> 2) & 0xf;
 	    /* only copy if the demux exists */
-	#if defined(SPARK7162)
 	    if((tag < TAG_COUNT) &&
 	       (internal->demux[internal->demux_tag[tag]] != NULL))
-	#else
-	    if((tag < TAG_COUNT) &&
-	       (internal->demux[tag] != NULL))
-	#endif
 	    {
 
 #ifdef STREAMCHECK
@@ -463,13 +438,8 @@ static int stream_injector(void *user_data)
 	      {
 		//printk("%d", tag);
 		/* inject the packets */
-	#if defined(SPARK7162)
 			demultiplex_dvb_packets(internal->demux[internal->demux_tag[tag]],
 						auxbuf[tag], count1[tag]);
-	#else
-			demultiplex_dvb_packets(internal->demux[tag],
-						auxbuf[tag], count1[tag]);
-	#endif
 		pTo[tag] = auxbuf[tag];
 		count1[tag] = 0;
 	      }
@@ -479,13 +449,8 @@ static int stream_injector(void *user_data)
 	  for(n = 0; n < TAG_COUNT; n++)
 	  {
 	    /* inject remainders if any */
-	#if defined(SPARK7162)
 	    if((count1[n] > 0) && (internal->demux[internal->demux_tag[n]] != NULL))
 	      demultiplex_dvb_packets(internal->demux[internal->demux_tag[n]], auxbuf[n], count1[n]);
-	#else
-	    if((count1[n] > 0) && (internal->demux[n] != NULL))
-	      demultiplex_dvb_packets(internal->demux[n], auxbuf[n], count1[n]);
-	#endif
 	  }
 	}
 
@@ -735,7 +700,6 @@ void pti_hal_init ( struct stpti *pti , struct dvb_demux* demux, void (*_demulti
 
   memset(internal, 0, sizeof(struct pti_internal));
 
-	#if defined(SPARK7162)
 	{
 		int i;
 		for (i = 0; i < TAG_COUNT; i++)
@@ -743,7 +707,6 @@ void pti_hal_init ( struct stpti *pti , struct dvb_demux* demux, void (*_demulti
 			internal->demux_tag[i] = i;
 		}
 	}
-	#endif
 
   /* Allocate the back buffer */
   internal->back_buffer = (char*)bigphysarea_alloc_pages((PTI_BUFFER_SIZE+PAGE_SIZE-1) / PAGE_SIZE,0,GFP_KERNEL);
@@ -752,7 +715,7 @@ void pti_hal_init ( struct stpti *pti , struct dvb_demux* demux, void (*_demulti
      printk("error allocating back buffer !!!!!!!!!!!!!!!!!!!!!!!!\n");
 
   /* ioremap the pti address space */
-#if defined(UFS912) || defined(SPARK) || defined(SPARK7162) || defined(HS7810A)
+#if defined(CONFIG_CPU_SUBTYPE_STX7105) || defined(CONFIG_CPU_SUBTYPE_STX7111)
   start = 0xfe230000;
 #else
   start = 0x19230000;
@@ -1014,7 +977,6 @@ int pti_hal_set_source ( int session_handle, const dmx_source_t source )
 #endif
 {
 		printk("source %d, session_handle %d\n", source, session_handle);
-		#if defined(SPARK7162)
 		{
 			int i;
 			int old_session;
@@ -1057,7 +1019,6 @@ int pti_hal_set_source ( int session_handle, const dmx_source_t source )
 						i, internal->demux_tag[i]);
 			}
 		}
-		#endif
         return 1;
 }
 
@@ -1072,9 +1033,7 @@ int pti_hal_get_new_session_handle ( int source, struct dvb_demux * demux )
 	{
 		printk("session %d, demux %p\n", source, demux);
 		internal->demux[source] = demux;
-		#if defined(SPARK7162)
 		internal->demux_tag[source] = source;
-		#endif
 	}
 
 	return source;
@@ -1114,18 +1073,6 @@ static void __exit pti_exit(void)
 
 module_init             (pti_init);
 module_exit             (pti_exit);
-
-#if defined(PLAYER_179) || defined(PLAYER_191)
-#if (defined(HL101) || defined(VIP1_V2) || defined(VIP2_V1) || defined(SPARK) || defined(SPARK7162))
-module_param(waitMS, int, 0444);
-MODULE_PARM_DESC(waitMS, "waitMS");
-
-module_param(videoMem, int, 0444);
-MODULE_PARM_DESC(videoMem, "videoMem\n");
-#endif
-#elif defined(PLAYER_131)
-#else
-#endif
 
 MODULE_AUTHOR("Peter Bennett <peter.bennett@st.com>; adapted by TDT");
 MODULE_DESCRIPTION("STPTI DVB Driver");
