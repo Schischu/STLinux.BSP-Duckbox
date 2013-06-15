@@ -44,6 +44,7 @@ $(STATEDIR)/driver-pti-np.compile:
 		$(MAKE) $(KERNEL_MAKEVARS) \
 		-C $(KERNEL_DIR) \
 		M=$(DRIVER_PTI_NP_DIR) \
+		EXTRA_CFLAGSS=-DPLAYER_$(call remove_quotes,$(PTXCONF_DRIVER_PLAYER2_VERSION)) \
 		modules
 	
 	@$(call touch)
@@ -60,6 +61,7 @@ $(STATEDIR)/driver-pti-np.install:
 		-C $(KERNEL_DIR) \
 		M=$(DRIVER_PTI_NP_DIR) \
 		INSTALL_MOD_PATH=$(DRIVER_PTI_NP_PKGDIR) \
+		EXTRA_CFLAGSS=-DPLAYER_$(call remove_quotes,$(PTXCONF_DRIVER_PLAYER2_VERSION)) \
 		modules_install
 	
 	@$(call touch)
