@@ -1,0 +1,168 @@
+## SECTION=multimedia_libs
+
+config ENIGMA2_SKINS_SH4
+	bool
+	default y
+	select ENIGMA2_PLI
+
+if ENIGMA2_SKINS_SH4
+
+#for p in `ls .`; do echo -e "config ENIGMA2_SKIN_`echo ${p^^} | sed -e 's/[^a-zA-Z0-9]/_/g'`\n\ttristate \"enigma2-skin-`echo ${p,,} | sed -e 's/[^a-zA-Z0-9\-]/-/g'`\"\n\tdepends on ENIGMA2_SKINS_SH4\n"; done
+
+config ENIGMA2_SKIN_BASIC_HD
+	tristate "enigma2-skin-basic-hd"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_BRUSHEDALU_HD
+	tristate "enigma2-skin-brushedalu-hd"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_DMCONCINNITY_HD
+	tristate "enigma2-skin-dmconcinnity-hd"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_DMM_HD
+	tristate "enigma2-skin-dmm-hd"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_DREAMMM_HD
+	tristate "enigma2-skin-dreammm-hd"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_DREAMTV_HD
+	tristate "enigma2-skin-dreamtv-hd"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_DTV_HD
+	tristate "enigma2-skin-dtv-hd"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_DTV_HD_RELOADED
+	tristate "enigma2-skin-dtv-hd-reloaded"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_ELGATO_HD
+	tristate "enigma2-skin-elgato-hd"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_KERNI_HD1
+	tristate "enigma2-skin-kerni-hd1"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_KERNI_HD1R2
+	tristate "enigma2-skin-kerni-hd1r2"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_MAKEFILE_AM
+	tristate "enigma2-skin-makefile-am"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_NEMESIS_BLACKBOX
+	tristate "enigma2-skin-nemesis-blackbox"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_NEMESIS_BLUELINE
+	tristate "enigma2-skin-nemesis-blueline"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_NEMESIS_BLUELINE_EXTENDED
+	tristate "enigma2-skin-nemesis-blueline-extended"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_NEMESIS_BLUELINE_SINGLE
+	tristate "enigma2-skin-nemesis-blueline-single"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_NEMESIS_CHROMELINE
+	tristate "enigma2-skin-nemesis-chromeline"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_NEMESIS_CHROMELINE_COBOLT
+	tristate "enigma2-skin-nemesis-chromeline-cobolt"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_NEMESIS_FLATLINE
+	tristate "enigma2-skin-nemesis-flatline"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_NEMESIS_FLATLINE_BLUE
+	tristate "enigma2-skin-nemesis-flatline-blue"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_NEMESIS_FLATLINE_PICON_BLUE
+	tristate "enigma2-skin-nemesis-flatline-picon-blue"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_NEMESIS_FLATLINE_PICON_LAVA
+	tristate "enigma2-skin-nemesis-flatline-picon-lava"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_NEMESIS_GLASSLINE
+	tristate "enigma2-skin-nemesis-glassline"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_NEMESIS_GREENLINE
+	tristate "enigma2-skin-nemesis-greenline"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_NEMESIS_GREENLINE_EXTENDED
+	tristate "enigma2-skin-nemesis-greenline-extended"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_NEMESIS_GREENLINE_SINGLE
+	tristate "enigma2-skin-nemesis-greenline-single"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_NEMESIS_GREYLINE
+	tristate "enigma2-skin-nemesis-greyline"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_NEMESIS_GREYLINE_EXTENDED
+	tristate "enigma2-skin-nemesis-greyline-extended"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_NEMESIS_GREYLINE_SINGLE
+	tristate "enigma2-skin-nemesis-greyline-single"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_NEMESIS_SHADOWLINE
+	tristate "enigma2-skin-nemesis-shadowline"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_SIMPLE
+	tristate "enigma2-skin-simple"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_SWAIN
+	tristate "enigma2-skin-swain"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_SWAIN_HD
+	tristate "enigma2-skin-swain-hd"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_ULTRAVIOLET
+	tristate "enigma2-skin-ultraviolet"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_VALI_HD_ATLANTIS
+	tristate "enigma2-skin-vali-hd-atlantis"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_VALI_HD_NANO
+	tristate "enigma2-skin-vali-hd-nano"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_VALI_HD_WARP
+	tristate "enigma2-skin-vali-hd-warp"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_VALI_XD
+	tristate "enigma2-skin-vali-xd"
+	depends on ENIGMA2_SKINS_SH4
+
+config ENIGMA2_SKIN_YADS_HD
+	tristate "enigma2-skin-yads-hd"
+	depends on ENIGMA2_SKINS_SH4
+
+endif
