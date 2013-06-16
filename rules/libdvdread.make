@@ -82,18 +82,12 @@ $(STATEDIR)/libdvdread.install:
 	@$(call world/install, LIBDVDREAD)
 	
 	( \
-		cp  $(LIBDVDREAD_PKGDIR)/usr/bin/dvdread-config $(PTXDIST_SYSROOT_CROSS)/bin/dvdread-config; \
 		cp -r $(LIBDVDREAD_PKGDIR)/usr/include/* $(SYSROOT)/usr/include/; \
 		cp -r $(LIBDVDREAD_PKGDIR)/usr/lib/* $(SYSROOT)/usr/lib/; \
-		sed -i "s/-I\$${prefix}\/include/-I\$${SYSROOT}\/usr\/include/g" $(PTXDIST_SYSROOT_CROSS)/bin/dvdread-config; \
-		sed -i "s/-L\/usr\/lib/-L\$${SYSROOT}\/usr\/lib/g" $(PTXDIST_SYSROOT_CROSS)/bin/dvdread-config; \
+		sed -i "s,-I\$${prefix}/include,-I\$${SYSROOT}/usr/include,g" $(LIBDVDREAD_PKGDIR)/usr/bin/dvdread-config; \
+		sed -i "s,-L/usr/lib,-L\$${SYSROOT}/usr/lib,g" $(LIBDVDREAD_PKGDIR)/usr/bin/dvdread-config; \
 	) 2>&1 > /dev/null
 	
-	cat $(PTXDIST_SYSROOT_CROSS)/bin/dvdread-config
-	
-	@$(call touch)
-
-$(STATEDIR)/libdvdread.install.post:
 	@$(call touch)
 
 # ----------------------------------------------------------------------------

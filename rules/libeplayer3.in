@@ -1,0 +1,9 @@
+## SECTION=multimedia_gstreamer
+
+menuconfig LIBEPLAYER3
+	tristate
+	select FFMPEG
+	select LIBPNG
+	prompt "libeplayer3              "
+	help
+	  FIXME
