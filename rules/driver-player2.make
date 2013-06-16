@@ -31,27 +31,34 @@ endif
 # ----------------------------------------------------------------------------
 
 ifdef PTXCONF_DRIVER_FRONTEND_CX24116
-DRIVER_PLAYER2_EXTRAS := EXTRA_CFLAGSS=-DFRONTEND_CX24116
+DRIVER_PLAYER2_EXTRAS += -DFRONTEND_CX24116
 endif
 ifdef PTXCONF_DRIVER_FRONTEND_AVL2108
-DRIVER_PLAYER2_EXTRAS := EXTRA_CFLAGSS=-DFRONTEND_AVL2108
+DRIVER_PLAYER2_EXTRAS += -DFRONTEND_AVL2108
 endif
 ifdef PTXCONF_DRIVER_FRONTEND_STV090X
-DRIVER_PLAYER2_EXTRAS := EXTRA_CFLAGSS=-DFRONTEND_STV090X
+DRIVER_PLAYER2_EXTRAS += -DFRONTEND_STV090X
 endif
 ifdef PTXCONF_DRIVER_FRONTEND_CORE
-DRIVER_PLAYER2_EXTRAS := EXTRA_CFLAGSS=-DFRONTEND_CORE
+DRIVER_PLAYER2_EXTRAS += -DFRONTEND_CORE
 endif
 ifdef PTXCONF_DRIVER_FRONTEND_SPARK
 ifdef PTXCONF_PLATFORM_SPARK
-DRIVER_PLAYER2_EXTRAS := EXTRA_CFLAGSS=-DFRONTEND_STV090X
+DRIVER_PLAYER2_EXTRAS += -DFRONTEND_STV090X
 endif
 ifdef PTXCONF_PLATFORM_SPARK7162
-DRIVER_PLAYER2_EXTRAS := EXTRA_CFLAGSS=-DFRONTEND_SPARK7162
+DRIVER_PLAYER2_EXTRAS += -DFRONTEND_SPARK7162
 endif
 endif
 ifdef PTXCONF_DRIVER_FRONTEND_MULTITUNER
-DRIVER_PLAYER2_EXTRAS := EXTRA_CFLAGSS=-DFRONTEND_MULTITUNER
+DRIVER_PLAYER2_EXTRAS += -DFRONTEND_MULTITUNER
+endif
+
+ifdef PTXCONF_DRIVER_MULTICOM_V3
+DRIVER_PLAYER2_EXTRAS += -DMULTICOM_VERSION=3
+endif
+ifdef PTXCONF_DRIVER_MULTICOM_V4
+DRIVER_PLAYER2_EXTRAS += -DMULTICOM_VERSION=4
 endif
 
 $(STATEDIR)/driver-player2.prepare:
@@ -72,7 +79,8 @@ $(STATEDIR)/driver-player2.compile:
 		TREE_ROOT=$(DRIVER_PLAYER2_DIR) \
 		CONFIG_MODULES_PATH=$(SYSROOT)/usr/include \
 		CONFIG_KERNEL_PATH="$(PTXDIST_SYSROOT_HOST)/usr" \
-		$(DRIVER_PLAYER2_EXTRAS) \
+		CONFIG_KERNEL_BUILD=$(KERNEL_DIR) \
+		EXTRA_CFLAGSS="$(DRIVER_PLAYER2_EXTRAS)" \
 		modules
 	
 	@$(call touch)
@@ -89,13 +97,19 @@ $(STATEDIR)/driver-player2.install:
 		-C $(KERNEL_DIR) \
 		M=$(DRIVER_PLAYER2_DIR)/linux \
 		INSTALL_MOD_PATH=$(DRIVER_PLAYER2_PKGDIR) \
-		$(DRIVER_PLAYER2_EXTRAS) \
+		EXTRA_CFLAGSS="$(DRIVER_PLAYER2_EXTRAS)" \
 		modules_install
 	
 	mkdir -p $(SYSROOT)/usr/include/linux/dvb
 	cp $(DRIVER_PLAYER2_DIR)/linux/include/linux/dvb/stm_ioctls.h $(SYSROOT)/usr/include/linux/dvb
+	cp $(DRIVER_PLAYER2_DIR)/linux/include/linux/dvb/stm_dvb.h $(SYSROOT)/usr/include/linux/dvb
+	cp $(DRIVER_PLAYER2_DIR)/linux/include/linux/dvb/stm_audio.h $(SYSROOT)/usr/include/linux/dvb
+	cp $(DRIVER_PLAYER2_DIR)/linux/include/linux/dvb/stm_video.h $(SYSROOT)/usr/include/linux/dvb
+	cp $(DRIVER_PLAYER2_DIR)/player/wrapper/player_api.h $(SYSROOT)/usr/include/
 	cp $(DRIVER_PLAYER2_DIR)/linux/drivers/media/dvb/stm/dvb/backend.h $(SYSROOT)/usr/include/linux/dvb
+ifeq ($(DRIVER_PLAYER2_VERSION),191)
 	cp $(DRIVER_PLAYER2_DIR)/linux/drivers/media/dvb/stm/dvb/backend_ops.h $(SYSROOT)/usr/include/linux/dvb
+endif
 	cp $(DRIVER_PLAYER2_DIR)/linux/drivers/media/dvb/stm/dvb/dvb_module.h $(SYSROOT)/usr/include/linux/dvb
 	cp $(DRIVER_PLAYER2_DIR)/linux/drivers/media/dvb/stm/dvb/dvb_audio.h $(SYSROOT)/usr/include/linux/dvb
 	cp $(DRIVER_PLAYER2_DIR)/linux/drivers/media/dvb/stm/dvb/dvb_video.h $(SYSROOT)/usr/include/linux/dvb

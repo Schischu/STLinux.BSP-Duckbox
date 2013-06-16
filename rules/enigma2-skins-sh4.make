@@ -316,26 +316,6 @@ $(STATEDIR)/enigma2-skin-kerni-hd1r2.targetinstall:
 	@$(call touch)
 
 # ----------------------------------------------------------------------------
-PACKAGES-$(PTXCONF_ENIGMA2_SKIN_MAKEFILE_AM)  += enigma2-skin-makefile-am
-ENIGMA2_SKIN_MAKEFILE_AM_VERSION              := $(ENIGMA2_SKINS_SH4_VERSION)
-ENIGMA2_SKIN_MAKEFILE_AM_PKGDIR               := $(ENIGMA2_SKINS_SH4_PKGDIR)
-
-$(STATEDIR)/enigma2-skin-makefile-am.targetinstall:
-	@$(call targetinfo)
-	
-	@$(call install_init,   enigma2-skin-makefile-am)
-	@$(call install_fixup,  enigma2-skin-makefile-am, PRIORITY,    optional)
-	@$(call install_fixup,  enigma2-skin-makefile-am, SECTION,     base)
-	@$(call install_fixup,  enigma2-skin-makefile-am, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
-	@$(call install_fixup,  enigma2-skin-makefile-am, DESCRIPTION, missing)
-	
-	@$(call install_tree,   enigma2-skin-makefile-am, 0, 0, -, /usr/share/enigma2/Makefile.am)
-	
-	@$(call install_finish, enigma2-skin-makefile-am)
-	
-	@$(call touch)
-
-# ----------------------------------------------------------------------------
 PACKAGES-$(PTXCONF_ENIGMA2_SKIN_NEMESIS_BLACKBOX)  += enigma2-skin-nemesis-blackbox
 ENIGMA2_SKIN_NEMESIS_BLACKBOX_VERSION              := $(ENIGMA2_SKINS_SH4_VERSION)
 ENIGMA2_SKIN_NEMESIS_BLACKBOX_PKGDIR               := $(ENIGMA2_SKINS_SH4_PKGDIR)
@@ -492,46 +472,6 @@ $(STATEDIR)/enigma2-skin-nemesis-flatline-blue.targetinstall:
 	@$(call install_tree,   enigma2-skin-nemesis-flatline-blue, 0, 0, -, /usr/share/enigma2/Nemesis.Flatline.Blue)
 	
 	@$(call install_finish, enigma2-skin-nemesis-flatline-blue)
-	
-	@$(call touch)
-
-# ----------------------------------------------------------------------------
-PACKAGES-$(PTXCONF_ENIGMA2_SKIN_NEMESIS_FLATLINE_PICON_BLUE)  += enigma2-skin-nemesis-flatline-picon-blue
-ENIGMA2_SKIN_NEMESIS_FLATLINE_PICON_BLUE_VERSION              := $(ENIGMA2_SKINS_SH4_VERSION)
-ENIGMA2_SKIN_NEMESIS_FLATLINE_PICON_BLUE_PKGDIR               := $(ENIGMA2_SKINS_SH4_PKGDIR)
-
-$(STATEDIR)/enigma2-skin-nemesis-flatline-picon-blue.targetinstall:
-	@$(call targetinfo)
-	
-	@$(call install_init,   enigma2-skin-nemesis-flatline-picon-blue)
-	@$(call install_fixup,  enigma2-skin-nemesis-flatline-picon-blue, PRIORITY,    optional)
-	@$(call install_fixup,  enigma2-skin-nemesis-flatline-picon-blue, SECTION,     base)
-	@$(call install_fixup,  enigma2-skin-nemesis-flatline-picon-blue, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
-	@$(call install_fixup,  enigma2-skin-nemesis-flatline-picon-blue, DESCRIPTION, missing)
-	
-	@$(call install_tree,   enigma2-skin-nemesis-flatline-picon-blue, 0, 0, -, /usr/share/enigma2/Nemesis.Flatline.Picon.Blue)
-	
-	@$(call install_finish, enigma2-skin-nemesis-flatline-picon-blue)
-	
-	@$(call touch)
-
-# ----------------------------------------------------------------------------
-PACKAGES-$(PTXCONF_ENIGMA2_SKIN_NEMESIS_FLATLINE_PICON_LAVA)  += enigma2-skin-nemesis-flatline-picon-lava
-ENIGMA2_SKIN_NEMESIS_FLATLINE_PICON_LAVA_VERSION              := $(ENIGMA2_SKINS_SH4_VERSION)
-ENIGMA2_SKIN_NEMESIS_FLATLINE_PICON_LAVA_PKGDIR               := $(ENIGMA2_SKINS_SH4_PKGDIR)
-
-$(STATEDIR)/enigma2-skin-nemesis-flatline-picon-lava.targetinstall:
-	@$(call targetinfo)
-	
-	@$(call install_init,   enigma2-skin-nemesis-flatline-picon-lava)
-	@$(call install_fixup,  enigma2-skin-nemesis-flatline-picon-lava, PRIORITY,    optional)
-	@$(call install_fixup,  enigma2-skin-nemesis-flatline-picon-lava, SECTION,     base)
-	@$(call install_fixup,  enigma2-skin-nemesis-flatline-picon-lava, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
-	@$(call install_fixup,  enigma2-skin-nemesis-flatline-picon-lava, DESCRIPTION, missing)
-	
-	@$(call install_tree,   enigma2-skin-nemesis-flatline-picon-lava, 0, 0, -, /usr/share/enigma2/Nemesis.Flatline.Picon.Lava)
-	
-	@$(call install_finish, enigma2-skin-nemesis-flatline-picon-lava)
 	
 	@$(call touch)
 
