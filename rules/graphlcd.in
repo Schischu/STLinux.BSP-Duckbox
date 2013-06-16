@@ -1,0 +1,4 @@
+## SECTION=multimedia_libs
+
+config GRAPHLCD
+	tristate "graphlcd"
