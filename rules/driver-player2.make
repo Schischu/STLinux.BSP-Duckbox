@@ -79,6 +79,7 @@ $(STATEDIR)/driver-player2.compile:
 		TREE_ROOT=$(DRIVER_PLAYER2_DIR) \
 		CONFIG_MODULES_PATH=$(SYSROOT)/usr/include \
 		CONFIG_KERNEL_PATH="$(PTXDIST_SYSROOT_HOST)/usr" \
+		CONFIG_KERNEL_BUILD=$(KERNEL_DIR) \
 		EXTRA_CFLAGSS="$(DRIVER_PLAYER2_EXTRAS)" \
 		modules
 	
@@ -101,8 +102,14 @@ $(STATEDIR)/driver-player2.install:
 	
 	mkdir -p $(SYSROOT)/usr/include/linux/dvb
 	cp $(DRIVER_PLAYER2_DIR)/linux/include/linux/dvb/stm_ioctls.h $(SYSROOT)/usr/include/linux/dvb
+	cp $(DRIVER_PLAYER2_DIR)/linux/include/linux/dvb/stm_dvb.h $(SYSROOT)/usr/include/linux/dvb
+	cp $(DRIVER_PLAYER2_DIR)/linux/include/linux/dvb/stm_audio.h $(SYSROOT)/usr/include/linux/dvb
+	cp $(DRIVER_PLAYER2_DIR)/linux/include/linux/dvb/stm_video.h $(SYSROOT)/usr/include/linux/dvb
+	cp $(DRIVER_PLAYER2_DIR)/player/wrapper/player_api.h $(SYSROOT)/usr/include/
 	cp $(DRIVER_PLAYER2_DIR)/linux/drivers/media/dvb/stm/dvb/backend.h $(SYSROOT)/usr/include/linux/dvb
+ifeq ($(DRIVER_PLAYER2_VERSION),191)
 	cp $(DRIVER_PLAYER2_DIR)/linux/drivers/media/dvb/stm/dvb/backend_ops.h $(SYSROOT)/usr/include/linux/dvb
+endif
 	cp $(DRIVER_PLAYER2_DIR)/linux/drivers/media/dvb/stm/dvb/dvb_module.h $(SYSROOT)/usr/include/linux/dvb
 	cp $(DRIVER_PLAYER2_DIR)/linux/drivers/media/dvb/stm/dvb/dvb_audio.h $(SYSROOT)/usr/include/linux/dvb
 	cp $(DRIVER_PLAYER2_DIR)/linux/drivers/media/dvb/stm/dvb/dvb_video.h $(SYSROOT)/usr/include/linux/dvb
