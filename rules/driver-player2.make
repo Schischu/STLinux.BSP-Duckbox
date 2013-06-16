@@ -102,10 +102,12 @@ $(STATEDIR)/driver-player2.install:
 	
 	mkdir -p $(SYSROOT)/usr/include/linux/dvb
 	cp $(DRIVER_PLAYER2_DIR)/linux/include/linux/dvb/stm_ioctls.h $(SYSROOT)/usr/include/linux/dvb
+ifneq ($(DRIVER_PLAYER2_VERSION),191)
 	cp $(DRIVER_PLAYER2_DIR)/linux/include/linux/dvb/stm_dvb.h $(SYSROOT)/usr/include/linux/dvb
 	cp $(DRIVER_PLAYER2_DIR)/linux/include/linux/dvb/stm_audio.h $(SYSROOT)/usr/include/linux/dvb
 	cp $(DRIVER_PLAYER2_DIR)/linux/include/linux/dvb/stm_video.h $(SYSROOT)/usr/include/linux/dvb
 	cp $(DRIVER_PLAYER2_DIR)/player/wrapper/player_api.h $(SYSROOT)/usr/include/
+endif
 	cp $(DRIVER_PLAYER2_DIR)/linux/drivers/media/dvb/stm/dvb/backend.h $(SYSROOT)/usr/include/linux/dvb
 ifeq ($(DRIVER_PLAYER2_VERSION),191)
 	cp $(DRIVER_PLAYER2_DIR)/linux/drivers/media/dvb/stm/dvb/backend_ops.h $(SYSROOT)/usr/include/linux/dvb
