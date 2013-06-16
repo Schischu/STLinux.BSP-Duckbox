@@ -1,2 +1,5 @@
 enigma2-plugins-HEAD-PYTHON_PATH.patch
 enigma2-plugins-systemplugins-networkbrowser-SUPPORT_AUTOFS.patch
+
+# downgrade WebInterface to last version before change to restrictive license
+enigma2-plugins-extensions-webinterface-DOWNGRADE_TO_VERSION_8f63e7b5ead9089353762ac8016466b8014625a1.patch
