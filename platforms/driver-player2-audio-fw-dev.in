@@ -6,3 +6,12 @@ config DRIVER_PLAYER2_AUDIO_FW_DEV
 	prompt "driver-player2-audio-fw-dev"
 	help
 	  FIXME
+
+if DRIVER_PLAYER2_AUDIO_FW_DEV
+
+config DRIVER_PLAYER2_AUDIO_FW_DEV_VERSION
+	prompt "driver-player2-audio-fw-dev version"
+	string
+	default "BL028_4-78"
+
+endif
