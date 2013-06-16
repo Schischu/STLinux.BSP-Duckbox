@@ -1,7 +1,7 @@
 ## SECTION=multimedia_tools
 
 config ENIGMA2_PLUGINS
-	bool
+	bool "enigma2-plugins"
 	default y
 	select ENIGMA2_PLI
 
