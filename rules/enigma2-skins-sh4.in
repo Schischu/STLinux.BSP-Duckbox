@@ -51,10 +51,6 @@ config ENIGMA2_SKIN_KERNI_HD1R2
 	tristate "enigma2-skin-kerni-hd1r2"
 	depends on ENIGMA2_SKINS_SH4
 
-config ENIGMA2_SKIN_MAKEFILE_AM
-	tristate "enigma2-skin-makefile-am"
-	depends on ENIGMA2_SKINS_SH4
-
 config ENIGMA2_SKIN_NEMESIS_BLACKBOX
 	tristate "enigma2-skin-nemesis-blackbox"
 	depends on ENIGMA2_SKINS_SH4
@@ -85,14 +81,6 @@ config ENIGMA2_SKIN_NEMESIS_FLATLINE
 
 config ENIGMA2_SKIN_NEMESIS_FLATLINE_BLUE
 	tristate "enigma2-skin-nemesis-flatline-blue"
-	depends on ENIGMA2_SKINS_SH4
-
-config ENIGMA2_SKIN_NEMESIS_FLATLINE_PICON_BLUE
-	tristate "enigma2-skin-nemesis-flatline-picon-blue"
-	depends on ENIGMA2_SKINS_SH4
-
-config ENIGMA2_SKIN_NEMESIS_FLATLINE_PICON_LAVA
-	tristate "enigma2-skin-nemesis-flatline-picon-lava"
 	depends on ENIGMA2_SKINS_SH4
 
 config ENIGMA2_SKIN_NEMESIS_GLASSLINE
