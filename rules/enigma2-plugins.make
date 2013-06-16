@@ -56,6 +56,8 @@ $(STATEDIR)/enigma2-plugins.extract:
 	cp -a $(ENIGMA2_PLUGINS_SOURCE_GIT) $(BUILDDIR)/$(ENIGMA2_PLUGINS); \
 	rm -rf $(BUILDDIR)/$(ENIGMA2_PLUGINS)/.git;
 	
+	sed -i 's/hw.get_device_name().lower() != "dm7025"/False/g' $(BUILDDIR)/$(ENIGMA2_PLUGINS)/webinterface/src/plugin.py
+	
 	@$(call patchin, ENIGMA2_PLUGINS)
 	
 	cd $(ENIGMA2_PLUGINS_DIR); \
@@ -76,6 +78,7 @@ ENIGMA2_PLUGINS_ENV 	:= $(CROSS_ENV)
 ENIGMA2_PLUGINS_AUTOCONF := \
 	$(CROSS_AUTOCONF_USR) \
 	--prefix=/usr \
+	--with-tpm \
 	PYTHON=$(PTXDIST_SYSROOT_HOST)/bin/python2.7 \
 	PY_PATH=$(SYSROOT)/usr \
 	PKG_CONFIG=$(PTXDIST_SYSROOT_HOST)/bin/pkg-config \
