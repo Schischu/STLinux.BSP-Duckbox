@@ -11,20 +11,20 @@ start)
 		case "$rtv" in
 			0) echo "0"
 				echo "E2 ERROR"
-				init 6;;
+				reboot;;
 			1) echo "1"
 				echo "SHUTDOWN"
-				init 0;;
+				fp_control -e;; #Todo: Will be replaced with call to halt
 			2) echo "2"
 				echo "REBOOT"
-				init 6;;
+				reboot;;
 			3) echo "3"
 				echo "E2 RESTART"
 				echo "0" > /proc/progress
 				/etc/init.d/showiframe start;;
 			*) echo "*"
 				echo "ERROR"
-				init 6;;
+				reboot;;
 		esac
 	) &
 
