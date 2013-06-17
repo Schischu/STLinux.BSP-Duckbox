@@ -1,0 +1,15 @@
+--- enigma2-nightly.org.org/lib/python/Tools/HardwareInfo.py	2012-03-20 01:26:26.671115298 -0700
++++ enigma2-nightly.org/lib/python/Tools/HardwareInfo.py	2012-03-20 01:26:31.467115298 -0700
+@@ -38,6 +38,11 @@
+ 				pass
+ 
+ 	def get_device_name(self):
++		import sys
++		caller = sys._current_frames().values()[0]
++		callerfunc = caller.f_back.f_globals['__name__']
++		if callerfunc == "Plugins.Extensions.WebInterface.plugin":
++			return "dm7025"
+ 		return HardwareInfo.device_name
+ 
+ 	def get_device_version(self):
+

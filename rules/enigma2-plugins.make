@@ -56,7 +56,7 @@ $(STATEDIR)/enigma2-plugins.extract:
 	cp -a $(ENIGMA2_PLUGINS_SOURCE_GIT) $(BUILDDIR)/$(ENIGMA2_PLUGINS); \
 	rm -rf $(BUILDDIR)/$(ENIGMA2_PLUGINS)/.git;
 	
-	sed -i 's/hw.get_device_name().lower() != "dm7025"/False/g' $(BUILDDIR)/$(ENIGMA2_PLUGINS)/webinterface/src/plugin.py
+	#sed -i 's/hw.get_device_name().lower() != "dm7025"/False/g' $(BUILDDIR)/$(ENIGMA2_PLUGINS)/webinterface/src/plugin.py
 	
 	@$(call patchin, ENIGMA2_PLUGINS)
 	
