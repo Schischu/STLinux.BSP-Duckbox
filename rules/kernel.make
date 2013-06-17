@@ -196,6 +196,9 @@ endif
 	cp $(KERNEL_DIR)/include/linux/dvb/frontend.h $(SYSROOT)/usr/include/linux/dvb/
 	cp $(KERNEL_DIR)/drivers/media/dvb/dvb-core/*.h $(SYSROOT)/usr/include/linux/dvb/
 	
+	mkdir -p $(KERNEL_PKGDIR)/lib/modules/$(call remove_quotes, $(PTXCONF_KERNEL_VERSION)).$(call remove_quotes, $(PTXCONF_KERNEL_LOCALVERSION))
+	touch $(KERNEL_PKGDIR)/lib/modules/$(call remove_quotes, $(PTXCONF_KERNEL_VERSION)).$(call remove_quotes, $(PTXCONF_KERNEL_LOCALVERSION))/modules.dep
+	
 	@$(call touch)
 
 # ----------------------------------------------------------------------------
@@ -256,6 +259,8 @@ ifdef PTXCONF_KERNEL_MODULES_INSTALL
 		find lib -type f -name "*.ko" | while read file; do \
 			$(call install_copy,  kernel-modules, 0, 0, 0644, $(KERNEL_PKGDIR)/$${file}, /lib/modules/`basename $${file}`, k) \
 	done
+
+	@$(call install_copy, kernel-modules, 0, 0, 0644, -, /lib/modules/$(call remove_quotes, $(PTXCONF_KERNEL_VERSION)).$(call remove_quotes, $(PTXCONF_KERNEL_LOCALVERSION))/modules.dep, n)
 
 	@$(call install_finish, kernel-modules)
 endif
