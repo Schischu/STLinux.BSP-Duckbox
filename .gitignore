@@ -10,3 +10,4 @@ modules.order
 *.old
 src
 local_src/extra/av-firmware/*.elf
+*.quilt
