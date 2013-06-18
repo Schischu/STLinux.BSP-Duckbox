@@ -49,6 +49,7 @@
 
 static unsigned char cancelStart = 0;
 int activemode = 0;
+int debug = 0;
 
 //----------------------------
 
