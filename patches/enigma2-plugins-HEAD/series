@@ -1,2 +1,3 @@
 enigma2-plugins-HEAD-PYTHON_PATH.patch
 enigma2-plugins-systemplugins-networkbrowser-SUPPORT_AUTOFS.patch
+enigma2-plugins-CONFIGURE_EPLAYER.patch
