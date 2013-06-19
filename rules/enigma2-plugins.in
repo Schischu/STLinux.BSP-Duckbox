@@ -147,7 +147,7 @@ config ENIGMA2_EXTENSION_MERLINEPGCENTER
 	tristate "enigma2-plugin-extensions-merlinepgcenter"
 	depends on ENIGMA2_PLUGINS
 
-config ENIGMA2_EXTENSION_MERLINMUSICPLAYER
+config ENIGMA2_EXTENSION_MERLINMUSICPLAYER 
 	tristate "enigma2-plugin-extensions-merlinmusicplayer"
 	depends on ENIGMA2_PLUGINS
 

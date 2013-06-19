@@ -74,11 +74,16 @@ $(STATEDIR)/enigma2-plugins.extract:
 ENIGMA2_PLUGINS_PATH	:= PATH=$(CROSS_PATH)
 ENIGMA2_PLUGINS_ENV 	:= $(CROSS_ENV)
 
+ifdef PTXCONF_LIBEPLAYER3
+P_CONFIG_OPTS += --enable-libeplayer3
+endif
+
 #ENIGMA2_PLUGINS_CONF_TOOL	:= autoconf
 ENIGMA2_PLUGINS_AUTOCONF := \
 	$(CROSS_AUTOCONF_USR) \
 	--prefix=/usr \
 	--with-tpm \
+	$(P_CONFIG_OPTS) \
 	PYTHON=$(PTXDIST_SYSROOT_HOST)/bin/python2.7 \
 	PY_PATH=$(SYSROOT)/usr \
 	PKG_CONFIG=$(PTXDIST_SYSROOT_HOST)/bin/pkg-config \
