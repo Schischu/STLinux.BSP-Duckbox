@@ -1,0 +1,12 @@
+autofs-4.1.4-misc-fixes.patch
+autofs-4.1.4-multi-parse-fix.patch
+autofs-4.1.4-non-replicated-ping.patch
+autofs-4.1.4-locking-fix-1.patch
+autofs-4.1.4-cross.patch
+autofs-4.1.4-Makefile.rules-cross.patch
+autofs-4.1.4-install.patch
+autofs-4.1.4-auto.net-sort-option-fix.patch
+autofs-4.1.4-autofs-additional-distros.patch
+autofs-4.1.4-no-bash.patch
+autofs-4.1.4-autofs-add-hotplug.patch
+autofs-4.1.4-no_man.patch

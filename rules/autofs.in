@@ -1,0 +1,13 @@
+## SECTION=networking
+
+config AUTOFS
+	tristate "autofs"
+	default y
+
+if AUTOFS
+
+config AUTOFS_CONFIG
+	tristate "autofs-config"
+	default y
+
+endif

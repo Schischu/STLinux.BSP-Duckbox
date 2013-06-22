@@ -1,0 +1,57 @@
+#!/bin/sh
+
+MODDIR=/lib/modules
+
+load()
+{
+  echo "Loading autofs"
+  if [ -e $MODDIR/autofs4.ko ]; then
+    insmod $MODDIR/autofs4.ko
+  fi
+}
+
+unload()
+{
+  echo "Unloading autofs"
+  if [ -e $MODDIR/autofs4.ko ]; then
+    rmmod $MODDIR/autofs4.ko
+  fi
+}
+
+start()
+{
+  echo "Starting autofs"
+  /usr/sbin/automount --timeout=5 /autofs file /etc/auto.hotplug
+  /usr/sbin/automount --ghost --timeout=5 /media/net file /etc/auto.network
+}
+
+stop()
+{
+  echo "Stoping autofs"
+  killall automount
+}
+
+case "$1" in
+  start)
+    load
+    start
+    ;;
+  stop)
+    stop
+    unload
+    ;;
+  restart)
+    stop
+    sleep 1
+    start
+    ;;
+  reload)
+    stop
+    sleep 1
+    start
+    ;;
+  *)
+    echo $"Usage: $0 {start|stop|restart|reload}"
+    RETVAL=0
+esac
+

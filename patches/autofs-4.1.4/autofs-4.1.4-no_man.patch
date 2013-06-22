@@ -1,0 +1,11 @@
+--- autofs-3.1.7-orig/Makefile.rules	2000-11-04 07:05:17.000000000 +0000
++++ autofs-3.1.7/Makefile.rules	2006-03-30 10:27:54.000000000 +0100
+@@ -5,7 +5,7 @@
+ #
+ 
+ # Root directory contents
+-SUBDIRS = lib daemon modules man samples
++SUBDIRS = lib daemon modules
+ INCDIRS = include
+ INCFILES = COPYING COPYRIGHT NEWS README* TODO Makefile Makefile.rules \
+ 	   Makefile.conf.in .version .autofs-* configure.in aclocal.m4 \

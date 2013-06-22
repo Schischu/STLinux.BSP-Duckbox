@@ -1,0 +1,15 @@
+## SECTION=initmethod_bbinit
+
+config AUTOFS_INIT
+	tristate "autofs-init"
+	depends on AUTOFS
+	default y
+
+if AUTOFS_INIT
+
+config AUTOFS_BBINIT_LINK
+	string
+	prompt "autofs"
+	default "S14autofs"
+
+endif
