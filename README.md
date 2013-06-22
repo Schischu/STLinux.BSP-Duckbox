@@ -9,18 +9,6 @@ Install rpm2cpio, setuptdt.sh
 
 Installation
 ============
-Selecting a Software Platform<br />
-ptxdist select configs/ptxconfig
+wget https://raw.github.com/Schischu/STLinux.StartHere/master/start.sh; chmod 755 start.sh <br />
+BOXTYPE=ufs912 ./start.sh
 
-Selecting a Hardware Platform<br />
-ptxdist platform configs/ufs913/platformconfig
-
-Selecting a Toolchain (If not already automatically detected)<br />
-ptxdist toolchain /opt/STLinux.Toolchain-2013.03.1/sh4-linux-gnu/\ <br />
-gcc-4.7.2-glibc-2.10.2-binutils-2.23.1-kernel-2.6.32-sanitized/bin
-
-Building the Root Filesystem<br />
-ptxdist go
-
-Building an Image<br />
-ptxdist images
