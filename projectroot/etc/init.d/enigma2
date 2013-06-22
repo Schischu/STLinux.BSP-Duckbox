@@ -5,27 +5,30 @@ start)
 	echo "starting enigma2"
 
 	(
-		/usr/bin/enigma2
-		rtv=$?
-		echo "enigma2 ended <- RTV: " $rtv
-		case "$rtv" in
-			0) echo "0"
-				echo "E2 ERROR"
-				reboot;;
-			1) echo "1"
-				echo "SHUTDOWN"
-				fp_control -e;; #Todo: Will be replaced with call to halt
-			2) echo "2"
-				echo "REBOOT"
-				reboot;;
-			3) echo "3"
-				echo "E2 RESTART"
-				echo "0" > /proc/progress
-				/etc/init.d/showiframe start;;
-			*) echo "*"
-				echo "ERROR"
-				reboot;;
-		esac
+		until false; do
+			/usr/bin/enigma2
+			rtv=$?
+			echo "enigma2 ended <- RTV: " $rtv
+			case "$rtv" in
+				0) echo "0"
+					echo "E2 ERROR"
+					reboot;;
+				1) echo "1"
+					echo "SHUTDOWN"
+					fp_control -e #Todo: Will be replaced with call to halt
+					break;;
+				2) echo "2"
+					echo "REBOOT"
+					reboot;;
+				3) echo "3"
+					echo "E2 RESTART"
+					echo "0" > /proc/progress
+					/etc/init.d/showiframe start;;
+				*) echo "*"
+					echo "ERROR"
+					reboot;;
+			esac
+		done
 	) &
 
 	exit 0
