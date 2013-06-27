@@ -102,6 +102,12 @@ $(STATEDIR)/fpcontrol-conf.targetinstall:
 	@$(call install_alternative, fpcontrol-conf, 0, 0, 0644, /etc/fpcontrol.conf)
 	@$(call install_alternative, fpcontrol-conf, 0, 0, 0644, /etc/vdstandby.cfg)
 
+ifdef PTXCONF_PLATFORM_SPARK
+	@$(call install_alternative, fpcontrol-conf, 0, 0, 0755, /bin/vdstandby)
+endif
+ifdef PTXCONF_PLATFORM_SPARK7162
+	@$(call install_alternative, fpcontrol-conf, 0, 0, 0755, /bin/vdstandby)
+endif
 	@$(call install_finish, fpcontrol-conf)
 
 	@$(call touch)
