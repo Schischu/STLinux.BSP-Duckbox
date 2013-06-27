@@ -1,6 +1,6 @@
 ## SECTION=kernel_driver
 
-config DRIVER_WIRELESS_RTL8792
+config DRIVER_WIRELESS_RTL8192
 	tristate
 	select KERNEL
 	prompt "driver-wireless-rtl8192"
