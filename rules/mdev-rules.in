@@ -1,0 +1,31 @@
+## SECTION=shell_and_console
+
+menuconfig MDEV_RULES
+	tristate
+	prompt "mdev-rules"
+	default y
+	select BUSYBOX
+
+if MDEV_RULES
+
+config MDEV_RULES_USB_HANDLER
+	bool
+	prompt "mdev-rules-usb-handler"
+	default y
+	select MDEV_RULES_MODULE
+
+config MDEV_RULES_MODULE
+	bool
+	prompt "mdev-rules-module"
+	default y
+
+config MDEV_RULES_WLAN
+	bool
+	prompt "mdev-rules-wlan"
+	default y
+
+config MDEV_RULES_MOUNT
+	bool
+	prompt "mdev-rules-mount"
+	default y
+endif

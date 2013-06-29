@@ -1,0 +1,17 @@
+#!/bin/sh
+if [ $# -eq 1 ]; then
+   if [ "$1" = "-a" ]; then
+	echo "enter standby..."
+	stfbset -d hdmi
+	echo on > /proc/stb/avs/0/standby
+	echo off > /dev/vfd 
+	sleep 2 
+	fp_control -s `date +"%H:%M:%S %d-%m-%Y"`
+	echo "done"
+   elif [ "$1" = "-d" ]; then
+	echo "end standby..."
+       #enable hdmi
+       stfbset -e hdmi
+       echo off > /proc/stb/avs/0/standby
+    fi
+fi

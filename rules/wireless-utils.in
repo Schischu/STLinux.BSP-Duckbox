@@ -1,0 +1,28 @@
+## SECTION=networking
+
+menuconfig WIRELESS_UTILS
+	tristate
+	prompt "wireless-utils"
+	default y
+	select WIRELESS
+	select WPA_SUPPLICANT
+	select LINUX_FIRMWARE
+
+if WIRELESS_UTILS
+
+config WIRELESS_UTILS_FIRMWARE_RT73
+	bool
+	prompt "wireless-utils-firmware-rt73"
+	default y
+
+config WIRELESS_UTILS_FIRMWARE_RT2870
+	bool
+	prompt "wireless-utils-firmware-rt2870"
+	default y
+
+config WIRELESS_UTILS_FIRMWARE_RT3070
+	bool
+	prompt "wireless-utils-firmware-rt3070"
+	default y
+
+endif
