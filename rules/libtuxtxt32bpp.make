@@ -92,6 +92,8 @@ $(STATEDIR)/libtuxtxt32bpp.targetinstall:
 	@$(call install_lib, libtuxtxt32bpp, 0, 0, 0644, libtuxtxt32bpp)
 	
 	@$(call install_tree, libtuxtxt32bpp, 0, 0, -, /usr/share/)
+	@$(call install_tree, libtuxtxt32bpp, 0, 0, -, /etc/tuxtxt/)
+	@$(call install_tree, libtuxtxt32bpp, 0, 0, -, /usr/lib/enigma2/python/Plugins/Extensions/Tuxtxt/)
 	
 	@$(call install_finish, libtuxtxt32bpp)
 	
