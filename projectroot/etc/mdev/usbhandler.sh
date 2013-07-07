@@ -32,7 +32,7 @@ IDS=`lsusb -s $BUS:$DEVICE | cut -f6 -d" "`
 MODULE=`grep $IDS $CNF|cut -f2- -d" "`
 if [ "$MODULE" != "" ]
 then
-[ $MODULE == "rt73" ] && insmod /lib/modules/rt2x00lib.ko && insmod /lib/modules/rt2x00usb.ko
+[ $MODULE == "rt73usb" ] && insmod /lib/modules/rt2x00lib.ko && insmod /lib/modules/rt2x00usb.ko
     echo "Loading USB module: $MODULE"
     insmod /lib/modules/$MODULE.ko
 fi
