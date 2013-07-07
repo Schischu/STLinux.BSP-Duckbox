@@ -31,6 +31,7 @@ config ENIGMA2_PLI
 	select GST_PLUGINS_DVBMEDIASINK
 	select LIBDVBSIPP
 	select LIBDREAMDVD
+	select GRAPHLCD
 
 config ENIGMA2_PLI_DEV
 	tristate "enigma2-pli-dev"

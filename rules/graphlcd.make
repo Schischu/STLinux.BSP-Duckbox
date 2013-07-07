@@ -25,7 +25,7 @@ GRAPHLCD_SOURCE_GIT	:= $(SRCDIR)/graphlcd-base.git
 GRAPHLCD_DIR	:= $(BUILDDIR)/$(GRAPHLCD)
 GRAPHLCD_LICENSE	:= graphlcd
 
-$(STATEDIR)/graphlcd.prepare: $(STATEDIR)/libusb.install
+$(STATEDIR)/graphlcd.prepare:
 
 $(STATEDIR)/graphlcd.get:
 	@$(call targetinfo)

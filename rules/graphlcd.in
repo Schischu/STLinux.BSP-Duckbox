@@ -2,3 +2,5 @@
 
 config GRAPHLCD
 	tristate "graphlcd"
+	default m
+	select LIBUSB

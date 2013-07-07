@@ -92,6 +92,7 @@ ENIGMA2_PLI_AUTOCONF := \
 	$(CROSS_AUTOCONF_USR) \
 		--prefix=/usr \
 		--without-libsdl \
+		--with-graphlcd \
 		PYTHON=$(PTXDIST_SYSROOT_HOST)/bin/python2.7 \
 		PY_PATH=$(SYSROOT)/usr \
 		PKG_CONFIG=$(PTXDIST_SYSROOT_HOST)/bin/pkg-config \
