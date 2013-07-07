@@ -1,84 +1,85 @@
 ## SECTION=multimedia_tools
 
 menuconfig STMFB_TOOLS
-	tristate
+	bool
+	default y
 	prompt "stmfb-tools                   "
 #	select DRIVER_STMFB
 
 if STMFB_TOOLS
 
 config STMFB_TOOLS_ACP_TRANSMISSION
-	bool 
-	default n
+	tristate 
+	default m
 	prompt "acp-transmission"
 
 config STMFB_TOOLS_V4L2_FLEXVP_CTRL
-	bool 
+	tristate 
 	default n
 	prompt "v4l2 flexvp-ctrl"
 
 config STMFB_TOOLS_HDMI_AUDIO_CFG
-	bool 
+	tristate 
 	default m
 	prompt "hdmi-audio-cfg"
 
 config STMFB_TOOLS_HDMI_CONTROL
-	bool 
+	tristate 
 	default y
 	prompt "hdmi-control"
 
 config STMFB_TOOLS_HDMI_INFO
-	bool 
-	default y
+	tristate 
+	default m
 	prompt "hdmi-info"
 
 config STMFB_TOOLS_ISRC_TRANSMISSION
-	bool 
-	default n
+	tristate 
+	default m
 	prompt "isrc-transmission"
 
 config STMFB_TOOLS_PICTURE_CFG
-	bool 
+	tristate 
 	default m
 	prompt "picture-cfg"
 
 config STMFB_TOOLS_DIRECTFB_SCREEN_ALIGNMENT
-	bool 
-	default n
+	tristate 
+	default m
 	prompt "directfb screen-alignment"
 
 config STMFB_TOOLS_STFBSET
-	bool 
+	tristate 
 	default y
 	prompt "stfbset"
 
 config STMFB_TOOLS_V4L2_V4L2LAYER_ALIGNMENT
-	bool 
+	tristate 
 	default n
 	prompt "v4l2 v4l2layer-alignment"
 
 config STMFB_TOOLS_V4L2_V4L2LUT8
-	bool 
+	tristate 
 	default n
 	prompt "v4l2 v4l2lut8"
 
 config STMFB_TOOLS_V4L2_V4L2STREAM
-	bool 
+	tristate 
 	default n
 	prompt "v4l2 v4l2stream"
 
 config STMFB_TOOLS_V4L2_V4L2VBI
-	bool 
+	tristate 
 	default n
 	prompt "v4l2 v4l2vbi"
 
 config STMFB_TOOLS_V4L2_YUVPLAYER
-	bool 
+	tristate 
 	default n
 	prompt "v4l2 yuvplayer"
 
 config STMFB_TOOLS_V4L2_ZORDER
-	bool 
+	tristate 
 	default n
 	prompt "v4l2 zorder"
 
