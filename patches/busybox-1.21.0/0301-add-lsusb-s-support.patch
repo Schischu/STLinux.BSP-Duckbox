@@ -1,0 +1,101 @@
+--- busybox-1.21.0/util-linux/lsusb.c.org	2012-12-22 23:39:04.000000000 
++++ busybox-1.21.0/util-linux/lsusb.c	2013-07-12 19:55:28.000000000 
+@@ -4,16 +4,33 @@
+  *
+  * Copyright (C) 2009  Malek Degachi <malek-degachi@laposte.net>
+  *
+  * Licensed under GPLv2 or later, see file LICENSE in this source tree.
+  */
+ 
+-//usage:#define lsusb_trivial_usage NOUSAGE_STR
+-//usage:#define lsusb_full_usage ""
++//usage:#define lsusb_trivial_usage
++//usage:       "[options]..."
++//usage:#define lsusb_full_usage "\n\n"
++//usage:       "List USB devices"
++//usage:     "\n	-s [[bus]:][devnum]	Show only devices with specified device and/or"
++//usage:     "\n				product ID numbers (in hexadecimal)"
+ 
+ #include "libbb.h"
++/* Globals */
++struct globals {
++int filter_busnum;
++int filter_devnum;
++};
++#define G (*ptr_to_globals)
++#define filter_busnum          (G.filter_busnum)
++#define filter_devnum          (G.filter_devnum)
++#define INIT_G() do { \
++	SET_PTR_TO_GLOBALS(xzalloc(sizeof(G))); \
++	filter_busnum = -1; \
++	filter_devnum = -1; \
++} while (0)
+ 
+ static int FAST_FUNC fileAction(
+ 		const char *fileName,
+ 		struct stat *statbuf UNUSED_PARAM,
+ 		void *userData UNUSED_PARAM,
+ 		int depth UNUSED_PARAM)
+@@ -47,29 +64,59 @@
+ 			devnum = xstrdup(tokens[1]);
+ 			continue;
+ 		}
+ 	}
+ 	config_close(parser);
+ 
+-	if (busnum) {
++	if (busnum && 
++		(filter_busnum == -1 || (filter_busnum != -1 && filter_busnum == xstrtou(busnum, 16))) &&
++		(filter_devnum == -1 || (filter_devnum != -1 && filter_devnum == xstrtou(devnum, 16))) ) {
++		
+ 		printf("Bus %s Device %s: ID %04x:%04x\n", busnum, devnum, product_vid, product_did);
+ 		free(busnum);
+ 		free(devnum);
+ 	}
+ 
+ 	return TRUE;
+ }
+ 
+ int lsusb_main(int argc, char **argv) MAIN_EXTERNALLY_VISIBLE;
+ int lsusb_main(int argc UNUSED_PARAM, char **argv UNUSED_PARAM)
+ {
+-	/* no options, no getopt */
++	char *buf;
++	unsigned opts;
++	enum {
++		OPT_s = 1 << 0,
++	};
++
++	INIT_G();
++
++	opt_complementary = ":";
++	opts = getopt32(argv, "s:", &buf);
++
++	if (opts & OPT_s)
++	{
++		char* token = NULL;
++		token = strtok(buf, ":");
++		
++		if(buf[0] != ':')
++		{
++			filter_busnum = xstrtou(token, 16);
++			token = strtok(0, ":");
++		}
++		
++		if (token != NULL)
++			filter_devnum = xstrtou(token, 16);
++		
++		printf("filter_busnum: %d\n", filter_busnum);
++		printf("filter_devnum: %d\n", filter_devnum);
++	}
+ 
+ 	recursive_action("/sys/bus/usb/devices",
+ 			ACTION_RECURSE,
+ 			fileAction,
+ 			NULL, /* dirAction */
+ 			NULL, /* userData */
+ 			0 /* depth */);
+ 
+ 	return EXIT_SUCCESS;
+ }
+

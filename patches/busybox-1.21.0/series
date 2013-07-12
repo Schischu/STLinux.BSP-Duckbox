@@ -11,3 +11,4 @@ busybox-udhcpc6-rfc3315-section-14-Pg27-retransmission-doubled.patch
 busybox-udhcpc-rfc2131-section-4-1-Pg24-retransmission-doubled.patch
 
 0300-add-e2-hotplug-support.patch
+0301-add-lsusb-s-support.patch
