@@ -75,22 +75,90 @@ $(STATEDIR)/graphlcd.compile:
 # Target-Install
 # ----------------------------------------------------------------------------
 
-$(STATEDIR)/graphlcd.targetinstall:
+ifdef PTXCONF_GRAPHLCD
+
+PACKAGES-$(PTXCONF_GRAPHLCD_CONF)  += graphlcd-conf
+GRAPHLCD_CONF_VERSION              := $(GRAPHLCD_VERSION)
+GRAPHLCD_CONF_PKGDIR               := $(GRAPHLCD_PKGDIR)
+
+$(STATEDIR)/graphlcd-conf.targetinstall:
 	@$(call targetinfo)
-
-	@$(call install_init, graphlcd)
-	@$(call install_fixup, graphlcd,PRIORITY,optional)
-	@$(call install_fixup, graphlcd,SECTION,base)
-	@$(call install_fixup, graphlcd,AUTHOR,"Robert Schwebel <r.schwebel@pengutronix.de>")
-	@$(call install_fixup, graphlcd,DESCRIPTION,missing)
-
-	@$(call install_lib, graphlcd, 0, 0, 0644, libglcddrivers)
-	@$(call install_lib, graphlcd, 0, 0, 0644, libglcdgraphics)
-	@$(call install_lib, graphlcd, 0, 0, 0644, libglcdskin)
-	@$(call install_copy, graphlcd, 0, 0, 0644, -, /etc/graphlcd.conf)
-
-	@$(call install_finish, graphlcd)
-
+	
+	@$(call install_init,   graphlcd-conf)
+	@$(call install_fixup,  graphlcd-conf, PRIORITY,    optional)
+	@$(call install_fixup,  graphlcd-conf, SECTION,     base)
+	@$(call install_fixup,  graphlcd-conf, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup,  graphlcd-conf, DESCRIPTION, missing)
+	
+	@$(call install_copy, graphlcd-conf, 0, 0, 0644, -, /etc/graphlcd.conf)
+	
+	@$(call install_finish, graphlcd-conf)
+	
 	@$(call touch)
+
+# ----------------------------------------------------------------------------
+
+PACKAGES-$(PTXCONF_GRAPHLCD_DRIVERS)  += graphlcd-drivers
+GRAPHLCD_DRIVERS_VERSION              := $(GRAPHLCD_VERSION)
+GRAPHLCD_DRIVERS_PKGDIR               := $(GRAPHLCD_PKGDIR)
+
+$(STATEDIR)/graphlcd-drivers.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init,   graphlcd-drivers)
+	@$(call install_fixup,  graphlcd-drivers, PRIORITY,    optional)
+	@$(call install_fixup,  graphlcd-drivers, SECTION,     base)
+	@$(call install_fixup,  graphlcd-drivers, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup,  graphlcd-drivers, DESCRIPTION, missing)
+	
+	@$(call install_lib, graphlcd-drivers, 0, 0, 0644, libglcddrivers)
+	
+	@$(call install_finish, graphlcd-drivers)
+	
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+
+PACKAGES-$(PTXCONF_GRAPHLCD_GRAPHICS)  += graphlcd-graphics
+GRAPHLCD_GRAPHICS_VERSION              := $(GRAPHLCD_VERSION)
+GRAPHLCD_GRAPHICS_PKGDIR               := $(GRAPHLCD_PKGDIR)
+
+$(STATEDIR)/graphlcd-graphics.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init,   graphlcd-graphics)
+	@$(call install_fixup,  graphlcd-graphics, PRIORITY,    optional)
+	@$(call install_fixup,  graphlcd-graphics, SECTION,     base)
+	@$(call install_fixup,  graphlcd-graphics, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup,  graphlcd-graphics, DESCRIPTION, missing)
+	
+	@$(call install_lib, graphlcd-graphics, 0, 0, 0644, libglcdgraphics)
+	
+	@$(call install_finish, graphlcd-graphics)
+	
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+
+PACKAGES-$(PTXCONF_GRAPHLCD_SKIN)  += graphlcd-skin
+GRAPHLCD_SKIN_VERSION              := $(GRAPHLCD_VERSION)
+GRAPHLCD_SKIN_PKGDIR               := $(GRAPHLCD_PKGDIR)
+
+$(STATEDIR)/graphlcd-skin.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init,   graphlcd-skin)
+	@$(call install_fixup,  graphlcd-skin, PRIORITY,    optional)
+	@$(call install_fixup,  graphlcd-skin, SECTION,     base)
+	@$(call install_fixup,  graphlcd-skin, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup,  graphlcd-skin, DESCRIPTION, missing)
+	
+	@$(call install_lib, graphlcd-skin, 0, 0, 0644, libglcdskin)
+	
+	@$(call install_finish, graphlcd-skin)
+	
+	@$(call touch)
+
+endif
 
 # vim: syntax=make

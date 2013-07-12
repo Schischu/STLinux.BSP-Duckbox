@@ -1,6 +1,31 @@
 ## SECTION=multimedia_libs
 
 config GRAPHLCD
-	tristate "graphlcd"
-	default m
+	bool
+	default y
+	prompt "graphlcd"
 	select LIBUSB
+
+if GRAPHLCD
+
+config GRAPHLCD_CONF
+	tristate
+	default m
+	prompt "graphlcd-conf"
+
+config GRAPHLCD_DRIVERS
+	tristate
+	default m
+	prompt "graphlcd-drivers"
+
+config GRAPHLCD_GRAPHICS
+	tristate
+	default m
+	prompt "graphlcd-graphics"
+
+config GRAPHLCD_SKIN
+	tristate
+	default n
+	prompt "graphlcd-skin"
+
+endif
