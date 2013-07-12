@@ -3,3 +3,4 @@ enigma2-pli-nightly.4.diff
 enigma2-pli-nightly.2-fix_libmmeimage_include.diff
 enigma2-pli-nightly.2-fix_missing_font.patch
 enigma2-pli-nightly.2-add_hwinfo_compatibility.patch
+enigma2-pli-nightly.2-add_graphlcd_dynload_support.patch

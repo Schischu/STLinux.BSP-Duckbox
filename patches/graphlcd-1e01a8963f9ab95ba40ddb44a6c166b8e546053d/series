@@ -1,1 +1,2 @@
 graphlcd.patch
+graphlcd_add_dynload_support.patch

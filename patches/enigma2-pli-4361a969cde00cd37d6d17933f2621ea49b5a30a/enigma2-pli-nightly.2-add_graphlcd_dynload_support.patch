@@ -1,0 +1,157 @@
+﻿Left base folder: /ramdisk/STLinux.BSP-Duckbox/platform-ufs912/build-target/enigma2-pli-4361a969cde00cd37d6d17933f2621ea49b5a30a
+Right base folder: /home/ubuntu/enigma2-pli-4361a969cde00cd37d6d17933f2621ea49b5a30a
+--- enigma2-nightly/lib/gdi/lcd.cpp	2013-07-12 15:58:25.000000000 
++++ enigma2-nightly/lib/gdi/lcd.cpp	2013-07-12 15:40:21.000000000 
+@@ -311,35 +311,82 @@
+ 	update();
+ }
+ 
+ /* **************************************************************** */
+ /* Pearl LCD */
+ 
++#include <dlfcn.h>
++
++
+ eDBoxLCD::eDBoxLCD()
+ {
+ 	eDebug("eDBoxLCD::eDBoxLCD >");
+ 
+ 	displayNumber = 0;
+ 	is_oled = 1;
+ 
+ 	instance=this;
+ 
+-	if (GLCD::Config.Load("/etc/graphlcd.conf") == false)
++	void *glcddrivers_handle  = dlopen("libglcddrivers.so.2", RTLD_LAZY);
++	void *glcdgraphics_handle = dlopen("libglcdgraphics.so.2", RTLD_LAZY);
++	if (glcddrivers_handle == NULL)
++	{
++		eDebug("Could not load %s! -> No graphlcd support available\n", "libglcddrivers.so.2");
++		return;
++	}
++	if (glcdgraphics_handle == NULL)
++	{
++		eDebug("Could not load %s! -> No graphlcd support available\n", "libglcdgraphics.so.2");
++		return;
++	}
++	
++	
++	GLCD::cConfigAbs * (*GLCD_CreateConfig)();
++	GLCD_CreateConfig = (GLCD::cConfigAbs* (*)(void))dlsym(glcddrivers_handle, "CreateConfig");
++	if (GLCD_CreateConfig == NULL)
++	{
++		eDebug("Could not load %s! -> No graphlcd support available\n", "GLCD_CreateConfig");
++		return;
++	}
++	
++	GLCD::cConfigAbs *GLCD_Config = GLCD_CreateConfig();
++
++	GLCD::cDriver * (*GLCD_CreateDriver)(int driverID, GLCD::cDriverConfig * config);
++	GLCD_CreateDriver = (GLCD::cDriver* (*)(int, GLCD::cDriverConfig*))dlsym(glcddrivers_handle, "CreateDriver2");
++	if (GLCD_CreateDriver == NULL)
++	{
++		eDebug("Could not load %s! -> No graphlcd support available\n", "GLCD_CreateDriver");
++		return;
++	}
++
++
++	GLCD::cBitmap * (*GLCD_CreateBitmap)(int width, int height);
++	GLCD_CreateBitmap = (GLCD::cBitmap* (*)(int, int))dlsym(glcdgraphics_handle, "CreateBitmap");
++	if (GLCD_CreateBitmap == NULL)
++	{
++		eDebug("Could not load %s! -> No graphlcd support available\n", "GLCD_CreateBitmap");
++		return;
++	}
++
++	if (GLCD_Config->Load("/etc/graphlcd.conf") == false)
+ 	{
+ 		eDebug("Error loading config file!\n");
+ 		return;
++	
+ 	}
+-	if (GLCD::Config.driverConfigs.size() <= 0)
++	
++	if (GLCD_Config->GetDriverConfigsSize() <= 0)
+ 	{
+ 		eDebug("ERROR: No displays specified in config file!\n");
++		return;
+ 	}
+ 
+-	GLCD::Config.driverConfigs[displayNumber].upsideDown ^= 0;
+-	GLCD::Config.driverConfigs[displayNumber].invert ^= 0;
++	GLCD_Config->GetDriverConfig(displayNumber)->upsideDown ^= 0;
++	GLCD_Config->GetDriverConfig(displayNumber)->invert ^= 0;
+ 
+-	lcd = GLCD::CreateDriver(GLCD::Config.driverConfigs[displayNumber].id, &GLCD::Config.driverConfigs[displayNumber]);
++	lcd = GLCD_CreateDriver(GLCD_Config->GetDriverConfig(displayNumber)->id, GLCD_Config->GetDriverConfig(displayNumber));
+ 
+ 	if (!lcd)
+ 	{
+ 		eDebug("ERROR: Failed creating display object\n");
+ 		return;
+ 	}
+@@ -350,21 +397,21 @@
+ 		eDebug("ERROR: Failed initializing display\n");
+ 		delete lcd;
+ 		lcd = NULL;
+ 		return;
+ #endif
+ 	}
+-	lcd->SetBrightness(GLCD::Config.driverConfigs[displayNumber].brightness);
++	lcd->SetBrightness(GLCD_Config->GetDriverConfig(displayNumber)->brightness);
+ 
+ 	lcd->GetFeature((std::string) "depth", depth);
+-	width = GLCD::Config.driverConfigs[displayNumber].width;
+-	height = GLCD::Config.driverConfigs[displayNumber].height;
++	width = GLCD_Config->GetDriverConfig(displayNumber)->width;
++	height = GLCD_Config->GetDriverConfig(displayNumber)->height;
+ 
+ 	eDebug("config -> (w %d, h %d)", width, height);
+ 
+-	bitmap = new GLCD::cBitmap(width, height);
++	bitmap = GLCD_CreateBitmap(width, height);
+ 	bitmap->Clear();
+ 
+ 	lcd->SetScreen(bitmap->Data(), bitmap->Width(), bitmap->Height());
+ 	lcd->Refresh(true);
+ 
+ 	lcdfd = 1; //needed for detected()
+--- enigma2-nightly/lib/gdi/lcd.h	2013-07-12 15:58:25.000000000 
++++ enigma2-nightly/lib/gdi/lcd.h	2013-07-12 14:46:59.000000000 
+@@ -3,19 +3,19 @@
+ 
+ #include <asm/types.h>
+ #include <lib/gdi/esize.h>
+ #include <lib/gdi/erect.h>
+ 
+ #ifdef HAVE_GRAPHLCD
+ #include <glcdgraphics/bitmap.h>
+ #include <glcdgraphics/glcd.h>
+-#include <glcdgraphics/image.h>
++//#include <glcdgraphics/image.h>
+ #include <glcddrivers/config.h>
+ #include <glcddrivers/driver.h>
+ #include <glcddrivers/drivers.h>
+-#include <glcdgraphics/extformats.h>
++//#include <glcdgraphics/extformats.h>
+ #include <byteswap.h>
+ #endif
+ 
+ #define LCD_CONTRAST_MIN 0
+ #define LCD_CONTRAST_MAX 63
+ #define LCD_BRIGHTNESS_MIN 0
+@@ -58,13 +58,13 @@
+ 	static eDBoxLCD *instance;
+ 	unsigned char inverted;
+ 	bool flipped;
+ 	int is_oled;
+ #ifdef HAVE_GRAPHLCD
+ 	GLCD::cDriver * lcd;
+-	GLCD::cBitmap * bitmap;
++	GLCD::cBitmapAbs * bitmap;
+ 	int displayNumber;
+ 	int depth;
+ 	int width, height;
+ #endif
+ #ifdef SWIG
+ 	eDBoxLCD();

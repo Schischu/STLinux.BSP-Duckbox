@@ -1,0 +1,204 @@
+﻿Left base folder: /ramdisk/STLinux.BSP-Duckbox/platform-ufs912/build-target/graphlcd-1e01a8963f9ab95ba40ddb44a6c166b8e546053d
+Right base folder: /home/ubuntu/graphlcd-1e01a8963f9ab95ba40ddb44a6c166b8e546053d
+--- graphlcd-base/glcddrivers/config.c	2013-06-30 19:53:11.000000000 
++++ graphlcd-base/glcddrivers/config.c	2013-07-12 15:16:17.000000000 
+@@ -289,7 +289,12 @@
+     syslog(LOG_ERR, "Config error: configuration %s not found!\n", name.c_str());
+     return -1;
+ }
+ 
+ cConfig Config;
+ 
++cConfigAbs * CreateConfig()
++{
++    return &Config;
++}
++
+ } // end of namespace
+--- graphlcd-base/glcddrivers/config.h	2013-06-30 19:53:11.000000000 
++++ graphlcd-base/glcddrivers/config.h	2013-07-12 15:39:37.000000000 
+@@ -58,29 +58,41 @@
+     cDriverConfig & operator=(const cDriverConfig & rhs);
+     bool Parse(const std::string & line);
+     int GetInt(const std::string & value);
+     bool GetBool(const std::string & value);
+ };
+ 
+-class cConfig
++class cConfigAbs
++{
++public:
++    virtual bool Load(const std::string & filename) = 0;
++    virtual cDriverConfig * GetDriverConfig(const int index) = 0;
++    virtual int GetDriverConfigsSize() const = 0;
++};
++
++class cConfig : public cConfigAbs
+ {
+ public:
+     int waitMethod;
+     int waitPriority;
+     std::vector <cDriverConfig> driverConfigs;
+ 
+ public:
+     cConfig();
+     ~cConfig();
+-    bool Load(const std::string & filename);
++    virtual bool Load(const std::string & filename);
+     bool Save(const std::string & filename);
+     bool Parse(const std::string & line);
+     int GetInt(const std::string & value);
+     bool GetBool(const std::string & value);
+     int GetConfigIndex(const std::string & name);
++    virtual int GetDriverConfigsSize() const { return driverConfigs.size(); };
++    virtual cDriverConfig * GetDriverConfig(const int index) { return &driverConfigs[index]; };
+ };
+ 
+ extern cConfig Config;
+ 
++extern "C" cConfigAbs * CreateConfig();
++
+ } // end of namespace
+ 
+ #endif
+--- graphlcd-base/glcddrivers/drivers.c	2013-06-30 19:53:11.000000000 
++++ graphlcd-base/glcddrivers/drivers.c	2013-07-12 15:44:44.000000000 
+@@ -6,12 +6,13 @@
+  * This file is released under the GNU General Public License. Refer
+  * to the COPYING file distributed with this package.
+  *
+  * (c) 2004 Andreas Regel <andreas.regel AT powarman.de>
+  */
+ 
++#include <stdio.h>
+ #include <string.h>
+ 
+ #include "drivers.h"
+ #include "simlcd.h"
+ #include "gu140x32f.h"
+ #include "gu256x64-372.h"
+@@ -89,12 +90,15 @@
+             return drivers[i].id;
+     return kDriverUnknown;
+ }
+ 
+ cDriver * CreateDriver(int driverID, cDriverConfig * config)
+ {
++
++printf("############## %s driverID: %d\n", __func__, driverID);
++
+     switch (driverID)
+     {
+         case kDriverSimLCD:
+             return new cDriverSimLCD(config);
+         case kDriverGU140X32F:
+             return new cDriverGU140X32F(config);
+@@ -145,7 +149,13 @@
+         case kDriverUnknown:
+         default:
+             return NULL;
+     }
+ }
+ 
++cDriver * CreateDriver2(int driverID, cDriverConfig * config)
++{
++printf("############## %s\n", __func__);
++    return CreateDriver(driverID, config);
++}
++
+ } // end of namespace
+--- graphlcd-base/glcddrivers/drivers.h	2013-06-30 19:53:11.000000000 
++++ graphlcd-base/glcddrivers/drivers.h	2013-07-12 15:16:44.000000000 
+@@ -60,9 +60,11 @@
+ };
+ 
+ tDriver * GetAvailableDrivers(int & count);
+ int GetDriverID(const std::string & driver);
+ cDriver * CreateDriver(int driverID, cDriverConfig * config);
+ 
++extern "C" cDriver * CreateDriver2(int driverID, cDriverConfig * config);
++
+ } // end of namespace
+ 
+ #endif
+--- graphlcd-base/glcdgraphics/bitmap.c	2013-06-30 19:53:11.000000000 
++++ graphlcd-base/glcdgraphics/bitmap.c	2013-07-12 14:51:41.000000000 
+@@ -966,7 +966,12 @@
+         }
+         fclose(fp);
+     }
+ }
+ #endif
+ 
++cBitmapAbs * CreateBitmap(int width, int height)
++{
++    return new cBitmap(width, height);
++}
++
+ } // end of namespace
+--- graphlcd-base/glcdgraphics/bitmap.h	2013-06-30 19:53:11.000000000 
++++ graphlcd-base/glcdgraphics/bitmap.h	2013-07-12 15:18:54.000000000 
+@@ -82,13 +82,24 @@
+    static uint32_t AlignAlpha  (uint32_t col);
+ };
+ 
+ 
+ class cFont;
+ 
+-class cBitmap
++class cBitmapAbs
++{
++public:
++    virtual int Width() const = 0;
++    virtual int Height() const = 0;
++    virtual const uint32_t * Data() const = 0;
++    virtual void Clear(uint32_t color = GRAPHLCD_Transparent) = 0;
++
++    virtual void DrawPixel(int x, int y, uint32_t color) = 0;
++};
++
++class cBitmap : public cBitmapAbs
+ {
+ protected:
+     int width;
+     int height;
+     int lineSize;
+     uint32_t * bitmap;
+@@ -100,20 +111,20 @@
+ public:
+     cBitmap(int width, int height, uint32_t * data = NULL);
+     cBitmap(int width, int height, uint32_t initcol);
+     cBitmap(const cBitmap & b);
+     ~cBitmap();
+ 
+-    int Width() const { return width; }
+-    int Height() const { return height; }
+-    int LineSize() const { return lineSize; }
++    virtual int Width() const { return width; }
++    virtual int Height() const { return height; }
++    virtual int LineSize() const { return lineSize; }
+     const uint32_t * Data() const { return bitmap; }
+ 
+-    void Clear(uint32_t color = cColor::Transparent);
++    virtual void Clear(uint32_t color = GRAPHLCD_Transparent);
+     void Invert();
+-    void DrawPixel(int x, int y, uint32_t color);
++    virtual void DrawPixel(int x, int y, uint32_t color);
+     void DrawLine(int x1, int y1, int x2, int y2, uint32_t color);
+     void DrawHLine(int x1, int y, int x2, uint32_t color);
+     void DrawVLine(int x, int y1, int y2, uint32_t color);
+     void DrawRectangle(int x1, int y1, int x2, int y2, uint32_t color, bool filled);
+     void DrawRoundRectangle(int x1, int y1, int x2, int y2, uint32_t color, bool filled, int size);
+     void DrawEllipse(int x1, int y1, int x2, int y2, uint32_t color, bool filled, int quadrants);
+@@ -139,9 +150,11 @@
+ #if 0
+     bool LoadPBM(const std::string & fileName);
+     void SavePBM(const std::string & fileName);
+ #endif
+ };
+ 
++extern "C" cBitmapAbs * CreateBitmap(int width, int height);
++
+ } // end of namespace
+ 
+ #endif

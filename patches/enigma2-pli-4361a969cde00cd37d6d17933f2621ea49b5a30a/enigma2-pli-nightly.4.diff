@@ -7383,7 +7383,7 @@ diff -Naur '--exclude-from=diff-ignore' enigma2-nightly.org/main/Makefile.am eni
  enigma2_SOURCES = \
  	bsod.cpp \
  	bsod.h \
-@@ -51,7 +53,17 @@
+@@ -51,7 +53,13 @@
  	@PTHREAD_LIBS@ \
  	@PYTHON_LDFLAGS@ \
  	@LIBDDVD_LIBS@ \
@@ -7394,10 +7394,6 @@ diff -Naur '--exclude-from=diff-ignore' enigma2-nightly.org/main/Makefile.am eni
 +if ENABLE_LIBEPLAYER3
 +enigma2_LDADD += \
 +	-leplayer3
-+endif
-+
-+if HAVE_GRAPHLCD
-+enigma2_LDADD += -lglcddrivers -lglcdgraphics -lglcdskin
 +endif
  
  enigma2_LDFLAGS = -Wl,--export-dynamic
