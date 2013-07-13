@@ -282,9 +282,9 @@ int init_dev(void)
 
 	cec_class = class_create(THIS_MODULE, DEVICE_NAME);
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,30)
-	device_create(cec_class, NULL, MKDEV(CEC_MAJOR, 0), NULL, "cec", 0);
+	device_create(cec_class, NULL, MKDEV(CEC_MAJOR, 0), NULL, "hdmi_cec", 0);
 #else
-	class_device_create(cecclass, NULL, MKDEV(CEC_MAJOR, 0), NULL, "cec", 0);
+	class_device_create(cecclass, NULL, MKDEV(CEC_MAJOR, 0), NULL, "hdmi_cec", 0);
 #endif
 
 	vOpen.fp = NULL;
