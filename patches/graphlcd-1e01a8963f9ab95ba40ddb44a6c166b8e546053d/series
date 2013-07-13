@@ -1,2 +1,3 @@
 graphlcd.patch
 graphlcd_add_dynload_support.patch
+graphlcd_support_libusb1.0.patch
