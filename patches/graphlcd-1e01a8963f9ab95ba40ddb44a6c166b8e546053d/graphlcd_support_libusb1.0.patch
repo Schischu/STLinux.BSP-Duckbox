@@ -142,7 +142,7 @@
  }
  
 -static struct usb_device *find_dev(int index)
-+static struct libusb_device *find_dev(struct libusb_context *ctx, int index)
++static struct libusb_device *find_dev(int index)
  {
 -	struct usb_bus *b;
 -	struct usb_device *d;
@@ -151,7 +151,7 @@
  	int enumeration = 0;
  
 -	b = usb_get_busses();
-+	ssize_t cnt = libusb_get_device_list(ctx, &list);
++	ssize_t cnt = libusb_get_device_list(NULL, &list);
  
 -	while (b) {
 -		d = b->devices;
@@ -253,7 +253,7 @@
  		}
  		retry++;
  	} while (ret == DEVERR_TIMEOUT && retry < 5);
-@@ -953,33 +962,38 @@
+@@ -953,33 +962,37 @@
  		return handle_error("Got invalid reply\n");
  	}
  	// pass back return code set by peer:
@@ -266,22 +266,20 @@
 -	struct usb_device *d;
 -	usb_dev_handle *usb_dev;
 +	int r;
-+	struct libusb_context *ctx = NULL;
 +	struct libusb_device *d;
 +	struct libusb_device_handle *usb_dev;
  
 -	usb_init();
 -	usb_find_busses();
 -	usb_find_devices();
-+	r = libusb_init(&ctx);
++	r = libusb_init(NULL);
 +	if (r < 0) {
 +		handle_error("Could not initialise libusb!");
 +		return NULL;
 +	}
-+	libusb_set_debug(ctx, 3);
++	libusb_set_debug(NULL, 3);
  
--	d = find_dev(index);
-+	d = find_dev(ctx, index);
+ 	d = find_dev(index);
  	if (!d) {
  		handle_error("No matching USB device found!");
  		return NULL;
@@ -301,6 +299,7 @@
  // -------------------------------------------------------------------
  // END SELECTIVE COPY & PASTE "rawusb.c"
  // -------------------------------------------------------------------
+
 --- graphlcd-base/glcddrivers/ax206dpf.h	2013-06-30 19:53:11.000000000 
 +++ graphlcd-base/glcddrivers/ax206dpf.h	2013-07-13 09:52:47.000000000 
 @@ -128,13 +128,13 @@
