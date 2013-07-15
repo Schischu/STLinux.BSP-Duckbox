@@ -1,4 +1,4 @@
-STLinux.BSP-Duckbox
+STLinux.BSP-Duckbox [![Build Status](http://duckbox.de:8080/job/STLinux.BSP-Duckbox/badge/icon)](http://duckbox.de:8080/job/STLinux.BSP-Duckbox/)
 ===================
 
 STLinux Duckbox BSP for ptxdist
