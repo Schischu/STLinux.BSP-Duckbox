@@ -45,7 +45,7 @@ config STMFB_TOOLS_PICTURE_CFG
 
 config STMFB_TOOLS_DIRECTFB_SCREEN_ALIGNMENT
 	tristate 
-	default m
+	default n
 	prompt "directfb screen-alignment"
 
 config STMFB_TOOLS_STFBSET
