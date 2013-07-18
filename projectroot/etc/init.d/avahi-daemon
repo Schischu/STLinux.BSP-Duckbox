@@ -1,0 +1,38 @@
+#!/bin/sh
+#
+# avahi-daemon
+# cat /sys/class/net/
+# chkconfig: S 0 20
+
+for IFACE in "$(ls -l /sys/class/net | grep -v virtual | grep -v eth0 | awk ' { print $9 } ' )"; do 
+
+case "$1" in
+	start)
+	DHCP=`grep -c "auto $IFACE" /etc/network/interfaces`
+	 if [ "$DHCP" = "1" ]; then 
+	    echo "Starting dhcp... $IFACE "
+            /sbin/udhcpc -i $IFACE -p /var/run/udhcpc.$IFACE.pid -b
+	 else
+	    /etc/init.d/udhcpc start 
+	 fi  
+	 ;;
+	stop)
+	DHCP=`grep -c dhcp /etc/network/interfaces`
+	if [ "$DHCP" = "1" ]; then 
+	   echo "Stoping dhcp...$IFACE"
+           kill -9 `cat  /var/run/udhcpc.$IFACE.pid`
+	else
+	   /etc/init.d/udhcpc stop 
+	fi  
+	;;
+	restart)
+	$0 stop
+	$0 start
+	;;
+	*)
+		echo "<start|stop|restart>"
+		exit 1
+	 ;;	
+esac 
+done
+exit 0
