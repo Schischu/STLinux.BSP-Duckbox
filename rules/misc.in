@@ -5,12 +5,14 @@ menu "boxspecific misc "
 config DEVINIT
 	tristate
 	prompt "devinit dummy"
+	default m
 	help
 	  FIXME
 
 config VDSTANDBY
 	tristate
 	prompt "vdstandby"
+	default m
 	help
 	  FIXME
 
