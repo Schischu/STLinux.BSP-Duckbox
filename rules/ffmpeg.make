@@ -52,6 +52,8 @@ FFMPEG_AUTOCONF += \
 		--cpu=sh4 \
 		--target-os=linux \
 		--arch=sh4 \
+		--disable-runtime-cpudetect \
+		--disable-ffprobe \
 		--disable-doc \
 		--disable-htmlpages \
 		--disable-manpages \
@@ -129,6 +131,8 @@ FFMPEG_AUTOCONF += \
 		--enable-pthreads \
 		--enable-bzlib \
 		--disable-zlib \
+		--enable-cross-compile \
+		--enable-stripping \
 		--disable-bsfs \
 		--enable-librtmp
 endif

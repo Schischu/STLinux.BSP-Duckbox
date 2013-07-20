@@ -1,0 +1,14 @@
+## SECTION=initmethod_bbinit
+
+config AVAHI_SCRIPT_INIT
+	tristate "avahi-script-init"
+	default y
+
+if AVAHI_SCRIPT_INIT
+
+config AVAHI_SCRIPT_BBINIT_LINK
+	string
+	prompt "avahi-script"
+	default "S28avahi-daemon"
+
+endif
