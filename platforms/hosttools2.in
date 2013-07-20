@@ -1,3 +1,0 @@
-source "rules/host-mup.in"
-source "rules/host-fup.in"
-source "rules/host-pad.in"

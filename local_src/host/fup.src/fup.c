@@ -677,6 +677,10 @@ int32_t main(int32_t argc, char* argv[])
       uint8_t zlib = 0;
 #endif
       printf("\n");
+      for (int i = 0; i < argc; i++)
+         printf("%s ", argv[i]);
+      printf("\n");
+      printf("\n");
       printf("Version: %s Date: %s USE_ZLIB: %d                                                        \n", VERSION, DATE, zlib);
       printf("\n");
       printf("Usage: %s -xcstv []                                                                      \n", argv[0]);

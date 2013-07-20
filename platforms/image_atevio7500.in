@@ -1,0 +1,13 @@
+## SECTION=image
+
+config IMAGE_ATEVIO7500
+	bool
+	select HOST_GENIMAGE
+	select HOST_MTD_UTILS
+	select HOST_PAD
+	select HOST_FUP
+	select KERNEL
+	depends on PLATFORM_ATEVIO7500
+	prompt "Generate images/atevio75500.data"
+	help
+	  FIXME

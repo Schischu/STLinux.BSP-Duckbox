@@ -11,15 +11,15 @@
 #
 # We provide this package
 #
-HOST_PACKAGES-$(PTXCONF_HOST_PAD) += host-pad
+HOST_PACKAGES-$(PTXCONF_HOST_FUP) += host-fup
 
 #
 # Paths and names
 #
-HOST_PAD_VERSION	:= 1.0.0
-HOST_PAD			:= pad
-HOST_PAD_URL		:= lndir://$(PTXDIST_WORKSPACE)/local_src/host/$(HOST_PAD).src
-HOST_PAD_DIR		:= $(HOST_BUILDDIR)/$(HOST_PAD).src
+HOST_FUP_VERSION	:= 1.0.0
+HOST_FUP			:= fup
+HOST_FUP_URL		:= lndir://$(PTXDIST_WORKSPACE)/local_src/host/$(HOST_FUP).src
+HOST_FUP_DIR		:= $(HOST_BUILDDIR)/$(HOST_FUP).src
 
 # ----------------------------------------------------------------------------
 # Prepare
@@ -28,28 +28,28 @@ HOST_PAD_DIR		:= $(HOST_BUILDDIR)/$(HOST_PAD).src
 #
 # autoconf
 #
-HOST_PAD_CONF_TOOL	:= autoconf
-HOST_PAD_CONF_OPT	:= \
+HOST_FUP_CONF_TOOL	:= autoconf
+HOST_FUP_CONF_OPT	:= \
 	$(HOST_AUTOCONF)
 
-$(STATEDIR)/host-pad.prepare: $(STATEDIR)/host-pad.get $(STATEDIR)/host-pad.extract
+$(STATEDIR)/host-fup.prepare: $(STATEDIR)/host-fup.get $(STATEDIR)/host-fup.extract
 	@$(call targetinfo)
-	cd $(HOST_PAD_DIR); \
+	cd $(HOST_FUP_DIR); \
 		cp $(PTXDIST_SYSROOT_HOST)/share/libtool/config/ltmain.sh .; \
 		touch NEWS README AUTHORS ChangeLog; \
 		aclocal; automake -a; autoconf
-	@$(call world/prepare, HOST_PAD)
+	@$(call world/prepare, HOST_FUP)
 	@$(call touch)
 
 # ----------------------------------------------------------------------------
 # Install
 # ----------------------------------------------------------------------------
 
-$(STATEDIR)/host-pad.install: $(STATEDIR)/host-pad.prepare $(STATEDIR)/host-pad.compile
+$(STATEDIR)/host-fup.install: $(STATEDIR)/host-fup.prepare $(STATEDIR)/host-fup.compile
 	@$(call targetinfo)
-	cp $(HOST_PAD_DIR)/pad $(PTXCONF_SYSROOT_HOST)/bin
+	cp $(HOST_FUP_DIR)/fup $(PTXCONF_SYSROOT_HOST)/bin
 	@$(call touch)
 
-$(STATEDIR)/host-pad.install.post: $(STATEDIR)/host-pad.install
+$(STATEDIR)/host-fup.install.post: $(STATEDIR)/host-fup.install
 
 # vim: syntax=make
