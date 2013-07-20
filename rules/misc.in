@@ -1,0 +1,17 @@
+## SECTION=core
+
+menu "boxspecific misc "
+
+config DEVINIT
+	tristate
+	prompt "devinit dummy"
+	help
+	  FIXME
+
+config VDSTANDBY
+	tristate
+	prompt "vdstandby"
+	help
+	  FIXME
+
+endmenu
