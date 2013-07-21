@@ -66,7 +66,7 @@ GRAPHLCD_CONF_ENV 	:= $(CROSS_ENV) \
 	PKG_CONFIG=$(PTXDIST_SYSROOT_HOST)/bin/pkg-config \
 	PKG_CONFIG_PATH=$(SYSROOT)/usr/lib/pkgconfig
 
-$(STATEDIR)/graphlcd.compile:
+$(STATEDIR)/graphlcd.compile: $(STATEDIR)/libusb.install.post
 	@$(call targetinfo)
 
 	cd $(GRAPHLCD_DIR) && $(GRAPHLCD_PATH) $(GRAPHLCD_CONF_ENV) \
