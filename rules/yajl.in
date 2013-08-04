@@ -1,0 +1,6 @@
+## SECTION=multimedia_libs
+
+config YAJL
+	bool
+	prompt "yajl"
+	default n

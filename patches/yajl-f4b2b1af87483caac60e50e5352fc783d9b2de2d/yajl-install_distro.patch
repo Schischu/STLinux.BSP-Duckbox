@@ -1,0 +1,11 @@
+--- yajl/configure	2011-12-06 23:03:38.986910111 +0100
++++ yajl/configure	2011-12-06 23:03:18.216901196 +0100
+@@ -67,7 +67,7 @@
+   f.puts "	@rm -rf Makefile build"
+   f.puts "	@rm -f yajl-*.tgz"
+   f.puts
+-  f.puts "install: all" 
++  f.puts "install: distro" 
+   f.puts "	@cd build && make install"
+   f.puts
+   f.puts "package: all"
