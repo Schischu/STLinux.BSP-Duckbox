@@ -1,0 +1,6 @@
+## SECTION=multimedia_libs
+
+config JASPER
+	tristate
+	prompt "jasper"
+	default n
