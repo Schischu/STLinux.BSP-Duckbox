@@ -1,0 +1,6 @@
+## SECTION=multimedia_libs
+
+config TAGLIB
+	tristate
+	prompt "taglib"
+	default n
