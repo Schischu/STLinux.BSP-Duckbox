@@ -1,0 +1,76 @@
+--- tinyxml2.6.2/Makefile.org	2012-06-12 22:17:12.350272415 +0200
++++ tinyxml2.6.2/Makefile	2012-06-12 22:17:11.826272393 +0200
+@@ -19,14 +19,14 @@
+ 
+ #****************************************************************************
+ 
+-CC     := gcc
+-CXX    := g++
+-LD     := g++
+-AR     := ar rc
+-RANLIB := ranlib
++CC     := sh4-linux-gcc
++CXX    := sh4-linux-g++
++LD     := sh4-linux-g++
++AR     := sh4-linux-ar
++RANLIB := sh4-linux-ranlib
+ 
+-DEBUG_CFLAGS     := -Wall -Wno-format -g -DDEBUG
+-RELEASE_CFLAGS   := -Wall -Wno-unknown-pragmas -Wno-format -O3
++DEBUG_CFLAGS     := -Wall -Wno-format -g -DDEBUG -DTIXML_USE_STL
++RELEASE_CFLAGS   := -Wall -Wno-unknown-pragmas -Wno-format -O3 -DTIXML_USE_STL
+ 
+ LIBS		 :=
+ 
+@@ -47,9 +47,9 @@
+ endif
+ 
+ ifeq (YES, ${PROFILE})
+-   CFLAGS   := ${CFLAGS} -pg -O3
+-   CXXFLAGS := ${CXXFLAGS} -pg -O3
+-   LDFLAGS  := ${LDFLAGS} -pg
++   CFLAGS   := ${CFLAGS} -O3 -DTIXML_USE_STL
++   CXXFLAGS := ${CXXFLAGS} -O3 -DTIXML_USE_STL
++   LDFLAGS  := ${LDFLAGS} -fPIC -shared
+ endif
+ 
+ #****************************************************************************
+@@ -82,8 +82,9 @@
+ #****************************************************************************
+ 
+ OUTPUT := xmltest
++LIB  := tinyxml
+ 
+-all: ${OUTPUT}
++all: ${LIB} ${PROG}
+ 
+ 
+ #****************************************************************************
+@@ -101,6 +102,10 @@
+ # Output
+ #****************************************************************************
+ 
++${LIB}: ${OBJS}
++	${LD} -shared -o lib$@.so ${LDFLAGS} ${OBJS} ${LIBS} ${EXTRA_LIBS}
++	ar rc lib$@.a ${OBJS}
++
+ ${OUTPUT}: ${OBJS}
+ 	${LD} -o $@ ${LDFLAGS} ${OBJS} ${LIBS} ${EXTRA_LIBS}
+ 
+@@ -128,3 +133,16 @@
+ tinyxmlparser.o: tinyxml.h tinystr.h
+ xmltest.o: tinyxml.h tinystr.h
+ tinyxmlerror.o: tinyxml.h tinystr.h
++
++install:
++	if ( test ! -d $(PREFIX)/include ) ; then mkdir -p $(PREFIX)/include ; fi
++	cp -f tinystr.h $(PREFIX)/include
++	chmod a+r $(PREFIX)/include/tinystr.h
++	cp -f tinyxml.h $(PREFIX)/include
++	chmod a+r $(PREFIX)/include/tinyxml.h
++	sed -i "0,/^#ifdef TIXML_USE_STL/s/^#ifdef TIXML_USE_STL/#define TIXML_USE_STL\n#ifdef TIXML_USE_STL/" $(PREFIX)/include/tinyxml.h
++	if ( test ! -d $(PREFIX)/lib ) ; then mkdir -p $(PREFIX)/lib ; fi
++	cp -f libtinyxml.so $(PREFIX)/lib
++	chmod a+r $(PREFIX)/lib/libtinyxml.so
++	ln -sf libtinyxml.so $(PREFIX)/lib/libtinyxml.so.2.6.2
++	ln -sf libtinyxml.so $(PREFIX)/lib/libtinyxml.so.2

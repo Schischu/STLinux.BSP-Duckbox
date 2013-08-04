@@ -1,0 +1,6 @@
+## SECTION=multimedia_libs
+
+config TINYXML
+	tristate
+	prompt "tinyxml"
+	default n
