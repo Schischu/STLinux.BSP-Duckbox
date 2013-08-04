@@ -1,0 +1,12 @@
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: STGLES
+Description: 3D graphics effects library
+Version: 1.0
+Requires: directfb >= 1.4.11
+Libs: -L${libdir} -lstgles
+Libs.private: -lrt
+Cflags: -I${includedir}

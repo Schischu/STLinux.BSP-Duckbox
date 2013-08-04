@@ -1,0 +1,7 @@
+## SECTION=multimedia_libs
+
+config LIBSTGLES
+	tristate "libstgles"
+	select DIRECTFB
+	default n
+

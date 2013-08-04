@@ -1,0 +1,16 @@
+AC_INIT([libstgles],[1.0],[],[libstgles])
+AC_PREREQ(2.53)
+
+AM_INIT_AUTOMAKE
+
+AC_PROG_CC
+AC_PROG_CXX
+
+m4_ifdef([LT_INIT], [LT_INIT], [AC_PROG_LIBTOOL])
+AC_CONFIG_MACRO_DIR([m4])
+
+PKG_CHECK_MODULES(DIRECTFB, [directfb])
+
+AC_OUTPUT([
+Makefile
+])
