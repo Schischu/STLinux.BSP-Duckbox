@@ -2,6 +2,7 @@
 
 config ENIGMA2_SKINS_SH4
 	bool
+	prompt "enigma2-skins-sh4"
 	default y
 	select ENIGMA2_PLI
 
