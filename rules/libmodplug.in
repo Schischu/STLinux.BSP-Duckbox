@@ -1,0 +1,6 @@
+## SECTION=multimedia_libs
+
+config LIBMODPLUG
+	tristate
+	prompt "libmodplug"
+	default n
