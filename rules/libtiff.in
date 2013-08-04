@@ -1,0 +1,6 @@
+## SECTION=multimedia_libs
+
+config LIBTIFF
+	tristate
+	prompt "libtiff"
+	default n
