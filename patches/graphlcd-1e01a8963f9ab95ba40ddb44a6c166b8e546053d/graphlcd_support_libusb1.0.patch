@@ -209,7 +209,7 @@
  	int len;
  	int ret;
  	static unsigned char ansbuf[13]; // Do not change size.
-+	int transferred, reveived;
++	int transferred, received;
  
  	g_buf[14] = cmdlen;
  	memcpy(&g_buf[15], cmd, cmdlen);
@@ -227,7 +227,7 @@
  		if (data) {
 -			ret = usb_bulk_write(dev, ENDPT_OUT, (char* )data,
 -					block_len, 3000);
-- 		if (ret != (int) block_len) {
+-			if (ret != (int) block_len) {
 +			ret = libusb_bulk_transfer(dev, ENDPT_OUT, data,
 +					block_len, &transferred, 3000);
 +			if (transferred != (int) block_len) {
@@ -237,7 +237,7 @@
  		}
  	} else if (data) {
 -		ret = usb_bulk_read(dev, ENDPT_IN, (char *) data, block_len, 4000);
-- 	if (ret != (int) block_len) {
+-		if (ret != (int) block_len) {
 +		ret = libusb_bulk_transfer(dev, ENDPT_IN, data, block_len, &received, 4000);
 +		if (received != (int) block_len) {
  			perror("bulk data read");
@@ -248,7 +248,7 @@
  	int retry = 0;
  	do {
 -		ret = usb_bulk_read(dev, ENDPT_IN, (char *) ansbuf, len, 5000);
-- 	if (ret != len) {
+-		if (ret != len) {
 +		ret = libusb_bulk_transfer(dev, ENDPT_IN, ansbuf, len, &received, 5000);
 +		if (received != len) {
  			perror("bulk ACK read");
