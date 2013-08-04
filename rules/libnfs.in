@@ -1,0 +1,6 @@
+## SECTION=multimedia_libs
+
+config LIBNFS
+	bool
+	prompt "libnfs"
+	default n
