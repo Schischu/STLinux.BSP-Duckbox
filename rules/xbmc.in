@@ -1,0 +1,62 @@
+## SECTION=multimedia_tools
+
+config XBMC
+	tristate "xbmc"
+	select BOOST
+	select DIRECTFB
+	select LIBSTGLES
+	select LIBASS
+	select LIBMPEG2
+	select LIBSAMPLERATE
+	select LIBOGG
+	select LIBVORBIS
+	select LIBMODPLUG
+	select LIBCURL
+	select FLAC
+	select BZIP2
+	select LIBLZO
+	select LIBTIFF
+	select SQLITE
+	select FREETYPE
+	select EXPAT
+	select FONTCONFIG
+	select LIBFRIBIDI
+	select LIBPCRE
+	select LIBCDIO
+	select JASPER
+	select YAJL
+	select LIBMICROHTTPD
+	select TINYXML
+	select LIBNFS
+	select TAGLIB
+	select LIBPNG
+	select LIBJPEG
+	select LIBGIF
+	select LIBID3TAG
+	select READLINE
+	select LIBMAD
+	select LIBXML2
+	select LIBXSLT
+	select SDPARM
+	select PYTHON
+	select PYTHON_ELEMENTTREE
+	select PYTHON_ZOPE_INTERFACE
+	select PYTHON_TWISTED
+	select PYTHON_OPENSSL
+	select PYTHON_WIFI
+	select PYTHON_LXML
+	select PYTHON_ZLIB
+	select LIBXMLCCWRAP
+	select LIBSIGCPP
+	select GST_PLUGINS_DVBMEDIASINK
+
+if XBMC
+choice
+	prompt "xbmc version   "
+	default XBMC_VERSION_201301022234
+
+	config XBMC_VERSION_201301022234
+		bool "Fr, 02 Jan 2013 22:34"
+endchoice
+endif
+
