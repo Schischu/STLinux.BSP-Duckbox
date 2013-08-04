@@ -1,0 +1,6 @@
+## SECTION=multimedia_libs
+
+config LIBSAMPLERATE
+	tristate
+	prompt "libsamplerate"
+	default n
