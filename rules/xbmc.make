@@ -116,6 +116,8 @@ XBMC_AUTOCONF := \
 		PKG_CONFIG=$(PTXDIST_SYSROOT_HOST)/bin/pkg-config \
 		PKG_CONFIG_PATH=$(SYSROOT)/usr/lib/pkgconfig
 
+XBMC_MAKE_OPS := $(PARALLELMFLAGS_BROKEN)
+
 # ----------------------------------------------------------------------------
 # Target-Install
 # ----------------------------------------------------------------------------
