@@ -5486,3 +5486,16 @@ diff -Naur '--exclude-from=diff-ign
  	@install -d $(DESTDIR)$(datarootdir)/applications
  	@install tools/Linux/xbmc.desktop $(DESTDIR)$(datarootdir)/applications/xbmc.desktop
  	@install -d $(DESTDIR)$(datadir)/icons/hicolor/48x48/apps
+--- xbmc-nightly.org/lib/libdvd/libdvdnav/configure2	2013-01-12 16:31:38.000000000 
++++ xbmc-nightly/lib/libdvd/libdvdnav/configure2	2013-01-12 19:49:47.000000000 
+@@ -110,8 +110,8 @@
+   echo "$DVDREAD_CONFIG returned an error. Can't proceed"
+   exit 1
+ fi
+-dvdread_cflags=`$DVDREAD_CONFIG --cflags`
+-dvdread_libs=`$DVDREAD_CONFIG --libs`
++dvdread_cflags=
++dvdread_libs=
+ 
+ targetos=`uname -s`
+ case $targetos in
