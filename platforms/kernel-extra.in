@@ -5,3 +5,9 @@ config KERNEL_DEBUG
 	select KERNEL
 	default n
 	prompt "enable kernel printk"
+
+config KERNEL_BPA2_DIRECTFBOPTIMIZED
+	bool
+	select KERNEL
+	default n
+	prompt "enable kernel bpa2 directfboptimized"

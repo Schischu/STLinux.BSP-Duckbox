@@ -4,3 +4,4 @@ config TAGLIB
 	tristate
 	prompt "taglib"
 	default n
+	select HOST_CMAKE
