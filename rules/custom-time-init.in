@@ -2,7 +2,7 @@
 
 config CUSTOM_TIME_INIT
 	tristate "rdate-init"
-	depends on BUSYBOX_RDATE
+	select BUSYBOX_RDATE
 	default m
 
 if CUSTOM_TIME_INIT

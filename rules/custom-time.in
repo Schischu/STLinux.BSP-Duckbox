@@ -2,7 +2,7 @@
 
 config CUSTOM_TIME
 	tristate "custom-time"
-	depends on TIMEZONE_CET
+	select TIMEZONE_CET
 	default m
 
 
