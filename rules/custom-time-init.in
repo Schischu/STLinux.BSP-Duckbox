@@ -1,0 +1,15 @@
+## SECTION=initmethod_bbinit
+
+config CUSTOM_TIME_INIT
+	tristate "rdate-init"
+	depends on BUSYBOX_RDATE
+	default m
+
+if CUSTOM_TIME_INIT
+
+config CUSTOM_TIME_BBINIT_LINK
+	string
+	prompt "rdate"
+	default "S97rdate"
+
+endif
