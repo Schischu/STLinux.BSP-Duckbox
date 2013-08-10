@@ -140,7 +140,6 @@ ifdef KERNEL_INITRAMFS_SOURCE_y
 		"$(<)"
 endif
 
-	@echo "Using kernel debug"
 ifdef PTXCONF_KERNEL_DEBUG
 	@echo "Using kernel debug"
 	@grep -v "CONFIG_PRINTK" "$(KERNEL_DIR)/.config" > "$(KERNEL_DIR)/.config.tmp"
@@ -148,6 +147,13 @@ ifdef PTXCONF_KERNEL_DEBUG
 	@echo "CONFIG_PRINTK=y" >> "$(KERNEL_DIR)/.config"
 	@echo "CONFIG_PRINTK_TIME=y" >> "$(KERNEL_DIR)/.config"
 	@echo "# CONFIG_DYNAMIC_DEBUG is not set" >> "$(KERNEL_DIR)/.config"
+endif
+
+ifdef PTXCONF_KERNEL_BPA2_DIRECTFBOPTIMIZED
+	@echo "Using kernel bpa2 directfboptimized"
+	@grep -v "CONFIG_BPA2_DIRECTFBOPTIMIZED" "$(KERNEL_DIR)/.config" > "$(KERNEL_DIR)/.config.tmp"
+	cp "$(KERNEL_DIR)/.config.tmp" "$(KERNEL_DIR)/.config"
+	@echo "CONFIG_BPA2_DIRECTFBOPTIMIZED=y" >> "$(KERNEL_DIR)/.config"
 endif
 
 	@$(call touch)

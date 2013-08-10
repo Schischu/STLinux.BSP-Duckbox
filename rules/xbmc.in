@@ -58,5 +58,264 @@ choice
 	config XBMC_VERSION_201301022234
 		bool "Fr, 02 Jan 2013 22:34"
 endchoice
+
+#SAVEIFS=$IFS; IFS=$(echo -en "\n\b"); for p in `ls .`; do echo -e "config XBMC_LANGUAGE_`echo ${p^^} | sed -e 's/[()]//g' | sed -e 's/[^a-zA-Z0-9]/_/g'`\n\ttristate \"xbmc-language-`echo ${p,,} | sed -e 's/[()]//g' | sed -e 's/[^a-zA-Z0-9\-]/-/g'`\"\n\tdepends on XBMC\n\tdefault m\n"; done; IFS=$SAVEIFS
+
+config XBMC_LANGUAGE_AFRIKAANS
+	tristate "xbmc-language-afrikaans"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_AMHARIC
+	tristate "xbmc-language-amharic"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_ARABIC
+	tristate "xbmc-language-arabic"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_BASQUE
+	tristate "xbmc-language-basque"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_BELARUSIAN
+	tristate "xbmc-language-belarusian"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_BOSNIAN
+	tristate "xbmc-language-bosnian"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_BULGARIAN
+	tristate "xbmc-language-bulgarian"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_CATALAN
+	tristate "xbmc-language-catalan"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_CHINESE_SIMPLE
+	tristate "xbmc-language-chinese-simple"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_CHINESE_TRADITIONAL
+	tristate "xbmc-language-chinese-traditional"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_CROATIAN
+	tristate "xbmc-language-croatian"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_CZECH
+	tristate "xbmc-language-czech"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_DANISH
+	tristate "xbmc-language-danish"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_DUTCH
+	tristate "xbmc-language-dutch"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_ENGLISH
+	tristate "xbmc-language-english"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_ENGLISH_US
+	tristate "xbmc-language-english-us"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_ESPERANTO
+	tristate "xbmc-language-esperanto"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_ESTONIAN
+	tristate "xbmc-language-estonian"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_FINNISH
+	tristate "xbmc-language-finnish"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_FRENCH
+	tristate "xbmc-language-french"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_GALICIAN
+	tristate "xbmc-language-galician"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_GERMAN
+	tristate "xbmc-language-german"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_GREEK
+	tristate "xbmc-language-greek"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_HEBREW
+	tristate "xbmc-language-hebrew"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_HINDI_DEVANAGIRI
+	tristate "xbmc-language-hindi-devanagiri"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_HUNGARIAN
+	tristate "xbmc-language-hungarian"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_ICELANDIC
+	tristate "xbmc-language-icelandic"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_INDONESIAN
+	tristate "xbmc-language-indonesian"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_ITALIAN
+	tristate "xbmc-language-italian"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_JAPANESE
+	tristate "xbmc-language-japanese"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_KOREAN
+	tristate "xbmc-language-korean"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_LITHUANIAN
+	tristate "xbmc-language-lithuanian"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_MACEDONIAN
+	tristate "xbmc-language-macedonian"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_MALTESE
+	tristate "xbmc-language-maltese"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_NORWEGIAN
+	tristate "xbmc-language-norwegian"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_POLISH
+	tristate "xbmc-language-polish"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_PORTUGUESE
+	tristate "xbmc-language-portuguese"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_PORTUGUESE_BRAZIL
+	tristate "xbmc-language-portuguese-brazil"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_ROMANIAN
+	tristate "xbmc-language-romanian"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_RUSSIAN
+	tristate "xbmc-language-russian"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_SERBIAN
+	tristate "xbmc-language-serbian"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_SERBIAN_CYRILLIC
+	tristate "xbmc-language-serbian-cyrillic"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_SLOVAK
+	tristate "xbmc-language-slovak"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_SLOVENIAN
+	tristate "xbmc-language-slovenian"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_SPANISH
+	tristate "xbmc-language-spanish"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_SPANISH_ARGENTINA
+	tristate "xbmc-language-spanish-argentina"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_SPANISH_MEXICO
+	tristate "xbmc-language-spanish-mexico"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_SWEDISH
+	tristate "xbmc-language-swedish"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_THAI
+	tristate "xbmc-language-thai"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_TURKISH
+	tristate "xbmc-language-turkish"
+	depends on XBMC
+	default m
+
+config XBMC_LANGUAGE_UKRAINIAN
+	tristate "xbmc-language-ukrainian"
+	depends on XBMC
+	default m
+
+
 endif
 
