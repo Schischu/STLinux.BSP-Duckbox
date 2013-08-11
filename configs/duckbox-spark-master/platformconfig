@@ -195,6 +195,7 @@ PTXCONF_CONSOLE_SPEED="115200"
 # extra kernel                  
 #
 # PTXCONF_KERNEL_DEBUG is not set
+# PTXCONF_KERNEL_BPA2_DIRECTFBOPTIMIZED is not set
 
 #
 # bootloaders                   
