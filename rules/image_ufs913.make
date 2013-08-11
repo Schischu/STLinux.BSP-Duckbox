@@ -106,6 +106,8 @@ $(STATEDIR)/image_working_dir_prepared2:
 		echo -n "       $(image/work_dir)/map/tiny/etc/gdk-pixbuf.loaders ";	\
 		echo -n "       $(image/work_dir)/map/tiny/etc/profile ";	\
 		echo -n "       $(image/work_dir)/map/tiny/etc/init.d/*; ";	\
+		echo -n "cp $(PTXDIST_WORKSPACE)/local_src/extra/ufs913/flash/inittab "; \
+		echo -n "   $(image/work_dir)/map/tiny/etc/; ";	\
 		echo -n "cp $(PTXDIST_WORKSPACE)/local_src/extra/ufs913/flash/profile "; \
 		echo -n "   $(image/work_dir)/map/tiny/etc/; ";	\
 		echo -n "cp $(PTXDIST_WORKSPACE)/local_src/extra/ufs913/flash/rcS "; \
