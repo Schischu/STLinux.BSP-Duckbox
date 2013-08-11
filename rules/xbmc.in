@@ -59,6 +59,98 @@ choice
 		bool "Fr, 02 Jan 2013 22:34"
 endchoice
 
+config XBMC_SKIN_CONFLUENCE
+	tristate "xbmc-skin-confluence"
+	depends on XBMC
+	default m
+
+config XBMC_WEATHER_WUNDERGROUND
+	tristate "xbmc-weather-wunderground"
+	depends on XBMC
+	default m
+
+config XBMC_WEBINTERFACE_DEFAULT
+	tristate "xbmc-webinterface-default"
+	depends on XBMC
+	default m
+
+#SAVEIFS=$IFS; IFS=$(echo -en "\n\b"); for p in `ls . | grep metadata`; do echo -e "config XBMC_`echo ${p^^} | sed -e 's/[()]//g' | sed -e 's/[^a-zA-Z0-9]/_/g'`\n\ttristate \"xbmc-`echo ${p,,} | sed -e 's/[()]//g' | sed -e 's/[^a-zA-Z0-9\-]/-/g'`\"\n\tdepends on XBMC\n\tdefault m\n"; done; IFS=$SAVEIFS
+
+config XBMC_METADATA_ALBUM_UNIVERSAL
+	tristate "xbmc-metadata-album-universal"
+	depends on XBMC
+	default m
+
+config XBMC_METADATA_ARTISTS_UNIVERSAL
+	tristate "xbmc-metadata-artists-universal"
+	depends on XBMC
+	default m
+
+config XBMC_METADATA_COMMON_ALLMUSIC_COM
+	tristate "xbmc-metadata-common-allmusic-com"
+	depends on XBMC
+	default m
+
+config XBMC_METADATA_COMMON_AMAZON_DE
+	tristate "xbmc-metadata-common-amazon-de"
+	depends on XBMC
+	default m
+
+config XBMC_METADATA_COMMON_FANART_TV
+	tristate "xbmc-metadata-common-fanart-tv"
+	depends on XBMC
+	default m
+
+config XBMC_METADATA_COMMON_HDTRAILERS_NET
+	tristate "xbmc-metadata-common-hdtrailers-net"
+	depends on XBMC
+	default m
+
+config XBMC_METADATA_COMMON_HTBACKDROPS_COM
+	tristate "xbmc-metadata-common-htbackdrops-com"
+	depends on XBMC
+	default m
+
+config XBMC_METADATA_COMMON_IMDB_COM
+	tristate "xbmc-metadata-common-imdb-com"
+	depends on XBMC
+	default m
+
+config XBMC_METADATA_COMMON_LAST_FM
+	tristate "xbmc-metadata-common-last-fm"
+	depends on XBMC
+	default m
+
+config XBMC_METADATA_COMMON_MUSICBRAINZ_ORG
+	tristate "xbmc-metadata-common-musicbrainz-org"
+	depends on XBMC
+	default m
+
+config XBMC_METADATA_COMMON_THEAUDIODB_COM
+	tristate "xbmc-metadata-common-theaudiodb-com"
+	depends on XBMC
+	default m
+
+config XBMC_METADATA_COMMON_THEMOVIEDB_ORG
+	tristate "xbmc-metadata-common-themoviedb-org"
+	depends on XBMC
+	default m
+
+config XBMC_METADATA_MUSICVIDEOS_LAST_FM
+	tristate "xbmc-metadata-musicvideos-last-fm"
+	depends on XBMC
+	default m
+
+config XBMC_METADATA_THEMOVIEDB_ORG
+	tristate "xbmc-metadata-themoviedb-org"
+	depends on XBMC
+	default m
+
+config XBMC_METADATA_TVDB_COM
+	tristate "xbmc-metadata-tvdb-com"
+	depends on XBMC
+	default m
+
 #SAVEIFS=$IFS; IFS=$(echo -en "\n\b"); for p in `ls .`; do echo -e "config XBMC_LANGUAGE_`echo ${p^^} | sed -e 's/[()]//g' | sed -e 's/[^a-zA-Z0-9]/_/g'`\n\ttristate \"xbmc-language-`echo ${p,,} | sed -e 's/[()]//g' | sed -e 's/[^a-zA-Z0-9\-]/-/g'`\"\n\tdepends on XBMC\n\tdefault m\n"; done; IFS=$SAVEIFS
 
 config XBMC_LANGUAGE_AFRIKAANS

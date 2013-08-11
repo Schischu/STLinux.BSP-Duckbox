@@ -1,0 +1,44 @@
+#!/bin/sh
+
+case $1 in
+start)
+	echo "starting xbmc"
+
+	(until false; do echo 1 > /proc/sys/vm/drop_caches; sleep 2; done) &
+
+	(
+		until false; do
+			/usr/bin/xbmc
+			rtv=$?
+			echo "xbmc ended <- RTV: " $rtv
+			case "$rtv" in
+				0) echo "0"
+					echo "ERROR"
+					reboot;;
+				1) echo "1"
+					echo "SHUTDOWN"
+					fp_control -e #Todo: Will be replaced with call to halt
+					break;;
+				2) echo "2"
+					echo "REBOOT"
+					reboot;;
+				*) echo "*"
+					echo "ERROR"
+					reboot;;
+			esac
+		done
+	) &
+
+	exit 0
+
+	;;
+stop)
+	echo "stopping xbmc"
+	killall xbmc
+	killall -9 xbmc
+	;;
+*)
+	echo "usage: $0 [start|stop]"
+	;;
+esac
+
