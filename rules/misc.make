@@ -84,4 +84,45 @@ $(STATEDIR)/vdstanby.clean:
 	@$(call targetinfo)
 	@$(call clean_pkg, VDSTANDBY)
 
+
+##############################################################################
+
+
+PACKAGES-$(PTXCONF_MOTD) += motd
+
+MOTD_VERSION	:= 0.1
+
+
+# ----------------------------------------------------------------------------
+# Target-Install
+# ----------------------------------------------------------------------------
+
+$(STATEDIR)/motd.targetinstall:
+	@$(call targetinfo)
+#
+# TODO: To build your own package, if this step requires one
+	@$(call install_init, motd)
+	@$(call install_fixup,motd,PRIORITY,optional)
+	@$(call install_fixup,motd,SECTION,base)
+	@$(call install_fixup,motd,AUTHOR,"schpuntik <schpuntik@freenet.de>")
+	@$(call install_fixup,motd,DESCRIPTION,missing)
+#
+# TODO: Add here all files that should be copied to the target
+# Note: Add everything before(!) call to macro install_finish
+
+	@$(call install_alternative, motd, 0, 0, 0644, /etc/motd)
+
+	@$(call install_finish,motd)
+
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+# Clean
+# ----------------------------------------------------------------------------
+
+$(STATEDIR)/motd.clean:
+	@$(call targetinfo)
+	@$(call clean_pkg, MOTD)
+
+
 # vim: syntax=make
