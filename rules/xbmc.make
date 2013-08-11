@@ -61,6 +61,10 @@ $(STATEDIR)/xbmc.extract:
 	rm -rf $(XBMC_DIR)/.git;
 	
 	@$(call patchin, XBMC)
+	
+	sed -i "s/<home>FirstPage<\/home>/<home>PreviousMenu<\/home>/g" $(XBMC_DIR)/system/keymaps/keyboard.xml
+	cp $(word 1, $(PATH_PATCHES))/$(XBMC)/duckbox.xml $(XBMC_DIR)/system/keymaps/
+	
 	#cd $(XBMC_DIR) && sh autogen.sh
 	
 	@$(call touch)
