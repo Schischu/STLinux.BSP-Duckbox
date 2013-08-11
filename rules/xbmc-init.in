@@ -1,0 +1,15 @@
+## SECTION=initmethod_bbinit
+
+config XBMC_INIT
+	tristate "xbmc-init"
+	depends on XBMC
+	default y
+
+if XBMC_INIT
+
+config XBMC_BBINIT_LINK
+	string
+	prompt "xbmc"
+	default "S99xbmc"
+
+endif

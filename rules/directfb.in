@@ -141,7 +141,7 @@ config DIRECTFB_GFX_UNICHROME
 config DIRECTFB_GFX_VMWARE
 	bool "vmware"
 
-config DIRECTFB_GFX_VMWARE
+config DIRECTFB_GFX_STGFX
 	bool "stgfx"
 
 endmenu

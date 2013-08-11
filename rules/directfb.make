@@ -131,10 +131,10 @@ endif
 
 ifdef PTXCONF_DIRECTFB_DEBUG
 DIRECTFB_AUTOCONF += --enable-debug
-DIRECTFB_MODULE_DIRECTORY := /usr/lib/directfb-1.4-0
+DIRECTFB_MODULE_DIRECTORY := /usr/lib/directfb-1.4-5
 else
 DIRECTFB_AUTOCONF += --disable-debug-support
-DIRECTFB_MODULE_DIRECTORY := /usr/lib/directfb-1.4-0-pure
+DIRECTFB_MODULE_DIRECTORY := /usr/lib/directfb-1.4-5-pure
 endif
 
 ifdef PTXCONF_DIRECTFB_TRACE

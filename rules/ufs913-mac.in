@@ -1,0 +1,14 @@
+## SECTION=initmethod_bbinit
+
+config UFS913_MAC_INIT
+	tristate "ufs913-mac-init"
+	default n
+
+if UFS913_MAC_INIT
+
+config UFS913_MAC_BBINIT_LINK
+	string
+	prompt "ufs913-mac"
+	default "S13ufs913-mac"
+
+endif

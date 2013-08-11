@@ -4,8 +4,8 @@ case $1 in
 start)
 	echo "starting ufs913-mac"
 
-	NFS=`grep -c nfs /proc/cmdline`
-	if [ "$NFS" -eq "1" ]; then
+	NFS=`grep -c "nfs" /proc/cmdline`
+	if [ "x$NFS" == "x1" ]; then
 		# We can not correct the mac from userspace if we are booting from nfsroot
 		echo "starting ufs913-mac... error, can not correct mac if booting from nfs, aborting"
 	else

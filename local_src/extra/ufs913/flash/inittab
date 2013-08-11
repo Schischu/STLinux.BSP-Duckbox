@@ -1,0 +1,8 @@
+# Begin /etc/inittab
+
+ttyAS0::sysinit:/etc/init.d/rcS
+
+# Launching Shell Directly...
+ttyAS0::once:-/bin/ash -s
+
+# End /etc/inittab

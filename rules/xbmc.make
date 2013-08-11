@@ -61,6 +61,10 @@ $(STATEDIR)/xbmc.extract:
 	rm -rf $(XBMC_DIR)/.git;
 	
 	@$(call patchin, XBMC)
+	
+	sed -i "s/<home>FirstPage<\/home>/<home>PreviousMenu<\/home>/g" $(XBMC_DIR)/system/keymaps/keyboard.xml
+	cp $(word 1, $(PATH_PATCHES))/$(XBMC)/duckbox.xml $(XBMC_DIR)/system/keymaps/
+	
 	#cd $(XBMC_DIR) && sh autogen.sh
 	
 	@$(call touch)
@@ -129,8 +133,9 @@ $(STATEDIR)/xbmc.targetinstall:
 	@$(call install_fixup, xbmc, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
 	@$(call install_fixup, xbmc, DESCRIPTION, missing)
 	
-	@$(call install_copy, xbmc, 0, 0, 755, -, /usr/bin/xbmc)
-	@$(call install_copy, xbmc, 0, 0, 755, -, /usr/bin/xbmc-standalone)
+	#@$(call install_copy, xbmc, 0, 0, 755, -, /usr/bin/xbmc)
+	#@$(call install_copy, xbmc, 0, 0, 755, -, /usr/bin/xbmc-standalone)
+	@$(call install_link, xbmc, /usr/lib/xbmc/xbmc.bin, /usr/bin/xbmc)
 	
 	@$(call install_copy, xbmc, 0, 0, 755, -, /usr/lib/xbmc/xbmc.bin, y)
 	@$(call install_tree, xbmc, 0, 0, -, /usr/lib/xbmc/addons)
@@ -144,6 +149,9 @@ $(STATEDIR)/xbmc.targetinstall:
 	@$(call install_tree, xbmc, 0, 0, -, /usr/share/xbmc/addons/library.xbmc.gui)
 	@$(call install_tree, xbmc, 0, 0, -, /usr/share/xbmc/addons/library.xbmc.pvr)
 	@$(call install_tree, xbmc, 0, 0, -, /usr/share/xbmc/addons/repository.xbmc.org)
+	@$(call install_tree, xbmc, 0, 0, -, /usr/share/xbmc/addons/script.module.pil)
+	@$(call install_tree, xbmc, 0, 0, -, /usr/share/xbmc/addons/script.module.pysqlite)
+	@$(call install_tree, xbmc, 0, 0, -, /usr/share/xbmc/addons/script.module.simplejson)
 	@$(call install_tree, xbmc, 0, 0, -, /usr/share/xbmc/addons/xbmc.addon)
 	@$(call install_tree, xbmc, 0, 0, -, /usr/share/xbmc/addons/xbmc.core)
 	@$(call install_tree, xbmc, 0, 0, -, /usr/share/xbmc/addons/xbmc.gui)
@@ -167,6 +175,413 @@ $(STATEDIR)/xbmc.targetinstall:
 	@$(call install_finish, xbmc)
 	
 	@$(call touch)
+
+# ----------------------------------------------------------------------------
+# Init
+# ----------------------------------------------------------------------------
+
+PACKAGES-$(PTXCONF_XBMC_INIT) += xbmc-init
+
+XBMC_INIT_VERSION	:= 1.0
+
+$(STATEDIR)/xbmc-init.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init,  xbmc-init)
+	@$(call install_fixup, xbmc-init, PRIORITY,    optional)
+	@$(call install_fixup, xbmc-init, SECTION,     base)
+	@$(call install_fixup, xbmc-init, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup, xbmc-init, DESCRIPTION, missing)
+	
+ifdef PTXCONF_INITMETHOD_BBINIT
+	@$(call install_alternative, xbmc-init, 0, 0, 0755, /etc/init.d/xbmc)
+	
+ifneq ($(call remove_quotes,$(PTXCONF_XBMC_BBINIT_LINK)),)
+	@$(call install_link, xbmc-init, \
+		../init.d/xbmc, \
+		/etc/rc.d/$(PTXCONF_XBMC_BBINIT_LINK))
+endif
+endif
+	
+	@$(call install_finish, xbmc-init)
+	
+	@$(call touch)
+
+
+# ----------------------------------------------------------------------------
+# Skin
+# ----------------------------------------------------------------------------
+
+PACKAGES-$(PTXCONF_XBMC_SKIN_CONFLUENCE)  += xbmc-skin-confluence
+XBMC_SKIN_CONFLUENCE_VERSION              := $(XBMC_VERSION)
+XBMC_SKIN_CONFLUENCE_PKGDIR               := $(XBMC_PKGDIR)
+
+$(STATEDIR)/xbmc-skin-confluence.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init,   xbmc-skin-confluence)
+	@$(call install_fixup,  xbmc-skin-confluence, PRIORITY,    optional)
+	@$(call install_fixup,  xbmc-skin-confluence, SECTION,     base)
+	@$(call install_fixup,  xbmc-skin-confluence, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup,  xbmc-skin-confluence, DESCRIPTION, missing)
+	
+	@$(call install_tree,   xbmc-skin-confluence, 0, 0, -, /usr/share/xbmc/addons/skin.confluence)
+	
+	@$(call install_finish, xbmc-skin-confluence)
+	
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+# Weather
+# ----------------------------------------------------------------------------
+
+PACKAGES-$(PTXCONF_XBMC_WEATHER_WUNDERGROUND)  += xbmc-weather-wunderground
+XBMC_WEATHER_WUNDERGROUND_VERSION              := $(XBMC_VERSION)
+XBMC_WEATHER_WUNDERGROUND_PKGDIR               := $(XBMC_PKGDIR)
+
+$(STATEDIR)/xbmc-weather-wunderground.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init,   xbmc-weather-wunderground)
+	@$(call install_fixup,  xbmc-weather-wunderground, PRIORITY,    optional)
+	@$(call install_fixup,  xbmc-weather-wunderground, SECTION,     base)
+	@$(call install_fixup,  xbmc-weather-wunderground, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup,  xbmc-weather-wunderground, DESCRIPTION, missing)
+	
+	@$(call install_tree,   xbmc-weather-wunderground, 0, 0, -, /usr/share/xbmc/addons/weather.wunderground)
+	
+	@$(call install_finish, xbmc-weather-wunderground)
+	
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+# Webinterface
+# ----------------------------------------------------------------------------
+
+PACKAGES-$(PTXCONF_XBMC_WEBINTERFACE_DEFAULT)  += xbmc-webinterface-default
+XBMC_WEBINTERFACE_DEFAULT_VERSION              := $(XBMC_VERSION)
+XBMC_WEBINTERFACE_DEFAULT_PKGDIR               := $(XBMC_PKGDIR)
+
+$(STATEDIR)/xbmc-webinterface-default.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init,   xbmc-webinterface-default)
+	@$(call install_fixup,  xbmc-webinterface-default, PRIORITY,    optional)
+	@$(call install_fixup,  xbmc-webinterface-default, SECTION,     base)
+	@$(call install_fixup,  xbmc-webinterface-default, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup,  xbmc-webinterface-default, DESCRIPTION, missing)
+	
+	@$(call install_tree,   xbmc-webinterface-default, 0, 0, -, /usr/share/xbmc/addons/webinterface.default)
+	
+	@$(call install_finish, xbmc-webinterface-default)
+	
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+# Metadata
+# ----------------------------------------------------------------------------
+
+#SAVEIFS=$IFS; IFS=$(echo -en "\n\b"); for p in `ls . | grep metadata`; do pb=`echo ${p^^} | sed -e 's/[()]//g' | sed -e 's/[^a-zA-Z0-9]/_/g'`; ps=`echo ${p,,} | sed -e 's/[()]//g' | sed -e 's/[^a-zA-Z0-9\-]/-/g'`; pf=`echo ${p} | sed -e 's/(/\\\\(/g' | sed -e 's/)/\\\\)/g' | sed -e 's/ /\\\\ /g'`; echo -e "PACKAGES-\$(PTXCONF_XBMC_${pb})  += xbmc-${ps}\nXBMC_${pb}_VERSION              := \$(XBMC_VERSION)\nXBMC_${pb}_PKGDIR               := \$(XBMC_PKGDIR)\n\n\$(STATEDIR)/xbmc-${ps}.targetinstall:\n\t@\$(call targetinfo)\n\t\n\t@\$(call install_init,   xbmc-${ps})\n\t@\$(call install_fixup,  xbmc-${ps}, PRIORITY,    optional)\n\t@\$(call install_fixup,  xbmc-${ps}, SECTION,     base)\n\t@\$(call install_fixup,  xbmc-${ps}, AUTHOR,      \"Robert Schwebel <r.schwebel@pengutronix.de>\")\n\t@\$(call install_fixup,  xbmc-${ps}, DESCRIPTION, missing)\n\t\n\t@\$(call install_tree,   xbmc-${ps}, 0, 0, -, /usr/share/xbmc/addons/${pf})\n\t\n\t@\$(call install_finish, xbmc-${ps})\n\t\n\t@\$(call touch)\n\n# ----------------------------------------------------------------------------"; done; IFS=$SAVEIFS
+PACKAGES-$(PTXCONF_XBMC_METADATA_ALBUM_UNIVERSAL)  += xbmc-metadata-album-universal
+XBMC_METADATA_ALBUM_UNIVERSAL_VERSION              := $(XBMC_VERSION)
+XBMC_METADATA_ALBUM_UNIVERSAL_PKGDIR               := $(XBMC_PKGDIR)
+
+$(STATEDIR)/xbmc-metadata-album-universal.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init,   xbmc-metadata-album-universal)
+	@$(call install_fixup,  xbmc-metadata-album-universal, PRIORITY,    optional)
+	@$(call install_fixup,  xbmc-metadata-album-universal, SECTION,     base)
+	@$(call install_fixup,  xbmc-metadata-album-universal, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup,  xbmc-metadata-album-universal, DESCRIPTION, missing)
+	
+	@$(call install_tree,   xbmc-metadata-album-universal, 0, 0, -, /usr/share/xbmc/addons/metadata.album.universal)
+	
+	@$(call install_finish, xbmc-metadata-album-universal)
+	
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+PACKAGES-$(PTXCONF_XBMC_METADATA_ARTISTS_UNIVERSAL)  += xbmc-metadata-artists-universal
+XBMC_METADATA_ARTISTS_UNIVERSAL_VERSION              := $(XBMC_VERSION)
+XBMC_METADATA_ARTISTS_UNIVERSAL_PKGDIR               := $(XBMC_PKGDIR)
+
+$(STATEDIR)/xbmc-metadata-artists-universal.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init,   xbmc-metadata-artists-universal)
+	@$(call install_fixup,  xbmc-metadata-artists-universal, PRIORITY,    optional)
+	@$(call install_fixup,  xbmc-metadata-artists-universal, SECTION,     base)
+	@$(call install_fixup,  xbmc-metadata-artists-universal, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup,  xbmc-metadata-artists-universal, DESCRIPTION, missing)
+	
+	@$(call install_tree,   xbmc-metadata-artists-universal, 0, 0, -, /usr/share/xbmc/addons/metadata.artists.universal)
+	
+	@$(call install_finish, xbmc-metadata-artists-universal)
+	
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+PACKAGES-$(PTXCONF_XBMC_METADATA_COMMON_ALLMUSIC_COM)  += xbmc-metadata-common-allmusic-com
+XBMC_METADATA_COMMON_ALLMUSIC_COM_VERSION              := $(XBMC_VERSION)
+XBMC_METADATA_COMMON_ALLMUSIC_COM_PKGDIR               := $(XBMC_PKGDIR)
+
+$(STATEDIR)/xbmc-metadata-common-allmusic-com.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init,   xbmc-metadata-common-allmusic-com)
+	@$(call install_fixup,  xbmc-metadata-common-allmusic-com, PRIORITY,    optional)
+	@$(call install_fixup,  xbmc-metadata-common-allmusic-com, SECTION,     base)
+	@$(call install_fixup,  xbmc-metadata-common-allmusic-com, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup,  xbmc-metadata-common-allmusic-com, DESCRIPTION, missing)
+	
+	@$(call install_tree,   xbmc-metadata-common-allmusic-com, 0, 0, -, /usr/share/xbmc/addons/metadata.common.allmusic.com)
+	
+	@$(call install_finish, xbmc-metadata-common-allmusic-com)
+	
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+PACKAGES-$(PTXCONF_XBMC_METADATA_COMMON_AMAZON_DE)  += xbmc-metadata-common-amazon-de
+XBMC_METADATA_COMMON_AMAZON_DE_VERSION              := $(XBMC_VERSION)
+XBMC_METADATA_COMMON_AMAZON_DE_PKGDIR               := $(XBMC_PKGDIR)
+
+$(STATEDIR)/xbmc-metadata-common-amazon-de.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init,   xbmc-metadata-common-amazon-de)
+	@$(call install_fixup,  xbmc-metadata-common-amazon-de, PRIORITY,    optional)
+	@$(call install_fixup,  xbmc-metadata-common-amazon-de, SECTION,     base)
+	@$(call install_fixup,  xbmc-metadata-common-amazon-de, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup,  xbmc-metadata-common-amazon-de, DESCRIPTION, missing)
+	
+	@$(call install_tree,   xbmc-metadata-common-amazon-de, 0, 0, -, /usr/share/xbmc/addons/metadata.common.amazon.de)
+	
+	@$(call install_finish, xbmc-metadata-common-amazon-de)
+	
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+PACKAGES-$(PTXCONF_XBMC_METADATA_COMMON_FANART_TV)  += xbmc-metadata-common-fanart-tv
+XBMC_METADATA_COMMON_FANART_TV_VERSION              := $(XBMC_VERSION)
+XBMC_METADATA_COMMON_FANART_TV_PKGDIR               := $(XBMC_PKGDIR)
+
+$(STATEDIR)/xbmc-metadata-common-fanart-tv.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init,   xbmc-metadata-common-fanart-tv)
+	@$(call install_fixup,  xbmc-metadata-common-fanart-tv, PRIORITY,    optional)
+	@$(call install_fixup,  xbmc-metadata-common-fanart-tv, SECTION,     base)
+	@$(call install_fixup,  xbmc-metadata-common-fanart-tv, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup,  xbmc-metadata-common-fanart-tv, DESCRIPTION, missing)
+	
+	@$(call install_tree,   xbmc-metadata-common-fanart-tv, 0, 0, -, /usr/share/xbmc/addons/metadata.common.fanart.tv)
+	
+	@$(call install_finish, xbmc-metadata-common-fanart-tv)
+	
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+PACKAGES-$(PTXCONF_XBMC_METADATA_COMMON_HDTRAILERS_NET)  += xbmc-metadata-common-hdtrailers-net
+XBMC_METADATA_COMMON_HDTRAILERS_NET_VERSION              := $(XBMC_VERSION)
+XBMC_METADATA_COMMON_HDTRAILERS_NET_PKGDIR               := $(XBMC_PKGDIR)
+
+$(STATEDIR)/xbmc-metadata-common-hdtrailers-net.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init,   xbmc-metadata-common-hdtrailers-net)
+	@$(call install_fixup,  xbmc-metadata-common-hdtrailers-net, PRIORITY,    optional)
+	@$(call install_fixup,  xbmc-metadata-common-hdtrailers-net, SECTION,     base)
+	@$(call install_fixup,  xbmc-metadata-common-hdtrailers-net, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup,  xbmc-metadata-common-hdtrailers-net, DESCRIPTION, missing)
+	
+	@$(call install_tree,   xbmc-metadata-common-hdtrailers-net, 0, 0, -, /usr/share/xbmc/addons/metadata.common.hdtrailers.net)
+	
+	@$(call install_finish, xbmc-metadata-common-hdtrailers-net)
+	
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+PACKAGES-$(PTXCONF_XBMC_METADATA_COMMON_HTBACKDROPS_COM)  += xbmc-metadata-common-htbackdrops-com
+XBMC_METADATA_COMMON_HTBACKDROPS_COM_VERSION              := $(XBMC_VERSION)
+XBMC_METADATA_COMMON_HTBACKDROPS_COM_PKGDIR               := $(XBMC_PKGDIR)
+
+$(STATEDIR)/xbmc-metadata-common-htbackdrops-com.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init,   xbmc-metadata-common-htbackdrops-com)
+	@$(call install_fixup,  xbmc-metadata-common-htbackdrops-com, PRIORITY,    optional)
+	@$(call install_fixup,  xbmc-metadata-common-htbackdrops-com, SECTION,     base)
+	@$(call install_fixup,  xbmc-metadata-common-htbackdrops-com, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup,  xbmc-metadata-common-htbackdrops-com, DESCRIPTION, missing)
+	
+	@$(call install_tree,   xbmc-metadata-common-htbackdrops-com, 0, 0, -, /usr/share/xbmc/addons/metadata.common.htbackdrops.com)
+	
+	@$(call install_finish, xbmc-metadata-common-htbackdrops-com)
+	
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+PACKAGES-$(PTXCONF_XBMC_METADATA_COMMON_IMDB_COM)  += xbmc-metadata-common-imdb-com
+XBMC_METADATA_COMMON_IMDB_COM_VERSION              := $(XBMC_VERSION)
+XBMC_METADATA_COMMON_IMDB_COM_PKGDIR               := $(XBMC_PKGDIR)
+
+$(STATEDIR)/xbmc-metadata-common-imdb-com.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init,   xbmc-metadata-common-imdb-com)
+	@$(call install_fixup,  xbmc-metadata-common-imdb-com, PRIORITY,    optional)
+	@$(call install_fixup,  xbmc-metadata-common-imdb-com, SECTION,     base)
+	@$(call install_fixup,  xbmc-metadata-common-imdb-com, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup,  xbmc-metadata-common-imdb-com, DESCRIPTION, missing)
+	
+	@$(call install_tree,   xbmc-metadata-common-imdb-com, 0, 0, -, /usr/share/xbmc/addons/metadata.common.imdb.com)
+	
+	@$(call install_finish, xbmc-metadata-common-imdb-com)
+	
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+PACKAGES-$(PTXCONF_XBMC_METADATA_COMMON_LAST_FM)  += xbmc-metadata-common-last-fm
+XBMC_METADATA_COMMON_LAST_FM_VERSION              := $(XBMC_VERSION)
+XBMC_METADATA_COMMON_LAST_FM_PKGDIR               := $(XBMC_PKGDIR)
+
+$(STATEDIR)/xbmc-metadata-common-last-fm.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init,   xbmc-metadata-common-last-fm)
+	@$(call install_fixup,  xbmc-metadata-common-last-fm, PRIORITY,    optional)
+	@$(call install_fixup,  xbmc-metadata-common-last-fm, SECTION,     base)
+	@$(call install_fixup,  xbmc-metadata-common-last-fm, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup,  xbmc-metadata-common-last-fm, DESCRIPTION, missing)
+	
+	@$(call install_tree,   xbmc-metadata-common-last-fm, 0, 0, -, /usr/share/xbmc/addons/metadata.common.last.fm)
+	
+	@$(call install_finish, xbmc-metadata-common-last-fm)
+	
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+PACKAGES-$(PTXCONF_XBMC_METADATA_COMMON_MUSICBRAINZ_ORG)  += xbmc-metadata-common-musicbrainz-org
+XBMC_METADATA_COMMON_MUSICBRAINZ_ORG_VERSION              := $(XBMC_VERSION)
+XBMC_METADATA_COMMON_MUSICBRAINZ_ORG_PKGDIR               := $(XBMC_PKGDIR)
+
+$(STATEDIR)/xbmc-metadata-common-musicbrainz-org.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init,   xbmc-metadata-common-musicbrainz-org)
+	@$(call install_fixup,  xbmc-metadata-common-musicbrainz-org, PRIORITY,    optional)
+	@$(call install_fixup,  xbmc-metadata-common-musicbrainz-org, SECTION,     base)
+	@$(call install_fixup,  xbmc-metadata-common-musicbrainz-org, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup,  xbmc-metadata-common-musicbrainz-org, DESCRIPTION, missing)
+	
+	@$(call install_tree,   xbmc-metadata-common-musicbrainz-org, 0, 0, -, /usr/share/xbmc/addons/metadata.common.musicbrainz.org)
+	
+	@$(call install_finish, xbmc-metadata-common-musicbrainz-org)
+	
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+PACKAGES-$(PTXCONF_XBMC_METADATA_COMMON_THEAUDIODB_COM)  += xbmc-metadata-common-theaudiodb-com
+XBMC_METADATA_COMMON_THEAUDIODB_COM_VERSION              := $(XBMC_VERSION)
+XBMC_METADATA_COMMON_THEAUDIODB_COM_PKGDIR               := $(XBMC_PKGDIR)
+
+$(STATEDIR)/xbmc-metadata-common-theaudiodb-com.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init,   xbmc-metadata-common-theaudiodb-com)
+	@$(call install_fixup,  xbmc-metadata-common-theaudiodb-com, PRIORITY,    optional)
+	@$(call install_fixup,  xbmc-metadata-common-theaudiodb-com, SECTION,     base)
+	@$(call install_fixup,  xbmc-metadata-common-theaudiodb-com, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup,  xbmc-metadata-common-theaudiodb-com, DESCRIPTION, missing)
+	
+	@$(call install_tree,   xbmc-metadata-common-theaudiodb-com, 0, 0, -, /usr/share/xbmc/addons/metadata.common.theaudiodb.com)
+	
+	@$(call install_finish, xbmc-metadata-common-theaudiodb-com)
+	
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+PACKAGES-$(PTXCONF_XBMC_METADATA_COMMON_THEMOVIEDB_ORG)  += xbmc-metadata-common-themoviedb-org
+XBMC_METADATA_COMMON_THEMOVIEDB_ORG_VERSION              := $(XBMC_VERSION)
+XBMC_METADATA_COMMON_THEMOVIEDB_ORG_PKGDIR               := $(XBMC_PKGDIR)
+
+$(STATEDIR)/xbmc-metadata-common-themoviedb-org.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init,   xbmc-metadata-common-themoviedb-org)
+	@$(call install_fixup,  xbmc-metadata-common-themoviedb-org, PRIORITY,    optional)
+	@$(call install_fixup,  xbmc-metadata-common-themoviedb-org, SECTION,     base)
+	@$(call install_fixup,  xbmc-metadata-common-themoviedb-org, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup,  xbmc-metadata-common-themoviedb-org, DESCRIPTION, missing)
+	
+	@$(call install_tree,   xbmc-metadata-common-themoviedb-org, 0, 0, -, /usr/share/xbmc/addons/metadata.common.themoviedb.org)
+	
+	@$(call install_finish, xbmc-metadata-common-themoviedb-org)
+	
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+PACKAGES-$(PTXCONF_XBMC_METADATA_MUSICVIDEOS_LAST_FM)  += xbmc-metadata-musicvideos-last-fm
+XBMC_METADATA_MUSICVIDEOS_LAST_FM_VERSION              := $(XBMC_VERSION)
+XBMC_METADATA_MUSICVIDEOS_LAST_FM_PKGDIR               := $(XBMC_PKGDIR)
+
+$(STATEDIR)/xbmc-metadata-musicvideos-last-fm.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init,   xbmc-metadata-musicvideos-last-fm)
+	@$(call install_fixup,  xbmc-metadata-musicvideos-last-fm, PRIORITY,    optional)
+	@$(call install_fixup,  xbmc-metadata-musicvideos-last-fm, SECTION,     base)
+	@$(call install_fixup,  xbmc-metadata-musicvideos-last-fm, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup,  xbmc-metadata-musicvideos-last-fm, DESCRIPTION, missing)
+	
+	@$(call install_tree,   xbmc-metadata-musicvideos-last-fm, 0, 0, -, /usr/share/xbmc/addons/metadata.musicvideos.last.fm)
+	
+	@$(call install_finish, xbmc-metadata-musicvideos-last-fm)
+	
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+PACKAGES-$(PTXCONF_XBMC_METADATA_THEMOVIEDB_ORG)  += xbmc-metadata-themoviedb-org
+XBMC_METADATA_THEMOVIEDB_ORG_VERSION              := $(XBMC_VERSION)
+XBMC_METADATA_THEMOVIEDB_ORG_PKGDIR               := $(XBMC_PKGDIR)
+
+$(STATEDIR)/xbmc-metadata-themoviedb-org.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init,   xbmc-metadata-themoviedb-org)
+	@$(call install_fixup,  xbmc-metadata-themoviedb-org, PRIORITY,    optional)
+	@$(call install_fixup,  xbmc-metadata-themoviedb-org, SECTION,     base)
+	@$(call install_fixup,  xbmc-metadata-themoviedb-org, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup,  xbmc-metadata-themoviedb-org, DESCRIPTION, missing)
+	
+	@$(call install_tree,   xbmc-metadata-themoviedb-org, 0, 0, -, /usr/share/xbmc/addons/metadata.themoviedb.org)
+	
+	@$(call install_finish, xbmc-metadata-themoviedb-org)
+	
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+PACKAGES-$(PTXCONF_XBMC_METADATA_TVDB_COM)  += xbmc-metadata-tvdb-com
+XBMC_METADATA_TVDB_COM_VERSION              := $(XBMC_VERSION)
+XBMC_METADATA_TVDB_COM_PKGDIR               := $(XBMC_PKGDIR)
+
+$(STATEDIR)/xbmc-metadata-tvdb-com.targetinstall:
+	@$(call targetinfo)
+	
+	@$(call install_init,   xbmc-metadata-tvdb-com)
+	@$(call install_fixup,  xbmc-metadata-tvdb-com, PRIORITY,    optional)
+	@$(call install_fixup,  xbmc-metadata-tvdb-com, SECTION,     base)
+	@$(call install_fixup,  xbmc-metadata-tvdb-com, AUTHOR,      "Robert Schwebel <r.schwebel@pengutronix.de>")
+	@$(call install_fixup,  xbmc-metadata-tvdb-com, DESCRIPTION, missing)
+	
+	@$(call install_tree,   xbmc-metadata-tvdb-com, 0, 0, -, /usr/share/xbmc/addons/metadata.tvdb.com)
+	
+	@$(call install_finish, xbmc-metadata-tvdb-com)
+	
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
 
 # ----------------------------------------------------------------------------
 # Language
