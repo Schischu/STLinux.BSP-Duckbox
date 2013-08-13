@@ -1,0 +1,9 @@
+## SECTION=multimedia_libs
+
+config CUSTOM_TIME
+	tristate "custom-time"
+	depends on TIMEZONE
+	select TIMEZONE_CET
+	default m
+
+
