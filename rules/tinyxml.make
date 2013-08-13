@@ -46,7 +46,7 @@ $(STATEDIR)/tinyxml.compile:
 # Install
 # ----------------------------------------------------------------------------
 
-TINYXML_INSTALL_OPT := install PREFIX=$(TINYXML_PKGDIR) INSTALLROOT=$(TINYXML_PKGDIR)
+TINYXML_INSTALL_OPT := install PREFIX=$(TINYXML_PKGDIR)/usr INSTALLROOT=$(TINYXML_PKGDIR)
 
 $(STATEDIR)/tinyxml.install:
 	@$(call targetinfo)
