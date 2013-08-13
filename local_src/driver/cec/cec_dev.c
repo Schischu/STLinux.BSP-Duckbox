@@ -297,13 +297,12 @@ int init_dev(void)
 
 int cleanup_dev(void)
 {
-	//unregister_chrdev(CEC_MAJOR,"CEC");
 	cdev_del(&cec_cdev);
 	unregister_chrdev_region(cec_dev_num, 1);
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,30)
 	device_destroy(cec_class, MKDEV(CEC_MAJOR, 0));
 #else
-	class_device_destroy(cecclass, MKDEV(CEC_MAJOR, 0));
+	class_device_destroy(cec_class, MKDEV(CEC_MAJOR, 0));
 #endif
 	class_destroy(cec_class);
 }
