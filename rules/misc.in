@@ -16,11 +16,4 @@ config VDSTANDBY
 	help
 	  FIXME
 
-config MOTD
-	tristate
-	prompt "motd"
-	default m
-	help
-	  FIXME
-
 endmenu
