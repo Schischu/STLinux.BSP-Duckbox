@@ -22,6 +22,10 @@ ifdef PTXCONF_XBMC_VERSION_201301022234
 XBMC_VERSION	:= 7a6cb7f49ae19dca3c48c40fa3bd20dc3c490e60
 endif
 
+ifdef PTXCONF_XBMC_VERSION_201304141405
+XBMC_VERSION	:= 32b1a5ef9e7f257a2559a3b766e85a55b22aec5f
+endif
+
 XBMC		:= xbmc-$(XBMC_VERSION)
 XBMC_URL	:= git://github.com/xbmc/xbmc.git
 XBMC_SOURCE_GIT	:= $(SRCDIR)/xbmc.git
@@ -68,6 +72,18 @@ $(STATEDIR)/xbmc.extract:
 	#cd $(XBMC_DIR) && sh autogen.sh
 	
 	@$(call touch)
+
+$(STATEDIR)/xbmc.extract.post:
+        @$(call targetinfo)
+
+	#This is a ugly hack. Somehow on my server this cannot be found. (Quick Hack)
+        rm $(SYSROOT)/lib/libstdc++.so.6
+        ln -s `readlink $(PTXDIST_PLATFORMDIR)/selected_toolchain`/../sh4-linux/lib/libstdc++.so.6.0.17 $(SYSROOT)/lib/libstdc++.so.6
+
+        @$(call world/extract.post, XBMC)
+
+        @$(call touch)
+
 
 # ----------------------------------------------------------------------------
 # Prepare
