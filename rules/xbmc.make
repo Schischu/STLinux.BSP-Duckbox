@@ -75,13 +75,15 @@ $(STATEDIR)/xbmc.extract:
 
 $(STATEDIR)/xbmc.extract.post:
 	@$(call targetinfo)
-
+	
 	#This is a ugly hack. Somehow on my server this cannot be found. (Quick Hack)
-	rm $(SYSROOT)/lib/libstdc++.so.6
+	if [ -e $(SYSROOT)/lib/libstdc++.so.6 ]; then \
+		rm $(SYSROOT)/lib/libstdc++.so.6; \
+	fi
 	ln -s `readlink $(PTXDIST_PLATFORMDIR)/selected_toolchain`/../sh4-linux/lib/libstdc++.so.6.0.17 $(SYSROOT)/lib/libstdc++.so.6
-
+	
 	@$(call world/extract.post, XBMC)
-
+	
 	@$(call touch)
 
 
