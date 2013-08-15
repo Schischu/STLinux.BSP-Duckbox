@@ -82,7 +82,7 @@ $(STATEDIR)/xbmc.extract.post:
 	fi
 	ln -s `readlink $(PTXDIST_PLATFORMDIR)/selected_toolchain`/../sh4-linux/lib/libstdc++.so.6.0.17 $(SYSROOT)/lib/libstdc++.so.6
 	
-	@$(call world/extract.post, XBMC)
+	@$(call world/patchin/post, XBMC)
 	
 	@$(call touch)
 
