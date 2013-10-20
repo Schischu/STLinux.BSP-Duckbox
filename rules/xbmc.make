@@ -508,6 +508,7 @@ $(STATEDIR)/xbmc-metadata-common-themoviedb-org.targetinstall:
 	
 	@$(call touch)
 
+ifdef PTXCONF_XBMC_VERSION_12_0_RC3_FRODO
 # ----------------------------------------------------------------------------
 PACKAGES-$(PTXCONF_XBMC_METADATA_MUSICVIDEOS_LAST_FM)  += xbmc-metadata-musicvideos-last-fm
 XBMC_METADATA_MUSICVIDEOS_LAST_FM_VERSION              := $(XBMC_VERSION)
@@ -527,6 +528,7 @@ $(STATEDIR)/xbmc-metadata-musicvideos-last-fm.targetinstall:
 	@$(call install_finish, xbmc-metadata-musicvideos-last-fm)
 	
 	@$(call touch)
+endif
 
 # ----------------------------------------------------------------------------
 PACKAGES-$(PTXCONF_XBMC_METADATA_THEMOVIEDB_ORG)  += xbmc-metadata-themoviedb-org
