@@ -18,14 +18,14 @@ PACKAGES-$(PTXCONF_LIBTUXTXT) += libtuxtxt
 #
 # Paths and names
 #
-LIBTUXTXT_VERSION	:= 4ff8fffd72115130ff6594841e7bad2f85e85f12
-LIBTUXTXT		:= libtuxtxt-$(LIBTUXTXT_VERSION)
-LIBTUXTXT_URL	:= git://openpli.git.sourceforge.net/gitroot/openpli/tuxtxt
+LIBTUXTXT_VERSION		:= 4ff8fffd72115130ff6594841e7bad2f85e85f12
+LIBTUXTXT				:= libtuxtxt-$(LIBTUXTXT_VERSION)
+LIBTUXTXT_URL			:= git://openpli.git.sourceforge.net/gitroot/openpli/tuxtxt
 LIBTUXTXT_GIT_BRANCH	:= master
-LIBTUXTXT_GIT_HEAD	:= $(LIBTUXTXT_VERSION)
-LIBTUXTXT_SOURCE	:= $(SRCDIR)/tuxtxt.git
-LIBTUXTXT_DIR	:= $(BUILDDIR)/$(LIBTUXTXT)/libtuxtxt
-LIBTUXTXT_LICENSE	:= libtuxtxt
+LIBTUXTXT_GIT_HEAD		:= $(LIBTUXTXT_VERSION)
+LIBTUXTXT_SOURCE		:= $(SRCDIR)/tuxtxt.git
+LIBTUXTXT_DIR			:= $(BUILDDIR)/$(LIBTUXTXT)/libtuxtxt
+LIBTUXTXT_LICENSE		:= libtuxtxt
 
 $(STATEDIR)/libtuxtxt.prepare: $(STATEDIR)/driver-avs.install \
                                $(STATEDIR)/driver-stmfb.install
