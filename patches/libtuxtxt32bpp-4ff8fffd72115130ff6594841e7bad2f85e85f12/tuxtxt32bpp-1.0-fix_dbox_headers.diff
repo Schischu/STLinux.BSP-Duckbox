@@ -1,7 +1,7 @@
-diff --git a/tuxtxt.c b/tuxtxt.c
+diff --git a/tuxtxt/tuxtxt.c b/tuxtxt/tuxtxt.c
 index 37f875f..907a878 100644
---- a/tuxtxt.c
-+++ b/tuxtxt.c
+--- a/tuxtxt/tuxtxt.c
++++ b/tuxtxt/tuxtxt.c
 @@ -204,11 +204,22 @@ int tuxtxt_run_ui(int pid, int demux)
  	tuxtxt_cache.vtxtpid = pid;
  
@@ -70,10 +70,10 @@ index 37f875f..907a878 100644
  				case KEY_POWER:		RCCode = RC_STANDBY;	break;
  				default:			RCCode = -1;		break;
  				}
-diff --git a/tuxtxt.h b/tuxtxt.h
+diff --git a/tuxtxt/tuxtxt.h b/tuxtxt/tuxtxt.h
 index 1b922b9..e636309 100644
---- a/tuxtxt.h
-+++ b/tuxtxt.h
+--- a/tuxtxt/tuxtxt.h
++++ b/tuxtxt/tuxtxt.h
 @@ -49,9 +49,11 @@
  #include <sys/mman.h>
  

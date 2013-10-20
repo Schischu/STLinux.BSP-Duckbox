@@ -21,44 +21,22 @@ PACKAGES-$(PTXCONF_LIBTUXTXT32BPP) += libtuxtxt32bpp
 LIBTUXTXT32BPP_VERSION	:= 4ff8fffd72115130ff6594841e7bad2f85e85f12
 LIBTUXTXT32BPP		:= libtuxtxt32bpp-$(LIBTUXTXT32BPP_VERSION)
 LIBTUXTXT32BPP_URL	:= git://openpli.git.sourceforge.net/gitroot/openpli/tuxtxt
-LIBTUXTXT32BPP_SOURCE_GIT	:= $(SRCDIR)/tuxtxt.git
+LIBTUXTXT32BPP_GIT_BRANCH	:= master
+LIBTUXTXT32BPP_GIT_HEAD	:= $(LIBTUXTXT32BPP_VERSION)
+LIBTUXTXT32BPP_SOURCE	:= $(SRCDIR)/tuxtxt.git
 LIBTUXTXT32BPP_DIR	:= $(BUILDDIR)/$(LIBTUXTXT32BPP)/tuxtxt
+LIBTUXTXT32BPP_SUBDIR	:= tuxtxt
 LIBTUXTXT32BPP_LICENSE	:= libtuxtxt32bpp
 
-$(STATEDIR)/libtuxtxt32bpp.get:
+$(STATEDIR)/libtuxtxt32bpp.extract.post:
 	@$(call targetinfo)
-	
-		if [ -d $(LIBTUXTXT32BPP_SOURCE_GIT) ]; then \
-			cd $(LIBTUXTXT32BPP_SOURCE_GIT); \
-			git pull -u origin master 2>&1 > /dev/null; \
-			git checkout HEAD 2>&1 > /dev/null; \
-			cd -; \
-		else \
-			git clone $(LIBTUXTXT32BPP_URL) $(LIBTUXTXT32BPP_SOURCE_GIT) 2>&1 > /dev/null; \
-		fi; 2>&1 > /dev/null
-	
-		if [ ! "$(LIBTUXTXT32BPP_VERSION)" == "HEAD" ]; then \
-			cd $(LIBTUXTXT32BPP_SOURCE_GIT); \
-			git checkout $(LIBTUXTXT32BPP_VERSION) 2>&1 > /dev/null; \
-			cd -; \
-		fi; 2>&1 > /dev/null
-	
-	@$(call touch)
-
-
-$(STATEDIR)/libtuxtxt32bpp.extract:
-	@$(call targetinfo)
-	
-	rm -rf $(BUILDDIR)/$(LIBTUXTXT32BPP); \
-	cp -a $(LIBTUXTXT32BPP_SOURCE_GIT) $(BUILDDIR)/$(LIBTUXTXT32BPP); \
-	rm -rf $(BUILDDIR)/$(LIBTUXTXT32BPP)/.git;
-	
-	@$(call patchin, LIBTUXTXT32BPP)
 	
 	cd $(LIBTUXTXT32BPP_DIR); \
 		cp $(PTXDIST_SYSROOT_HOST)/share/libtool/config/ltmain.sh .; \
 		touch NEWS README AUTHORS ChangeLog; \
 		aclocal; autoheader; automake -a; autoconf; 
+	
+	@$(call world/patchin/post, LIBTUXTXT32BPP)
 	
 	@$(call touch)
 

@@ -15,7 +15,7 @@ ifdef PTXCONF_IMAGE_SPARK
 $(STATEDIR)/image_working_dir_prepared:
 	@echo -n "Preparing... "
 	@cd $(IMAGEDIR);	\
-	((					\
+	((			\
 		echo ""		\
 	) | tee -a "$(PTX_LOGFILE)") | $(FAKEROOT) -s $(STATEDIR)/image_working_dir_prepared --
 	

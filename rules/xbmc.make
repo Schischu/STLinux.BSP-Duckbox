@@ -28,50 +28,14 @@ endif
 
 XBMC		:= xbmc-$(XBMC_VERSION)
 XBMC_URL	:= git://github.com/xbmc/xbmc.git
-XBMC_SOURCE_GIT	:= $(SRCDIR)/xbmc.git
+XBMC_GIT_BRANCH	:= master
+XBMC_GIT_HEAD	:= $(XBMC_VERSION)
+XBMC_SOURCE	:= $(SRCDIR)/xbmc.git
 XBMC_DIR	:= $(BUILDDIR)/$(XBMC)
 XBMC_LICENSE	:= xbmc
 
 XBMC_DEV_VERSION	:= $(XBMC_VERSION)
 XBMC_DEV_PKGDIR	:= $(XBMC_PKGDIR)
-
-$(STATEDIR)/xbmc.get:
-	@$(call targetinfo)
-	
-		if [ -d $(XBMC_SOURCE_GIT) ]; then \
-			cd $(XBMC_SOURCE_GIT); \
-			git pull -u origin master 2>&1 > /dev/null; \
-			git checkout HEAD 2>&1 > /dev/null; \
-			cd -; \
-		else \
-			git clone  $(XBMC_URL) $(XBMC_SOURCE_GIT) 2>&1 > /dev/null; \
-		fi; 2>&1 > /dev/null
-	
-		if [ ! "$(XBMC_VERSION)" == "HEAD" ]; then \
-			cd $(XBMC_SOURCE_GIT); \
-			git checkout $(XBMC_VERSION) 2>&1 > /dev/null; \
-			cd -; \
-		fi; 2>&1 > /dev/null
-	
-	@$(call touch)
-
-PATH_PATCHES = $(subst :, ,$(PTXDIST_PATH_PATCHES))
-
-$(STATEDIR)/xbmc.extract:
-	@$(call targetinfo)
-	
-	rm -rf $(XBMC_DIR); \
-	cp -a $(XBMC_SOURCE_GIT) $(XBMC_DIR); \
-	rm -rf $(XBMC_DIR)/.git;
-	
-	@$(call patchin, XBMC)
-	
-	sed -i "s/<home>FirstPage<\/home>/<home>PreviousMenu<\/home>/g" $(XBMC_DIR)/system/keymaps/keyboard.xml
-	cp $(word 1, $(PATH_PATCHES))/$(XBMC)/duckbox.xml $(XBMC_DIR)/system/keymaps/
-	
-	#cd $(XBMC_DIR) && sh autogen.sh
-	
-	@$(call touch)
 
 $(STATEDIR)/xbmc.extract.post:
 	@$(call targetinfo)
@@ -81,6 +45,9 @@ $(STATEDIR)/xbmc.extract.post:
 		rm $(SYSROOT)/lib/libstdc++.so.6; \
 	fi
 	ln -s `readlink $(PTXDIST_PLATFORMDIR)/selected_toolchain`/../sh4-linux/lib/libstdc++.so.6.0.17 $(SYSROOT)/lib/libstdc++.so.6
+	
+	sed -i "s/<home>FirstPage<\/home>/<home>PreviousMenu<\/home>/g" $(XBMC_DIR)/system/keymaps/keyboard.xml
+	cp $(word 1, $(PATH_PATCHES))/$(XBMC)/duckbox.xml $(XBMC_DIR)/system/keymaps/
 	
 	@$(call world/patchin/post, XBMC)
 	

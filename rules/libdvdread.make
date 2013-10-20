@@ -20,48 +20,18 @@ PACKAGES-$(PTXCONF_LIBDVDREAD) += libdvdread
 #
 LIBDVDREAD_VERSION	:= 1243
 LIBDVDREAD		:= libdvdread-r$(LIBDVDREAD_VERSION)
-LIBDVDREAD_URL	:= svn://svn.mplayerhq.hu/dvdnav/trunk/libdvdread
-LIBDVDREAD_SOURCE_SVN	:= $(SRCDIR)/libdvdread.svn
-LIBDVDREAD_DIR	:= $(BUILDDIR)/$(LIBDVDREAD)
+LIBDVDREAD_URL		:= svn://svn.mplayerhq.hu/dvdnav/trunk/libdvdread
+LIBDVDREAD_SVN_REV	:= $(LIBDVDREAD_VERSION)
+LIBDVDREAD_SOURCE	:= $(SRCDIR)/libdvdread.svn
+LIBDVDREAD_DIR		:= $(BUILDDIR)/$(LIBDVDREAD)
 LIBDVDREAD_LICENSE	:= GPLv2
 
-# ----------------------------------------------------------------------------
-# Extract
-# ----------------------------------------------------------------------------
-
-$(STATEDIR)/libdvdread.get:
+$(STATEDIR)/libdvdread.extract.post:
 	@$(call targetinfo)
-	
-	 ( \
-		if [ -d $(LIBDVDREAD_SOURCE_SVN) ]; then \
-			cd $(LIBDVDREAD_SOURCE_SVN); \
-			svn update 2>&1 > /dev/null; \
-			cd -; \
-		else \
-			svn checkout $(LIBDVDREAD_URL) $(LIBDVDREAD_SOURCE_SVN) 2>&1 > /dev/null; \
-		fi; \
-	) 2>&1 > /dev/null
-	
-	( \
-		if [ ! "$(LIBDVDREAD_VERSION)" == "HEAD" ]; then \
-			cd $(LIBDVDREAD_SOURCE_SVN); \
-			svn up -r $(LIBDVDREAD_VERSION) 2>&1 > /dev/null; \
-			cd -; \
-		fi; \
-	) 2>&1 > /dev/null
-	
-	@$(call touch)
-
-$(STATEDIR)/libdvdread.extract:
-	@$(call targetinfo)
-	
-	@$(call shell, rm -rf $(LIBDVDREAD_DIR);)
-	@$(call shell, cp -a $(LIBDVDREAD_SOURCE_SVN) $(LIBDVDREAD_DIR);)
-	@$(call shell, rm -rf $(LIBDVDREAD_DIR)/.svn;)
-	
-	@$(call patchin, LIBDVDREAD)
 	
 	cd $(LIBDVDREAD_DIR) && autoreconf -v --install
+	
+	@$(call world/patchin/post, LIBDVDREAD)
 	
 	@$(call touch)
 

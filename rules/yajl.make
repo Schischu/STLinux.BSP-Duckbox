@@ -21,40 +21,11 @@ PACKAGES-$(PTXCONF_YAJL) += yajl
 YAJL_VERSION	:= f4b2b1af87483caac60e50e5352fc783d9b2de2d
 YAJL		:= yajl-$(YAJL_VERSION)
 YAJL_URL	:= git://github.com/lloyd/yajl
-YAJL_SOURCE_GIT	:= $(SRCDIR)/yajl.git
+YAJL_GIT_BRANCH	:= master
+YAJL_GIT_HEAD	:= $(YAJL_VERSION)
+YAJL_SOURCE	:= $(SRCDIR)/yajl.git
 YAJL_DIR	:= $(BUILDDIR)/$(YAJL)
 YAJL_LICENSE	:= yajl
-
-$(STATEDIR)/yajl.get:
-	@$(call targetinfo)
-	
-		if [ -d $(YAJL_SOURCE_GIT) ]; then \
-			cd $(YAJL_SOURCE_GIT); \
-			git pull -u origin touchcol 2>&1 > /dev/null; \
-			git checkout $(YAJL_VERSION) 2>&1 > /dev/null; \
-			cd -; \
-		else \
-			git clone $(YAJL_URL) $(YAJL_SOURCE_GIT) 2>&1 > /dev/null; \
-		fi; 2>&1 > /dev/null
-	
-		if [ ! "$(YAJL_VERSION)" == "HEAD" ]; then \
-			cd $(YAJL_SOURCE_GIT); \
-			git checkout $(YAJL_VERSION) 2>&1 > /dev/null; \
-			cd -; \
-		fi; 2>&1 > /dev/null
-	
-	@$(call touch)
-
-
-$(STATEDIR)/yajl.extract:
-	@$(call targetinfo)
-	
-	rm -rf $(BUILDDIR)/$(YAJL); \
-	cp -a $(YAJL_SOURCE_GIT) $(BUILDDIR)/$(YAJL); \
-	rm -rf $(BUILDDIR)/$(YAJL)/.git;
-	
-	@$(call patchin, YAJL)	
-	@$(call touch)
 
 #
 # autoconf

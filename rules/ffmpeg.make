@@ -124,6 +124,8 @@ FFMPEG_AUTOCONF += \
 		--enable-decoder=vorbis \
 		--enable-parser=mjpeg \
 		--enable-demuxer=mjpeg \
+		--enable-demuxer=rtsp \
+		--enable-demuxer=wav \
 		--enable-protocol=file \
 		--disable-indevs \
 		--disable-outdevs \

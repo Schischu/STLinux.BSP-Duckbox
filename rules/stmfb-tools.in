@@ -43,10 +43,12 @@ config STMFB_TOOLS_PICTURE_CFG
 	default m
 	prompt "picture-cfg"
 
+if PTXCONF_DIRECTFB
 config STMFB_TOOLS_DIRECTFB_SCREEN_ALIGNMENT
 	tristate 
 	default n
 	prompt "directfb screen-alignment"
+endif
 
 config STMFB_TOOLS_STFBSET
 	tristate 

@@ -35,49 +35,27 @@ endif
 ENIGMA2_PLI		:= enigma2-pli-$(ENIGMA2_PLI_VERSION)
 ENIGMA2_PLI_URL	:= git://git.code.sf.net/p/openpli/enigma2
 ENIGMA2_PLI_URLOLD := git://openpli.git.sourceforge.net/gitroot/openpli/enigma2
-ENIGMA2_PLI_SOURCE_GIT	:= $(SRCDIR)/enigma2-pli.git
+ENIGMA2_PLI_SOURCE	:= $(SRCDIR)/enigma2-pli.git
+endif
+ENIGMA2_PLI_GIT_HEAD	:= $(ENIGMA2_PLI_VERSION)
 ENIGMA2_PLI_DIR	:= $(BUILDDIR)/$(ENIGMA2_PLI)
 ENIGMA2_PLI_LICENSE	:= enigma2-pli
 
 ENIGMA2_PLI_DEV_VERSION	:= $(ENIGMA2_PLI_VERSION)
 ENIGMA2_PLI_DEV_PKGDIR	:= $(ENIGMA2_PLI_PKGDIR)
 
-$(STATEDIR)/enigma2-pli.get:
-	@$(call targetinfo)
-	
-		if [ -d $(ENIGMA2_PLI_SOURCE_GIT) ]; then \
-			cd $(ENIGMA2_PLI_SOURCE_GIT); \
-			git pull -u origin master 2>&1 > /dev/null; \
-			git checkout HEAD 2>&1 > /dev/null; \
-			cd -; \
-		else \
-			git clone  $(ENIGMA2_PLI_URL) $(ENIGMA2_PLI_SOURCE_GIT) 2>&1 > /dev/null; \
-		fi; 2>&1 > /dev/null
-	
-		if [ ! "$(ENIGMA2_PLI_VERSION)" == "HEAD" ]; then \
-			cd $(ENIGMA2_PLI_SOURCE_GIT); \
-			git checkout $(ENIGMA2_PLI_VERSION) 2>&1 > /dev/null; \
-			cd -; \
-		fi; 2>&1 > /dev/null
-	
-	@$(call touch)
-
 PATH_PATCHES = $(subst :, ,$(PTXDIST_PATH_PATCHES))
 
-$(STATEDIR)/enigma2-pli.extract:
+$(STATEDIR)/enigma2-pli.extract.post:
 	@$(call targetinfo)
-	
-	rm -rf $(ENIGMA2_PLI_DIR); \
-	cp -a $(ENIGMA2_PLI_SOURCE_GIT) $(ENIGMA2_PLI_DIR); \
-	rm -rf $(ENIGMA2_PLI_DIR)/.git;
-	
-	@$(call patchin, ENIGMA2_PLI)
 	
 	cp $(word 1, $(PATH_PATCHES))/$(ENIGMA2_PLI)/valis_enigma.ttf $(ENIGMA2_PLI_DIR)/data/fonts/
 	cp $(word 1, $(PATH_PATCHES))/$(ENIGMA2_PLI)/valis_lcd.ttf $(ENIGMA2_PLI_DIR)/data/fonts/
 	
 	sed -e 's|#!/usr/bin/python|#!$(PTXDIST_SYSROOT_CROSS)/bin/python|' -i $(ENIGMA2_PLI_DIR)/po/xml2po.py
 	cd $(ENIGMA2_PLI_DIR) && sh autogen.sh
+	
+	@$(call world/patchin/post, ENIGMA2_PLI)
 	
 	@$(call touch)
 

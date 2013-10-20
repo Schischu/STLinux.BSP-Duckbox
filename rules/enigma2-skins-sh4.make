@@ -18,53 +18,24 @@ PACKAGES-$(PTXCONF_ENIGMA2_SKINS_SH4) += enigma2-skins-sh4
 #
 # Paths and names
 #
-ENIGMA2_SKINS_SH4_VERSION	:= HEAD
+ENIGMA2_SKINS_SH4_VERSION	:= master
 ENIGMA2_SKINS_SH4		:= enigma2-skins-sh4-$(ENIGMA2_SKINS_SH4_VERSION)
-ENIGMA2_SKINS_SH4_URL	:= git://github.com/schpuntik/enigma2-skins-sh4.git
-ENIGMA2_SKINS_SH4_SOURCE_GIT	:= $(SRCDIR)/schpuntik-skins-enigma2-sh4.git
-ENIGMA2_SKINS_SH4_DIR	:= $(BUILDDIR)/$(ENIGMA2_SKINS_SH4) 
+ENIGMA2_SKINS_SH4_URL		:= git://github.com/schpuntik/enigma2-skins-sh4.git
+ENIGMA2_SKINS_SH4_GIT_BRANCH    := master
+ENIGMA2_SKINS_SH4_GIT_HEAD	:= $(ENIGMA2_SKINS_SH4_GIT_BRANCH)
+ENIGMA2_SKINS_SH4_SOURCE	:= $(SRCDIR)/schpuntik-skins-enigma2-sh4.git
+ENIGMA2_SKINS_SH4_DIR		:= $(BUILDDIR)/$(ENIGMA2_SKINS_SH4) 
 ENIGMA2_SKINS_SH4_LICENSE	:= GPLv2
 
-$(STATEDIR)/enigma2-skins-sh4.get:
+$(STATEDIR)/enigma2-skins-sh4.extract.post:
 	@$(call targetinfo)
-	
-	( \
-		if [ -d $(ENIGMA2_SKINS_SH4_SOURCE_GIT) ]; then \
-			cd $(ENIGMA2_SKINS_SH4_SOURCE_GIT); \
-			git pull -u origin master 2>&1 > /dev/null; \
-			git checkout master 2>&1 > /dev/null; \
-			git checkout HEAD 2>&1 > /dev/null; \
-			cd -; \
-		else \
-			git clone $(ENIGMA2_SKINS_SH4_URL) $(ENIGMA2_SKINS_SH4_SOURCE_GIT) 2>&1 > /dev/null; \
-			cd $(ENIGMA2_SKINS_SH4_SOURCE_GIT); \
-			git checkout master 2>&1 > /dev/null; \
-		fi; \
-	) 2>&1 > /dev/null
-	
-	( \
-		if [ ! "$(ENIGMA2_SKINS_SH4_VERSION)" == "HEAD" ]; then \
-			cd $(ENIGMA2_SKINS_SH4_SOURCE_GIT); \
-			git checkout $(ENIGMA2_SKINS_SH4_VERSION) 2>&1 > /dev/null; \
-			cd -; \
-		fi; \
-	) 2>&1 > /dev/null
-	
-	@$(call touch)
-
-$(STATEDIR)/enigma2-skins-sh4.extract:
-	@$(call targetinfo)
-	
-	rm -rf $(BUILDDIR)/$(ENIGMA2_SKINS_SH4); \
-	cp -a $(ENIGMA2_SKINS_SH4_SOURCE_GIT) $(BUILDDIR)/$(ENIGMA2_SKINS_SH4); \
-	rm -rf $(BUILDDIR)/$(ENIGMA2_SKINS_SH4)/.git;
-	
-	@$(call patchin, ENIGMA2_SKINS_SH4)
 	
 	cd $(ENIGMA2_SKINS_SH4_DIR); \
 		cp $(PTXDIST_SYSROOT_HOST)/share/libtool/config/ltmain.sh .; \
 		touch NEWS README AUTHORS ChangeLog; \
 		autoreconf -i; #aclocal -I m4; autoheader; automake -a; autoconf; 
+	
+	@$(call world/patchin/post, ENIGMA2_SKINS_SH4)
 	
 	@$(call touch)
 

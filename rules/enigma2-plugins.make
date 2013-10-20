@@ -21,49 +21,22 @@ PACKAGES-$(PTXCONF_ENIGMA2_PLUGINS) += enigma2-plugins
 ENIGMA2_PLUGINS_VERSION	:= HEAD
 ENIGMA2_PLUGINS		:= enigma2-plugins-$(ENIGMA2_PLUGINS_VERSION)
 ENIGMA2_PLUGINS_URL	:= git://openpli.git.sourceforge.net/gitroot/openpli/plugins-enigma2
-ENIGMA2_PLUGINS_SOURCE_GIT	:= $(SRCDIR)/openpli-plugins-enigma2.git
+ENIGMA2_PLUGINS_GIT_BRANCH := master
+ENIGMA2_PLUGINS_GIT_HEAD := $(ENIGMA2_PLUGINS_GIT_BRANCH)
+ENIGMA2_PLUGINS_SOURCE	:= $(SRCDIR)/openpli-plugins-enigma2.git
 ENIGMA2_PLUGINS_DIR	:= $(BUILDDIR)/$(ENIGMA2_PLUGINS) 
 ENIGMA2_PLUGINS_LICENSE	:= GPLv2
 
-$(STATEDIR)/enigma2-plugins.get:
-	@$(call targetinfo)
-	
-	( \
-		if [ -d $(ENIGMA2_PLUGINS_SOURCE_GIT) ]; then \
-			cd $(ENIGMA2_PLUGINS_SOURCE_GIT); \
-			git pull -u origin master 2>&1 > /dev/null; \
-			git checkout HEAD 2>&1 > /dev/null; \
-			cd -; \
-		else \
-			git clone $(ENIGMA2_PLUGINS_URL) $(ENIGMA2_PLUGINS_SOURCE_GIT) 2>&1 > /dev/null; \
-		fi; \
-	) 2>&1 > /dev/null
-	
-	( \
-		if [ ! "$(ENIGMA2_PLUGINS_VERSION)" == "HEAD" ]; then \
-			cd $(ENIGMA2_PLUGINS_SOURCE_GIT); \
-			git checkout $(ENIGMA2_PLUGINS_VERSION) 2>&1 > /dev/null; \
-			cd -; \
-		fi; \
-	) 2>&1 > /dev/null
-	
-	@$(call touch)
 
-$(STATEDIR)/enigma2-plugins.extract:
+$(STATEDIR)/enigma2-plugins.extract.post:
 	@$(call targetinfo)
-	
-	rm -rf $(BUILDDIR)/$(ENIGMA2_PLUGINS); \
-	cp -a $(ENIGMA2_PLUGINS_SOURCE_GIT) $(BUILDDIR)/$(ENIGMA2_PLUGINS); \
-	rm -rf $(BUILDDIR)/$(ENIGMA2_PLUGINS)/.git;
-	
-	#sed -i 's/hw.get_device_name().lower() != "dm7025"/False/g' $(BUILDDIR)/$(ENIGMA2_PLUGINS)/webinterface/src/plugin.py
-	
-	@$(call patchin, ENIGMA2_PLUGINS)
 	
 	cd $(ENIGMA2_PLUGINS_DIR); \
 		cp $(PTXDIST_SYSROOT_HOST)/share/libtool/config/ltmain.sh .; \
 		touch NEWS README AUTHORS ChangeLog; \
 		autoreconf -i; #aclocal -I m4; autoheader; automake -a; autoconf; 
+	
+	@$(call world/patchin/post, ENIGMA2_PLUGINS)
 	
 	@$(call touch)
 
@@ -75,7 +48,7 @@ ENIGMA2_PLUGINS_PATH	:= PATH=$(CROSS_PATH)
 ENIGMA2_PLUGINS_ENV 	:= $(CROSS_ENV)
 
 ifdef PTXCONF_LIBEPLAYER3
-P_CONFIG_OPTS += --enable-libeplayer3
+ENIGMA2_PLUGINS_CONFIG_OPTS += --enable-libeplayer3
 endif
 
 #ENIGMA2_PLUGINS_CONF_TOOL	:= autoconf
@@ -83,7 +56,7 @@ ENIGMA2_PLUGINS_AUTOCONF := \
 	$(CROSS_AUTOCONF_USR) \
 	--prefix=/usr \
 	--with-tpm \
-	$(P_CONFIG_OPTS) \
+	$(ENIGMA2_PLUGINS_CONFIG_OPTS) \
 	PYTHON=$(PTXDIST_SYSROOT_HOST)/bin/python2.7 \
 	PY_PATH=$(SYSROOT)/usr \
 	PKG_CONFIG=$(PTXDIST_SYSROOT_HOST)/bin/pkg-config \

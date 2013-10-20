@@ -22,49 +22,22 @@ PACKAGES-$(PTXCONF_LIBDREAMDVD) += libdreamdvd
 #http://schwerkraft.elitedvb.net/anonscm/git/libdreamdvd/libdreamdvd.git
 LIBDREAMDVD_VERSION	:= 6aa22dd3f530ca4be49946e07e4a0bfe60427bdf
 LIBDREAMDVD		:= libdreamdvd-$(LIBDREAMDVD_VERSION)
-LIBDREAMDVD_URL	:= git://github.com/mirakels/libdreamdvd.git
-LIBDREAMDVD_SOURCE_GIT	:= $(SRCDIR)/libdreamdvd.git
-LIBDREAMDVD_DIR	:= $(BUILDDIR)/$(LIBDREAMDVD)
+LIBDREAMDVD_URL		:= git://github.com/mirakels/libdreamdvd.git
+LIBDREAMDVD_GIT_BRANCH	:= master
+LIBDREAMDVD_GIT_HEAD	:= $(LIBDREAMDVD_VERSION)
+LIBDREAMDVD_SOURCE	:= $(SRCDIR)/libdreamdvd.git
+LIBDREAMDVD_DIR		:= $(BUILDDIR)/$(LIBDREAMDVD)
 LIBDREAMDVD_LICENSE	:= GPLv2
 
-$(STATEDIR)/libdreamdvd.get:
+$(STATEDIR)/libdreamdvd.extract.post:
 	@$(call targetinfo)
-	
-	( \
-		if [ -d $(LIBDREAMDVD_SOURCE_GIT) ]; then \
-			cd $(LIBDREAMDVD_SOURCE_GIT); \
-			git pull -u origin master 2>&1 > /dev/null; \
-			git checkout HEAD 2>&1 > /dev/null; \
-			cd -; \
-		else \
-			git clone $(LIBDREAMDVD_URL) $(LIBDREAMDVD_SOURCE_GIT) 2>&1 > /dev/null; \
-		fi; \
-	) 2>&1 > /dev/null
-	
-	( \
-		if [ ! "$(LIBDREAMDVD_VERSION)" == "HEAD" ]; then \
-			cd $(LIBDREAMDVD_SOURCE_GIT); \
-			git checkout $(LIBDREAMDVD_VERSION) 2>&1 > /dev/null; \
-			cd -; \
-		fi; \
-	) 2>&1 > /dev/null
-	
-	@$(call touch)
-
-
-$(STATEDIR)/libdreamdvd.extract:
-	@$(call targetinfo)
-	
-	rm -rf $(BUILDDIR)/$(LIBDREAMDVD); \
-	cp -a $(LIBDREAMDVD_SOURCE_GIT) $(BUILDDIR)/$(LIBDREAMDVD); \
-	rm -rf $(BUILDDIR)/$(LIBDREAMDVD)/.git;
-	
-	@$(call patchin, LIBDREAMDVD)
 	
 	cd $(LIBDREAMDVD_DIR); \
 		cp $(PTXDIST_SYSROOT_HOST)/share/libtool/config/ltmain.sh .; \
 		touch NEWS README AUTHORS ChangeLog; \
 		aclocal; autoheader; automake -a; autoconf; 
+	
+	@$(call world/patchin/post, LIBDREAMDVD)
 	
 	@$(call touch)
 

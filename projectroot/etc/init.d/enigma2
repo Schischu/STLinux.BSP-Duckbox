@@ -24,6 +24,10 @@ start)
 					echo "E2 RESTART"
 					echo "0" > /proc/progress
 					/etc/init.d/showiframe start;;
+				143) echo "143"
+					# Terminated by kill, stop case.
+					echo "E2 SIGTERM"
+					break;;
 				*) echo "*"
 					echo "ERROR"
 					reboot;;

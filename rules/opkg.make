@@ -16,48 +16,14 @@ PACKAGES-$(PTXCONF_OPKG) += opkg
 #
 # Paths and names
 #
-OPKG_VERSION	:= 649
-OPKG		:= opkg-r$(OPKG_VERSION)
-OPKG_URL	:= http://opkg.googlecode.com/svn/trunk/
-#http://opkg.googlecode.com/files/$(OPKG).$(OPKG_SUFFIX)
-OPKG_SOURCE_SVN	:= $(SRCDIR)/opkg.svn
+OPKG_VERSION	:= 0.2.0
+OPKG_MD5	:= e8a6fd34fb2529191fe09dc14c934cc3
+OPKG		:= opkg-$(OPKG_VERSION)
+OPKG_SUFFIX	:= tar.gz
+OPKG_URL	:= http://opkg.googlecode.com/files/$(OPKG).$(OPKG_SUFFIX)
+OPKG_SOURCE	:= $(SRCDIR)/$(OPKG).$(OPKG_SUFFIX)
 OPKG_DIR	:= $(BUILDDIR)/$(OPKG)
 OPKG_LICENSE	:= GPLv2
-
-$(STATEDIR)/opkg.get:
-	@$(call targetinfo)
-	
-	@$(call shell, ( \
-		if [ -d $(OPKG_SOURCE_SVN) ]; then \
-			cd $(OPKG_SOURCE_SVN); \
-			svn update 2>&1 > /dev/null; \
-			cd -; \
-		else \
-			svn checkout $(OPKG_URL) $(OPKG_SOURCE_SVN) 2>&1 > /dev/null; \
-		fi;) 2>&1 > /dev/null)
-	
-	@$(call shell, ( \
-		if [ ! "$(OPKG_VERSION)" == "HEAD" ]; then \
-			cd $(OPKG_SOURCE_SVN); \
-			svn up -r $(OPKG_VERSION) 2>&1 > /dev/null; \
-			cd -; \
-		fi;) 2>&1 > /dev/null)
-	
-	@$(call touch)
-
-
-$(STATEDIR)/opkg.extract:
-	@$(call targetinfo)
-	
-	@$(call shell, rm -rf $(OPKG_DIR);)
-	@$(call shell, cp -a $(OPKG_SOURCE_SVN) $(OPKG_DIR);)
-	@$(call shell, rm -rf $(OPKG_DIR)/.git;)
-	
-	@$(call patchin, OPKG)
-	
-	cd $(OPKG_DIR) && autoreconf -v --install
-	
-	@$(call touch)
 
 # ----------------------------------------------------------------------------
 # Prepare
@@ -124,7 +90,7 @@ ifdef PTXCONF_OPKG_GPG
 	@$(call install_copy, opkg, 0, 0, 0755, -, /usr/bin/opkg-key)
 endif
 #	@$(call install_copy, opkg, 0, 0, 0755, -, /usr/bin/update-alternatives)
-	@$(call install_copy, opkg, 0, 0, 0755, $(OPKG_DIR)/src/opkg-cl, /usr/bin/opkg)
+	@$(call install_copy, opkg, 0, 0, 0755, $(OPKG_PKGDIR)/usr/bin/opkg-cl, /usr/bin/opkg)
 
 	@$(call install_copy, opkg, 0, 0, 0755, -, /usr/share/opkg/intercept/ldconfig)
 	@$(call install_copy, opkg, 0, 0, 0755, -, /usr/share/opkg/intercept/depmod)

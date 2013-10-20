@@ -1,0 +1,10 @@
+## SECTION=python
+
+menuconfig PYTHON_GDATA
+	tristate
+	select PYTHON
+	prompt "python-gdata                "
+	help
+	  FIXME
+
+

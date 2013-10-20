@@ -18,49 +18,17 @@ PACKAGES-$(PTXCONF_ENIGMA2_SKIN_MAGIC) += enigma2-skin-magic
 #
 # Paths and names
 #
-ENIGMA2_SKIN_MAGIC_VERSION	:= HEAD
+ENIGMA2_SKIN_MAGIC_VERSION	:= master
 ENIGMA2_SKIN_MAGIC		:= enigma2-skin-magic-$(ENIGMA2_SKIN_MAGIC_VERSION)
-ENIGMA2_SKIN_MAGIC_URL	:= git://git.code.sf.net/p/openpli/skin-magic
-ENIGMA2_SKIN_MAGIC_URLOLD := git://openpli.git.sourceforge.net/gitroot/openpli/skin-magic
-ENIGMA2_SKIN_MAGIC_SOURCE_GIT	:= $(SRCDIR)/enigma2-skin-magic.git
-ENIGMA2_SKIN_MAGIC_DIR	:= $(BUILDDIR)/$(ENIGMA2_SKIN_MAGIC)
+ENIGMA2_SKIN_MAGIC_URL		:= git://git.code.sf.net/p/openpli/skin-magic
+ENIGMA2_SKIN_MAGIC_GIT_BRANCH	:= master
+ENIGMA2_SKIN_MAGIC_GIT_HEAD	:= $(ENIGMA2_SKIN_MAGIC_GIT_BRANCH)
+ENIGMA2_SKIN_MAGIC_SOURCE	:= $(SRCDIR)/enigma2-skin-magic.git
+ENIGMA2_SKIN_MAGIC_DIR		:= $(BUILDDIR)/$(ENIGMA2_SKIN_MAGIC)
 ENIGMA2_SKIN_MAGIC_LICENSE	:= enigma2-skin-magic
 
 ENIGMA2_SKIN_MAGIC_DEV_VERSION	:= $(ENIGMA2_SKIN_MAGIC_VERSION)
 ENIGMA2_SKIN_MAGIC_DEV_PKGDIR	:= $(ENIGMA2_SKIN_MAGIC_PKGDIR)
-
-$(STATEDIR)/enigma2-skin-magic.get:
-	@$(call targetinfo)
-	
-		if [ -d $(ENIGMA2_SKIN_MAGIC_SOURCE_GIT) ]; then \
-			cd $(ENIGMA2_SKIN_MAGIC_SOURCE_GIT); \
-			git pull -u origin master 2>&1 > /dev/null; \
-			git checkout HEAD 2>&1 > /dev/null; \
-			cd -; \
-		else \
-			git clone  $(ENIGMA2_SKIN_MAGIC_URL) $(ENIGMA2_SKIN_MAGIC_SOURCE_GIT) 2>&1 > /dev/null; \
-		fi; 2>&1 > /dev/null
-	
-		if [ ! "$(ENIGMA2_SKIN_MAGIC_VERSION)" == "HEAD" ]; then \
-			cd $(ENIGMA2_SKIN_MAGIC_SOURCE_GIT); \
-			git checkout $(ENIGMA2_SKIN_MAGIC_VERSION) 2>&1 > /dev/null; \
-			cd -; \
-		fi; 2>&1 > /dev/null
-	
-	@$(call touch)
-
-PATH_PATCHES = $(subst :, ,$(PTXDIST_PATH_PATCHES))
-
-$(STATEDIR)/enigma2-skin-magic.extract:
-	@$(call targetinfo)
-	
-	rm -rf $(ENIGMA2_SKIN_MAGIC_DIR); \
-	cp -a $(ENIGMA2_SKIN_MAGIC_SOURCE_GIT) $(ENIGMA2_SKIN_MAGIC_DIR); \
-	rm -rf $(ENIGMA2_SKIN_MAGIC_DIR)/.git;
-	
-	@$(call patchin, ENIGMA2_SKIN_MAGIC)
-	
-	@$(call touch)
 
 # ----------------------------------------------------------------------------
 # Prepare

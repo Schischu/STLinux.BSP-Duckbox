@@ -20,48 +20,18 @@ PACKAGES-$(PTXCONF_LIBDVDNAV) += libdvdnav
 #
 LIBDVDNAV_VERSION	:= 1243
 LIBDVDNAV		:= libdvdnav-r$(LIBDVDNAV_VERSION)
-LIBDVDNAV_URL	:= svn://svn.mplayerhq.hu/dvdnav/trunk/libdvdnav
-LIBDVDNAV_SOURCE_SVN	:= $(SRCDIR)/libdvdnav.svn
-LIBDVDNAV_DIR	:= $(BUILDDIR)/$(LIBDVDNAV)
+LIBDVDNAV_URL		:= svn://svn.mplayerhq.hu/dvdnav/trunk/libdvdnav
+LIBDVDNAV_SVN_REV	:= $(LIBDVDNAV_VERSION)
+LIBDVDNAV_SOURCE	:= $(SRCDIR)/libdvdnav.svn
+LIBDVDNAV_DIR		:= $(BUILDDIR)/$(LIBDVDNAV)
 LIBDVDNAV_LICENSE	:= GPLv2
 
-# ----------------------------------------------------------------------------
-# Extract
-# ----------------------------------------------------------------------------
-
-$(STATEDIR)/libdvdnav.get:
+$(STATEDIR)/libdvdnav.extract.post:
 	@$(call targetinfo)
-	
-	 ( \
-		if [ -d $(LIBDVDNAV_SOURCE_SVN) ]; then \
-			cd $(LIBDVDNAV_SOURCE_SVN); \
-			svn update 2>&1 > /dev/null; \
-			cd -; \
-		else \
-			svn checkout $(LIBDVDNAV_URL) $(LIBDVDNAV_SOURCE_SVN) 2>&1 > /dev/null; \
-		fi; \
-	) 2>&1 > /dev/null
-	
-	( \
-		if [ ! "$(LIBDVDNAV_VERSION)" == "HEAD" ]; then \
-			cd $(LIBDVDNAV_SOURCE_SVN); \
-			svn up -r $(LIBDVDNAV_VERSION) 2>&1 > /dev/null; \
-			cd -; \
-		fi; \
-	) 2>&1 > /dev/null
-	
-	@$(call touch)
-
-$(STATEDIR)/libdvdnav.extract:
-	@$(call targetinfo)
-	
-	@$(call shell, rm -rf $(LIBDVDNAV_DIR);)
-	@$(call shell, cp -a $(LIBDVDNAV_SOURCE_SVN) $(LIBDVDNAV_DIR);)
-	@$(call shell, rm -rf $(LIBDVDNAV_DIR)/.svn;)
-	
-	@$(call patchin, LIBDVDNAV)
 	
 	cd $(LIBDVDNAV_DIR) && autoreconf -v --install
+	
+	@$(call world/patchin/post, LIBDVDNAV)
 	
 	@$(call touch)
 

@@ -18,8 +18,8 @@ PACKAGES-$(PTXCONF_STLINUX_TOOLCHAIN_FIX) += stlinux-toolchain-fix
 $(STATEDIR)/stlinux-toolchain-fix.install:
 	@$(call targetinfo)
 	cp -a `readlink $(PTXDIST_PLATFORMDIR)/selected_toolchain`/../sysroot-$(PTXCONF_GNU_TARGET)/* $(PTXCONF_SYSROOT_HOST)/
-	ln -s `readlink $(PTXDIST_PLATFORMDIR)/selected_toolchain`/../lib $(PTXCONF_SYSROOT_HOST)/lib/lib
-	ln -s `readlink $(PTXDIST_PLATFORMDIR)/selected_toolchain`/../libexec $(PTXCONF_SYSROOT_HOST)/lib/libexec
+	ln -s -f `readlink $(PTXDIST_PLATFORMDIR)/selected_toolchain`/../lib $(PTXCONF_SYSROOT_HOST)/lib/lib
+	ln -s -f `readlink $(PTXDIST_PLATFORMDIR)/selected_toolchain`/../libexec $(PTXCONF_SYSROOT_HOST)/lib/libexec
 	@$(call touch)
 
 # vim: syntax=make

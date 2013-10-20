@@ -53,7 +53,7 @@ int showiframe(char * path, bool progress) {
         struct stat s;
         fstat(f, &s);
 
-        m_video_clip_fd = open("/dev/dvb/adapter0/video0", O_WRONLY|O_NONBLOCK);
+        m_video_clip_fd = open("/dev/dvb/adapter0/video0", O_WRONLY);
         if (ioctl(m_video_clip_fd, VIDEO_SET_FORMAT, VIDEO_FORMAT_16_9) < 0)
             printf("VIDEO_SET_FORMAT failed (%m)\n");
             

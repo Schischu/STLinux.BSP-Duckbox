@@ -20,43 +20,12 @@ PACKAGES-$(PTXCONF_GRAPHLCD) += graphlcd
 #
 GRAPHLCD_VERSION	:= 1e01a8963f9ab95ba40ddb44a6c166b8e546053d
 GRAPHLCD		:= graphlcd-$(GRAPHLCD_VERSION)
-GRAPHLCD_URL	:= git://projects.vdr-developer.org/graphlcd-base.git
-GRAPHLCD_SOURCE_GIT	:= $(SRCDIR)/graphlcd-base.git
-GRAPHLCD_DIR	:= $(BUILDDIR)/$(GRAPHLCD)
+GRAPHLCD_URL		:= git://projects.vdr-developer.org/graphlcd-base.git
+GRAPHLCD_GIT_BRANCH	:= master
+GRAPHLCD_GIT_HEAD	:= $(GRAPHLCD_VERSION)
+GRAPHLCD_SOURCE		:= $(SRCDIR)/graphlcd-base.git
+GRAPHLCD_DIR		:= $(BUILDDIR)/$(GRAPHLCD)
 GRAPHLCD_LICENSE	:= graphlcd
-
-$(STATEDIR)/graphlcd.prepare:
-
-$(STATEDIR)/graphlcd.get:
-	@$(call targetinfo)
-	
-		if [ -d $(GRAPHLCD_SOURCE_GIT) ]; then \
-			cd $(GRAPHLCD_SOURCE_GIT); \
-			git pull -u origin touchcol 2>&1 > /dev/null; \
-			git checkout $(GRAPHLCD_VERSION) 2>&1 > /dev/null; \
-			cd -; \
-		else \
-			git clone $(GRAPHLCD_URL) $(GRAPHLCD_SOURCE_GIT) 2>&1 > /dev/null; \
-		fi; 2>&1 > /dev/null
-	
-		if [ ! "$(GRAPHLCD_VERSION)" == "HEAD" ]; then \
-			cd $(GRAPHLCD_SOURCE_GIT); \
-			git checkout $(GRAPHLCD_VERSION) 2>&1 > /dev/null; \
-			cd -; \
-		fi; 2>&1 > /dev/null
-	
-	@$(call touch)
-
-
-$(STATEDIR)/graphlcd.extract:
-	@$(call targetinfo)
-	
-	rm -rf $(BUILDDIR)/$(GRAPHLCD); \
-	cp -a $(GRAPHLCD_SOURCE_GIT) $(BUILDDIR)/$(GRAPHLCD); \
-	rm -rf $(BUILDDIR)/$(GRAPHLCD)/.git;
-	
-	@$(call patchin, GRAPHLCD)	
-	@$(call touch)
 
 # ----------------------------------------------------------------------------
 # Compile

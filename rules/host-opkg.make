@@ -20,16 +20,12 @@ HOST_PACKAGES-$(PTXCONF_HOST_OPKG) += host-opkg
 HOST_OPKG	= $(OPKG)
 HOST_OPKG_DIR	= $(HOST_BUILDDIR)/$(HOST_OPKG)
 
-$(STATEDIR)/host-opkg.extract:
+$(STATEDIR)/host-opkg.extract.post:
 	@$(call targetinfo)
 	
-	@$(call shell, rm -rf $(HOST_OPKG_DIR);)
-	@$(call shell, cp -a $(OPKG_SOURCE_SVN) $(HOST_OPKG_DIR);)
-	@$(call shell, rm -rf $(HOST_OPKG_DIR)/.git;)
-	
-	@$(call patchin, HOST_OPKG)
-	
 	cd $(HOST_OPKG_DIR) && autoreconf -v --install
+	
+	@$(call world/patchin/post, HOST_OPKG)
 	
 	@$(call touch)
 

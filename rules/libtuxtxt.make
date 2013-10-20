@@ -21,47 +21,24 @@ PACKAGES-$(PTXCONF_LIBTUXTXT) += libtuxtxt
 LIBTUXTXT_VERSION	:= 4ff8fffd72115130ff6594841e7bad2f85e85f12
 LIBTUXTXT		:= libtuxtxt-$(LIBTUXTXT_VERSION)
 LIBTUXTXT_URL	:= git://openpli.git.sourceforge.net/gitroot/openpli/tuxtxt
-LIBTUXTXT_SOURCE_GIT	:= $(SRCDIR)/tuxtxt.git
+LIBTUXTXT_GIT_BRANCH	:= master
+LIBTUXTXT_GIT_HEAD	:= $(LIBTUXTXT_VERSION)
+LIBTUXTXT_SOURCE	:= $(SRCDIR)/tuxtxt.git
 LIBTUXTXT_DIR	:= $(BUILDDIR)/$(LIBTUXTXT)/libtuxtxt
 LIBTUXTXT_LICENSE	:= libtuxtxt
 
 $(STATEDIR)/libtuxtxt.prepare: $(STATEDIR)/driver-avs.install \
-                                   $(STATEDIR)/driver-stmfb.install
+                               $(STATEDIR)/driver-stmfb.install
 
-$(STATEDIR)/libtuxtxt.get:
+$(STATEDIR)/libtuxtxt.extract.post:
 	@$(call targetinfo)
-	
-		if [ -d $(LIBTUXTXT_SOURCE_GIT) ]; then \
-			cd $(LIBTUXTXT_SOURCE_GIT); \
-			git pull -u origin master 2>&1 > /dev/null; \
-			git checkout HEAD 2>&1 > /dev/null; \
-			cd -; \
-		else \
-			git clone $(LIBTUXTXT_URL) $(LIBTUXTXT_SOURCE_GIT) 2>&1 > /dev/null; \
-		fi; 2>&1 > /dev/null
-	
-		if [ ! "$(LIBTUXTXT_VERSION)" == "HEAD" ]; then \
-			cd $(LIBTUXTXT_SOURCE_GIT); \
-			git checkout $(LIBTUXTXT_VERSION) 2>&1 > /dev/null; \
-			cd -; \
-		fi; 2>&1 > /dev/null
-	
-	@$(call touch)
-
-
-$(STATEDIR)/libtuxtxt.extract:
-	@$(call targetinfo)
-	
-	rm -rf $(BUILDDIR)/$(LIBTUXTXT); \
-	cp -a $(LIBTUXTXT_SOURCE_GIT) $(BUILDDIR)/$(LIBTUXTXT); \
-	rm -rf $(BUILDDIR)/$(LIBTUXTXT)/.git;
-	
-	@$(call patchin, LIBTUXTXT)
 	
 	cd $(LIBTUXTXT_DIR); \
 		cp $(PTXDIST_SYSROOT_HOST)/share/libtool/config/ltmain.sh .; \
 		touch NEWS README AUTHORS ChangeLog; \
 		aclocal; autoheader; automake -a; autoconf; 
+	
+	@$(call world/patchin/post, LIBTUXTXT)
 	
 	@$(call touch)
 

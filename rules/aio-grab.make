@@ -18,45 +18,19 @@ PACKAGES-$(PTXCONF_AIO_GRAB) += aio-grab
 # Paths and names
 #
 AIO_GRAB_VERSION	:= 47983a78821c0fdbef3aab36113d5c6fc34bb11b
-AIO_GRAB			:= aio-grab-$(AIO_GRAB_VERSION)
+AIO_GRAB		:= aio-grab-$(AIO_GRAB_VERSION)
 AIO_GRAB_URL		:= git://openpli.git.sourceforge.net/gitroot/openpli/aio-grab
-AIO_GRAB_SOURCE_GIT	:= $(SRCDIR)/aio-grab.git
+AIO_GRAB_GIT_BRANCH     := master
+AIO_GRAB_GIT_HEAD	:= $(AIO_GRAB_VERSION)
+AIO_GRAB_SOURCE		:= $(SRCDIR)/aio-grab.git
 AIO_GRAB_DIR		:= $(BUILDDIR)/$(AIO_GRAB)
 AIO_GRAB_LICENSE	:= GPLv2
 
-$(STATEDIR)/aio-grab.get:
+
+$(STATEDIR)/aio-grab.extract.post:
 	@$(call targetinfo)
 	
-	( \
-		if [ -d $(AIO_GRAB_SOURCE_GIT) ]; then \
-			cd $(AIO_GRAB_SOURCE_GIT); \
-			git pull -u origin master 2>&1 > /dev/null; \
-			git checkout HEAD 2>&1 > /dev/null; \
-			cd -; \
-		else \
-			git clone $(AIO_GRAB_URL) $(AIO_GRAB_SOURCE_GIT) 2>&1 > /dev/null; \
-		fi; \
-	) 2>&1 > /dev/null
-	
-	( \
-		if [ ! "$(AIO_GRAB_VERSION)" == "HEAD" ]; then \
-			cd $(AIO_GRAB_SOURCE_GIT); \
-			git checkout $(AIO_GRAB_VERSION) 2>&1 > /dev/null; \
-			cd -; \
-		fi; \
-	) 2>&1 > /dev/null
-	
-	@$(call touch)
-
-
-$(STATEDIR)/aio-grab.extract:
-	@$(call targetinfo)
-	
-	rm -rf $(BUILDDIR)/$(AIO_GRAB); \
-	cp -a $(AIO_GRAB_SOURCE_GIT) $(BUILDDIR)/$(AIO_GRAB); \
-	rm -rf $(BUILDDIR)/$(AIO_GRAB)/.git;
-	
-	@$(call patchin, AIO_GRAB)
+	@$(call world/patchin/post, AIO_GRAB)
 	
 	cd $(AIO_GRAB_DIR); \
 		cp $(PTXDIST_SYSROOT_HOST)/share/libtool/config/ltmain.sh .; \

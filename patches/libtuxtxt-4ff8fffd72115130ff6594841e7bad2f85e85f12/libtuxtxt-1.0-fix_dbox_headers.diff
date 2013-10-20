@@ -1,6 +1,6 @@
-diff -Nur ta/tuxtxt_common.h b/tuxtxt_common.h
---- a/tuxtxt_common.h	2012-03-21 03:53:24.000000000 -0700
-+++ b/tuxtxt_common.h	2012-03-21 05:01:34.008166144 -0700
+diff -Nur ta/libtuxtxt/tuxtxt_common.h b/libtuxtxt/tuxtxt_common.h
+--- a/libtuxtxt/tuxtxt_common.h	2012-03-21 03:53:24.000000000 -0700
++++ b/libtuxtxt/tuxtxt_common.h	2012-03-21 05:01:34.008166144 -0700
 
 @@ -32,6 +32,67 @@
  #include <tdgfx/stb04gfx.h>
@@ -171,9 +171,9 @@ diff -Nur ta/tuxtxt_common.h b/tuxtxt_common.h
  	}
  	 /* close avs */
  	if (renderinfo->avs >= 0)
-diff -Nur a/tuxtxt_def.h b/tuxtxt_def.h
---- a/tuxtxt_def.h	2012-03-21 03:53:24.000000000 -0700
-+++ b/tuxtxt_def.h	2012-03-21 05:00:01.192166143 -0700
+diff -Nur a/libtuxtxt/tuxtxt_def.h b/libtuxtxt/tuxtxt_def.h
+--- a/libtuxtxt/tuxtxt_def.h	2012-03-21 03:53:24.000000000 -0700
++++ b/libtuxtxt/tuxtxt_def.h	2012-03-21 05:00:01.192166143 -0700
 @@ -38,9 +38,11 @@
  #include <linux/fb.h>
  
