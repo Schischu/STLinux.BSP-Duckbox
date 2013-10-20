@@ -31,6 +31,8 @@ config ENIGMA2_PLI
 	select LIBDVBSIPP
 	select LIBDREAMDVD
 	select GRAPHLCD
+	select LIBEPLAYER3 if !GSTREAMER
+	select GST_PLUGINS_DVBMEDIASINK if GSTREAMER
 
 config ENIGMA2_PLI_DEV
 	tristate "enigma2-pli-dev"
