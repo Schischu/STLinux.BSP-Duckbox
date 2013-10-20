@@ -53,10 +53,13 @@ config XBMC
 if XBMC
 choice
 	prompt "xbmc version   "
-	default XBMC_VERSION_201301022234
+	default XBMC_VERSION_12_0_RC3_FRODO
 
-	config XBMC_VERSION_201301022234
+	config XBMC_VERSION_12_0_RC3_FRODO
 		bool "Fr, 02 Jan 2013 22:34"
+
+	config XBMC_VERSION_12_2_FRODO
+		bool "Su, 14 Apr 2013 14:05"
 endchoice
 
 config XBMC_SKIN_CONFLUENCE

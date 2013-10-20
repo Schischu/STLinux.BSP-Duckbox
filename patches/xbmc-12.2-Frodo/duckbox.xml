@@ -1,0 +1,54 @@
+<keymap>
+ <global>
+  <keyboard>
+   <key id="105">Left</key>
+   <key id="106">Right</key>
+   <key id="103">Up</key>
+   <key id="108">Down</key>
+   <key id="28">Select</key>
+   <key id="102">PreviousMenu</key>
+   <key id="139">ContextMenu</key>
+   <key id="358">Info</key>
+   <key id="226">ToggleFullscreen</key>
+   <key id="11">Number0</key>
+   <key id="2">Number1</key>
+   <key id="3">JumpSMS2</key>
+   <key id="4">JumpSMS3</key>
+   <key id="5">JumpSMS4</key>
+   <key id="6">JumpSMS5</key>
+   <key id="7">JumpSMS6</key>
+   <key id="8">JumpSMS7</key>
+   <key id="9">JumpSMS8</key>
+   <key id="10">JumpSMS9</key>
+   <key id="114">VolumeDown</key>
+   <key id="115">VolumeUp</key>
+   <key id="119">Pause</key>
+   <key id="167">Record</key>
+   <key id="128">Stop</key>
+   <key id="168">Rewind</key>
+   <key id="207">Play</key>
+   <key id="208">FastForward</key>
+   <key id="116">XBMC.ShutDown()</key>
+  </keyboard>
+ </global>
+
+ <VirtualKeyboard>
+  <keyboard>
+   <key id="11">Number0</key>
+   <key id="2">Number1</key>
+   <key id="3">Number2</key>
+   <key id="4">Number3</key>
+   <key id="5">Number4</key>
+   <key id="6">Number5</key>
+   <key id="7">Number6</key>
+   <key id="8">Number7</key>
+   <key id="9">Number8</key>
+   <key id="10">Number9</key>
+   <key id="28">Enter</key>
+   <key id="109">CursorLeft</key>
+   <key id="104">CursorRight</key>
+  </keyboard>
+ </VirtualKeyboard>
+
+</keymap>
+
