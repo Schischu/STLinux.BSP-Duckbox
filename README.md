@@ -6,6 +6,7 @@ STLinux Duckbox BSP for ptxdist
 Prerequisites
 =============
 Install rpm2cpio, setuptdt.sh
+Also install libsdl-image1.2-dev
 
 Installation
 ============
