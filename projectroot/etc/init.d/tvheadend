@@ -1,0 +1,51 @@
+#!/bin/sh
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/bin/tvheadend
+NAME=tvheadend
+PIDFILE=/var/run/tvheadend.pid
+TVHUSER=root
+TVHOPTS="-f -u $TVHUSER"
+
+start() {
+	mkdir -p /var/run/vsftpd/empty
+
+	echo -n "starting $NAME..."
+	start-stop-daemon -S -b -x "$DAEMON" -p "$PIDFILE" -- $TVHOPTS > /dev/null 2>&1
+	if [ "$?" = "0" ]; then
+		echo "done"
+	else
+		echo "failed $?"
+		exit 1
+	fi
+}
+
+stop() {
+	echo -n "stopping $NAME..."
+	start-stop-daemon -K -p $PIDFILE > /dev/null 2>&1
+	if [ "$?" = "0" ]; then
+		echo "done"
+	else
+		echo "failed $?"
+		exit 1
+	fi
+}
+
+case "$1" in
+start)
+	start
+	;;
+stop)
+	stop
+	;;
+restart)
+	$0 stop
+	sleep 1
+	$0 start
+	;;
+*)
+	echo "usage: $0 {start|stop|restart}"
+esac
+
+exit 0
+
