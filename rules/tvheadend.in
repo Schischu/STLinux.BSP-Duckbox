@@ -1,0 +1,22 @@
+## SECTION=applications
+
+menuconfig TVHEADEND
+	tristate
+	prompt "tvheadend                     "
+	select BZIP2
+	select ZLIB
+	select OPENSSL
+	select PYTHON
+	help
+	  Tvheadend is a TV streaming server for Linux supporting DVB-S, DVB-S2,
+	  DVB-C, DVB-T, ATSC, IPTV, and Analog video (V4L) as input sources
+
+if TVHEADEND
+
+config TVHEADEND_STARTSCRIPT
+	bool
+	prompt "install /etc/init.d/tvheadend"
+	default y
+
+endif
+

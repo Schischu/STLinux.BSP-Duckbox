@@ -1,0 +1,34 @@
+# Add removed muxes
+# Look at http://www.mail-archive.com/linux-media@vger.kernel.org/msg33911.html
+# from http://linuxtv.org/hg/dvb-apps/file/148ede2a6809/util/scan/dvb-t/
+Index: tvheadend-3.2.18/data/dvb-scan/dvb-t/fr-LeMans
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ tvheadend-3.2.18/data/dvb-scan/dvb-t/fr-LeMans	2013-03-27 20:59:54.000000000 +0100
+@@ -0,0 +1,26 @@
++# Le Mans - France (DVB-T transmitter of Mayet)
++# Le Mans - France (signal DVB-T transmis depuis l'émetteur de Mayet   )
++# Pour plus d'informations vous pouvez consulter :
++#  - le topic sur l'émetteur de Mayet sur le forum du site tvnt.net :
++#      http://www.tvnt.net/forum/viewtopic.php?t=48
++#  - le site de TDF : http://tnt.niv2.com/72100-LE-MANS.html
++# contact : Matthieu Duchemin <alkahan@free.fr>
++
++# T freq bw fec_hi fec_lo mod transmission-mode guard-interval hierarchy
++
++# R3
++T 482000000 8MHz AUTO AUTO AUTO AUTO AUTO NONE
++# R1
++T 514000000 8MHz AUTO AUTO AUTO AUTO AUTO NONE
++# R2
++T 578000000 8MHz AUTO AUTO AUTO AUTO AUTO NONE
++# R10
++T 586000000 8MHz AUTO AUTO AUTO AUTO AUTO NONE
++# R6
++T 594000000 8MHz AUTO AUTO AUTO AUTO AUTO NONE
++# R5 : Canal 37
++T 602000000 8MHz AUTO AUTO AUTO AUTO AUTO NONE
++# R11
++T 674000000 8MHz AUTO AUTO AUTO AUTO AUTO NONE
++# R4
++T 778000000 8MHz AUTO AUTO AUTO AUTO AUTO NONE

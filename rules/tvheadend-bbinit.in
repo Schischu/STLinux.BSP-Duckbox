@@ -1,0 +1,14 @@
+## SECTION=initmethod_bbinit
+
+config TVHEADEND_BBINIT_STARTLINK
+	string
+	depends on TVHEADEND_STARTSCRIPT
+	prompt "tvheadend start"
+	default "S90tvheadend"
+
+config TVHEADEND_BBINIT_STOPLINK
+	string
+	depends on TVHEADEND_STARTSCRIPT
+	prompt "tvheadend stop"
+	default "K10tvheadend"
+
