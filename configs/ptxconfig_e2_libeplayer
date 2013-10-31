@@ -2155,6 +2155,7 @@ PTXCONF_FFMPEG_STRIP=y
 # PTXCONF_GNUPG is not set
 # PTXCONF_LIRC is not set
 # PTXCONF_LPC21ISP is not set
+# PTXCONF_TVHEADEND is not set
 
 #
 # Editors                       
