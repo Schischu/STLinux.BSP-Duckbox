@@ -1,0 +1,68 @@
+## SECTION=multimedia_tools
+
+comment "xbmc-pvr-addons: tvheadend isn't selected !"
+	depends on !TVHEADEND
+
+menuconfig XBMC_PVR_ADDONS
+	tristate
+	prompt "xbmc-pvr-addons"
+	depends on TVHEADEND
+	select LIBCURL
+	select SQLITE
+	select BOOST
+	help
+	  This addons allows XBMC PVR to connect to various TV/PVR backends and tuners.
+
+if XBMC_PVR_ADDONS
+
+config XBMC_PVR_ADDONS_ARGUSTV
+	tristate "xbmc-pvr-addons-argustv"
+	depends on XBMC_PVR_ADDONS
+	default m
+
+config XBMC_PVR_ADDONS_DEMO
+	tristate "xbmc-pvr-addons-demo"
+	depends on XBMC_PVR_ADDONS
+	default m
+
+config XBMC_PVR_ADDONS_DVBVIEWER
+	tristate "xbmc-pvr-addons-dvbviewer"
+	depends on XBMC_PVR_ADDONS
+	default m
+
+config XBMC_PVR_ADDONS_HTS
+	tristate "xbmc-pvr-addons-hts"
+	depends on XBMC_PVR_ADDONS
+	default m
+
+config XBMC_PVR_ADDONS_IPTVSIMPLE
+	tristate "xbmc-pvr-addons-iptvsimple"
+	depends on XBMC_PVR_ADDONS
+	default m
+
+config XBMC_PVR_ADDONS_MEDIAPORTAL_TVSERVER
+	tristate "xbmc-pvr-addons-mediaportal-tvserver"
+	depends on XBMC_PVR_ADDONS
+	default m
+
+config XBMC_PVR_ADDONS_NEXTPVR
+	tristate "xbmc-pvr-addons-nextpvr"
+	depends on XBMC_PVR_ADDONS
+	default m
+
+config XBMC_PVR_ADDONS_NJOY
+	tristate "xbmc-pvr-addons-njoy"
+	depends on XBMC_PVR_ADDONS
+	default m
+
+config XBMC_PVR_ADDONS_VDR_VNSI
+	tristate "xbmc-pvr-addons-vdr-vnsi"
+	depends on XBMC_PVR_ADDONS
+	default m
+
+config XBMC_PVR_ADDONS_VUPLUS
+	tristate "xbmc-pvr-addons-vuplus"
+	depends on XBMC_PVR_ADDONS
+	default m
+
+endif
