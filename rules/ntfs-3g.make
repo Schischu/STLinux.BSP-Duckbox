@@ -16,7 +16,7 @@ PACKAGES-$(PTXCONF_NTFS_3G) += ntfs-3g
 #
 # Paths and names
 #
-NTFS_3G_VERSION	:= 2012.1.15
+NTFS_3G_VERSION	:= 2013.1.13
 NTFS_3G_MD5	:= 341acae00a290cab9b00464db65015cc
 NTFS_3G		:= ntfs-3g_ntfsprogs-$(NTFS_3G_VERSION)
 NTFS_3G_SUFFIX	:= tgz
