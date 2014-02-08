@@ -11,5 +11,10 @@ Also install libsdl-image1.2-dev
 Installation
 ============
 wget https://raw.github.com/Schischu/STLinux.StartHere/master/start.sh; chmod 755 start.sh <br />
-BOXTYPE=ufs912 ./start.sh
+BOXTYPE=ufs912 SW=enigma2 MEDIAFW=gstreamer ./start.sh
+
+Possible combinations are
+SW=enigma2 MEDIAFW=gstreamer
+SW=enigma2 MEDIAFW=libeplayer
+SW=xbmc    MEDIAFW=gstreamer
 
