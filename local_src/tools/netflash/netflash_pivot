@@ -1,8 +1,9 @@
 #!/bin/sh
 
-USB=/autofs/sda1
+USB=/media/sda1
 
 # Decrease the system load
+echo "[netflash] kill ui"
 killall S99xbmc
 killall xbmc
 killall S99enigma2
@@ -12,6 +13,7 @@ cd $USB
 
 # Copy the current filesystem to the usbdrive if not already ready
 if [ ! -e $USB/fs.ready ]; then
+ echo "[netflash] copy fs to usb"
  for i in `ls /`; do
   RET="1"
   for v in autofs dev proc run sys tmp var media mnt; do
@@ -27,19 +29,23 @@ if [ ! -e $USB/fs.ready ]; then
  touch $USB/fs.ready
 else
  # Old filesystem already ready so just copy netflash
+ echo "[netflash] update netflash"
  cp /etc/init.d/netflash $USB/etc/init.d/
  cp /bin/netflash_pivot  $USB/bin/
 fi
 
 # Pivot to the usbdrive
+echo "[netflash] pivot fs"
 mkdir -p $USB/root_old
 pivot_root $USB $USB/root_old
 
+echo "[netflash] fixup mounts"
 for v in autofs dev proc run sys tmp var/log var/run var/lock var/tmp; do
  rm /$v; mkdir -p /$v; mount --move /root_old/$v /$v
 done
 
 # Kill remaining processes which block /root_old
+echo "[netflash] kill process with open block on /root_out"
 killall evremote2
 killall vsftpd
 killall autologin
@@ -54,13 +60,15 @@ killall autologin
 #done
 
 # Remove every startscript, we dont need them
+echo "[netflash] remove rc.d/*"
 rm /etc/rc.d/*
 
 # Add the flasher startscript
+echo "[netflash] add rc.d/S00netflash"
 ln -s /etc/init.d/netflash /etc/rc.d/S00netflash
 
+echo "$USB" > /usb
+
 # Send init the restart command
+echo "[netflash] send init restart"
 chroot / /bin/kill -QUIT 1 &
-
-
-reboot

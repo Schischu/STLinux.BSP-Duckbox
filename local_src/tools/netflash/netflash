@@ -4,6 +4,7 @@ case $1 in
 start)
 	echo "starting netflash"
 	
+	USB=`cat /usb`
 	TARGET=`cat /etc/hostname`
 	
 	# Unmount all submounts
@@ -28,6 +29,7 @@ start)
 	#/etc/init.d/telnetd start
 	#/etc/init.d/vsftpd start
 	
+	umount /root_old$USB
 	umount /root_old
 	
 	# Flash filesystem
