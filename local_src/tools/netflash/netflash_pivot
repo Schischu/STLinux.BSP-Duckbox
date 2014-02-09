@@ -1,0 +1,66 @@
+#!/bin/sh
+
+USB=/autofs/sda1
+
+# Decrease the system load
+killall S99xbmc
+killall xbmc
+killall S99enigma2
+killall enigma2
+
+cd $USB
+
+# Copy the current filesystem to the usbdrive if not already ready
+if [ ! -e $USB/fs.ready ]; then
+ for i in `ls /`; do
+  RET="1"
+  for v in autofs dev proc run sys tmp var media mnt; do
+   if [ "x$i" == "x$v" ]; then
+    RET="0"
+   fi
+  done
+  
+  if [ "x$RET" == "x1" ]; then
+   cp -r /$i $USB/
+  fi
+ done
+ touch $USB/fs.ready
+else
+ # Old filesystem already ready so just copy netflash
+ cp /etc/init.d/netflash $USB/etc/init.d/
+ cp /bin/netflash_pivot  $USB/bin/
+fi
+
+# Pivot to the usbdrive
+mkdir -p $USB/root_old
+pivot_root $USB $USB/root_old
+
+for v in autofs dev proc run sys tmp var/log var/run var/lock var/tmp; do
+ rm /$v; mkdir -p /$v; mount --move /root_old/$v /$v
+done
+
+# Kill remaining processes which block /root_old
+killall evremote2
+killall vsftpd
+killall autologin
+
+# We have to remove everything we dont need so >=S40
+#mkdir -p /etc/rc.bak/
+#for s in `ls /etc/rc.d`; do
+# N=`echo $s | sed 's/.*S\([0-9]*\).*/\1/'`
+# if [ $N -ge 40 ]; then
+#  mv /etc/rc.d/$s /etc/rc.bak/
+# fi
+#done
+
+# Remove every startscript, we dont need them
+rm /etc/rc.d/*
+
+# Add the flasher startscript
+ln -s /etc/init.d/netflash /etc/rc.d/S00netflash
+
+# Send init the restart command
+chroot / /bin/kill -QUIT 1 &
+
+
+reboot

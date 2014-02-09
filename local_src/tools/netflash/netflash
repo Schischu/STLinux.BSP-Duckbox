@@ -1,0 +1,55 @@
+#!/bin/sh
+
+case $1 in
+start)
+	echo "starting netflash"
+	
+	TARGET=`cat /etc/hostname`
+	
+	# Unmount all submounts
+	case $TARGET in
+	ufs913)
+		umount /root_old/boot
+		;;
+	*)
+		echo "unsupported target"
+		exit 1
+		;;
+	esac
+	
+	# Uncomment if networkaccess is necessary
+	#mount -oremount,rw /
+	#mkdir -p /media
+	#/etc/init.d/mdev start
+	#/etc/init.d/ifloop start
+	#/etc/init.d/networking start
+	#/etc/init.d/openssh start
+	#/etc/init.d/inetd start
+	#/etc/init.d/telnetd start
+	#/etc/init.d/vsftpd start
+	
+	umount /root_old
+	
+	# Flash filesystem
+	case $TARGET in
+	ufs913)
+		flash_eraseall -j /dev/mtd8
+		nandwrite      -p /dev/mtd8 /home/mtd_fw.sum.bin
+
+		flash_eraseall -j /dev/mtd9
+		nandwrite      -p /dev/mtd9 /home/mtd_root.sum.bin
+		dd of=/dev/mtdblock6 if=/home/uImage.bin
+		;;
+	*)
+		echo "unsupported target"
+		exit 1
+		;;
+	esac
+	
+	exit 0
+
+	;;
+*)
+	echo "usage: $0 [start]"
+	;;
+esac
