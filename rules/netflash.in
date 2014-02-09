@@ -1,0 +1,6 @@
+## SECTION=core
+
+config NETFLASH
+	tristate
+	default y
+	select BASE
