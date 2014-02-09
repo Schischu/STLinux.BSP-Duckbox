@@ -48,6 +48,7 @@ start)
 		;;
 	esac
 	
+	reboot
 	exit 0
 
 	;;
