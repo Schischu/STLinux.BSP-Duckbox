@@ -33,11 +33,11 @@ $(STATEDIR)/image_working_dir_prepared:
 #
 ############################## UIMAGE ##############################################################
 
-$(IMAGEDIR)/uImage: $(IMAGEDIR)/linuximage
+$(IMAGEDIR)/uImage.bin: $(IMAGEDIR)/linuximage
 	@echo -n "Creating uImage... "
 	@cd $(image/work_dir);										\
 	((															\
-		echo "cp $(IMAGEDIR)/linuximage $(IMAGEDIR)/uImage";	\
+		echo "cp $(IMAGEDIR)/linuximage $(IMAGEDIR)/uImage.bin";	\
 	) | tee -a "$(PTX_LOGFILE)") | $(FAKEROOT) --
 	@echo "done."
 
@@ -288,7 +288,7 @@ $(IMAGEDIR)/mtd_root.sum.pad.u.bin: $(IMAGEDIR)/mtd_root.sum.pad.bin
 
 # $FUP -c $OUTFILE -k $CURDIR/uImage -a $CURDIR/mtd_fw.sum.pad.signed.bin -r $CURDIR/mtd_root.sum.pad.r.signed.bin -d $CURDIR/mtd_root.sum.pad.d.signed.bin -c0 $CURDIR/mtd_root.sum.pad.c0.bin -c4 $CURDIR/mtd_root.sum.pad.c4.bin -c8 $CURDIR/mtd_root.sum.pad.c8.bin -ca $CURDIR/mtd_root.sum.pad.ca.bin -u $CURDIR/mtd_root.sum.pad.u.bin
 $(IMAGEDIR)/update.ird: $(STATEDIR)/image_working_dir               \
-                        $(IMAGEDIR)/uImage                          \
+                        $(IMAGEDIR)/uImage.bin                     \
                         $(IMAGEDIR)/mtd_fw.sum.pad.signed.bin       \
                         $(IMAGEDIR)/mtd_root.sum.pad.r.signed.bin   \
                         $(IMAGEDIR)/mtd_root.sum.pad.d.signed.bin   \
@@ -299,11 +299,11 @@ $(IMAGEDIR)/update.ird: $(STATEDIR)/image_working_dir               \
                         $(IMAGEDIR)/mtd_root.sum.pad.u.bin   \
                         $(STATEDIR)/host-fup.install.post
 	@echo -n "Creating $@... "
-	@cd $(IMAGEDIR);													\
+	@cd $(IMAGEDIR);												\
 	((																\
 		echo -n "$(PTXCONF_SYSROOT_HOST)/bin/fup ";					\
 		echo -n "-c $@ ";											\
-		echo -n "-k $(IMAGEDIR)/uImage ";							\
+		echo -n "-k $(IMAGEDIR)/uImage.bin ";						\
 		echo -n "-a $(IMAGEDIR)/mtd_fw.sum.pad.signed.bin ";		\
 		echo -n "-r $(IMAGEDIR)/mtd_root.sum.pad.r.signed.bin ";	\
 		echo -n "-d $(IMAGEDIR)/mtd_root.sum.pad.d.signed.bin ";	\
@@ -320,8 +320,9 @@ $(IMAGEDIR)/update.ird: $(STATEDIR)/image_working_dir               \
 	((																\
 		echo -n "rm -rf ";											\
 		echo -n "       $(IMAGEDIR)/linuximage ";					\
-		echo -n "       $(IMAGEDIR)/uImage ";						\
-		echo -n "       $(IMAGEDIR)/*.bin ";						\
+		echo -n "       $(IMAGEDIR)/mtd_fw.bin ";					\
+		echo -n "       $(IMAGEDIR)/mtd_root.bin ";					\
+		echo -n "       $(IMAGEDIR)/*.pad*.bin ";					\
 		echo    "       $(STATEDIR)/image_working_dir_prepared";	\
 	) | tee -a "$(PTX_LOGFILE)") | $(FAKEROOT) --
 	@echo "done."

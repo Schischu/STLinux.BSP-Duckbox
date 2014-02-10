@@ -9,6 +9,9 @@ start)
 	
 	# Unmount all submounts
 	case $TARGET in
+	atevio7500)
+		umount /root_old/boot
+		;;
 	ufs913)
 		umount /root_old/boot
 		;;
@@ -34,12 +37,22 @@ start)
 	
 	# Flash filesystem
 	case $TARGET in
+	atevio7500)
+		flash_eraseall -j /dev/mtd2
+		dd of=/dev/mtdblock2 if=/home/mtd_fw.sum.bin
+		
+		flash_eraseall -j /dev/mtd3
+		dd of=/dev/mtdblock3 if=/home/mtd_root.sum.bin
+		
+		dd of=/dev/mtdblock1 if=/home/uImage.bin
+		;;
 	ufs913)
 		flash_eraseall -j /dev/mtd8
 		nandwrite      -p /dev/mtd8 /home/mtd_fw.sum.bin
-
+		
 		flash_eraseall -j /dev/mtd9
 		nandwrite      -p /dev/mtd9 /home/mtd_root.sum.bin
+		
 		dd of=/dev/mtdblock6 if=/home/uImage.bin
 		;;
 	*)

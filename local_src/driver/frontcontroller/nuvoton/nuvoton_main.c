@@ -168,7 +168,8 @@ int ack_sem_down(void)
     err  = wait_event_interruptible_timeout(ack_wq, dataReady == 1, ACK_WAIT_TIME); 
     if (err == -ERESTARTSYS)
     {
-         printk("wait_event_interruptible failed\n");
+         //printk("wait_event_interruptible failed\n");
+         msleep(10);
          return err;
     } else
     if (err == 0)
@@ -230,7 +231,8 @@ void getRCData(unsigned char* data, int* len)
 
         if (wait_event_interruptible(wq, KeyBufferStart != KeyBufferEnd))
         {
-            printk("wait_event_interruptible failed\n");
+            //printk("wait_event_interruptible failed\n");
+            msleep(10);
             return;
         }
     }
@@ -565,7 +567,8 @@ int nuvotonTask(void * dummy)
      
      if (wait_event_interruptible(rx_wq, (RCVBufferStart != RCVBufferEnd)))
      {
-         printk("wait_event_interruptible failed\n");
+         //printk("wait_event_interruptible failed\n");
+         msleep(10);
          continue;
      }
 
